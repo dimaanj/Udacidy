@@ -32,7 +32,8 @@ public class AuthorizationFilter implements Filter {
         userCommands.add(CommandEnum.VIEW_MORE.getName());
         userCommands.add(CommandEnum.UPLOAD_MESSAGES.getName());
 
-        adminCommands.add(CommandEnum.VIEW_MORE_CONFERENCES.getName());
+        userCommands.add(CommandEnum.VIEW_MORE_CONFERENCES.getName());
+        userCommands.add(CommandEnum.SEND_REQUEST.getName());
 
 
         adminCommands.add(CommandEnum.GREETING.getName());

@@ -27,7 +27,7 @@ public class RemoveConferenceCommand implements Command {
         Long conferenceId = Long.valueOf(content.getParameter("conferenceId"));
         Content conferenceContent = CONTENT_SERVICE.findByConferenceId(conferenceId);
 
-        List<Section> sectionList = SECTION_SERVICE.findByConferenceId(conferenceId);
+        List<Section> sectionList = SECTION_SERVICE.findSectionsByConferenceId(conferenceId);
         for(Section s : sectionList){
             SECTION_SERVICE.delete(s.getId());
             CONTENT_SERVICE.delete(s.getContentId());

@@ -98,7 +98,7 @@
         </c:if>
 
         window.scrollTo(0, document.body.scrollHeight);
-        setInterval(loadMessages, 1000);
+        setInterval(loadMessages, 1500);
     };
 
     function loadMessages() {

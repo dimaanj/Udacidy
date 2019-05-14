@@ -34,10 +34,7 @@ public class ConnectionPool {
         this.url = bundle.getString(DbInitParameterName.DB_URL);
         this.user = bundle.getString(DbInitParameterName.DB_USER);
         this.password = bundle.getString(DbInitParameterName.DB_PASSWORD);
-        init();
-    }
 
-    private void init() {
         connectionPool = new ArrayBlockingQueue<>(poolSize);
         usedConnections = new ArrayBlockingQueue<>(poolSize);
         for (int i = 0; i < poolSize; i++) {
@@ -45,12 +42,17 @@ public class ConnectionPool {
             try {
                 connection = createConnection(driverName, url, user, password);
                 connectionPool.add(connection);
+                System.out.println("connection " + connection + " was created");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
         }
     }
+
+//    private void init() {
+//
+//    }
 
     private static Connection createConnection(String driverName, String url, String user, String password)
             throws SQLException {

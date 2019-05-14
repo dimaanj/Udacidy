@@ -3,6 +3,7 @@ package by.epam.dmitriytomashevich.javatr.courses.controller;
 import by.epam.dmitriytomashevich.javatr.courses.command.ActionFactory;
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
+import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
 import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
 
 import javax.servlet.RequestDispatcher;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Optional;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,

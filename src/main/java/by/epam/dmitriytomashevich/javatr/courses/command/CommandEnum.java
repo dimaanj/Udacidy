@@ -8,6 +8,7 @@ import by.epam.dmitriytomashevich.javatr.courses.command.error.PageNotFoundComma
 import by.epam.dmitriytomashevich.javatr.courses.command.help.HelpCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.GreetingCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.MainCommand;
+import by.epam.dmitriytomashevich.javatr.courses.command.main.SendRequestCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.ViewMoreConferencesCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.profile.LoginCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.profile.LogoutCommand;
@@ -38,6 +39,11 @@ public enum CommandEnum {
     HELP("/udacidy/help"){
         {
             this.command = new HelpCommand();
+        }
+    },
+    SEND_REQUEST("sendRequest"){
+        {
+            this.command = new SendRequestCommand();
         }
     },
     VIEW_MORE("viewMore"){

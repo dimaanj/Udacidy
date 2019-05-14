@@ -1,15 +1,16 @@
 package by.epam.dmitriytomashevich.javatr.courses.domain.json;
 
+import java.util.List;
 import java.util.Objects;
 
 public class JsonConference {
     private Long id;
     private Long contentId;
     private Long authorId;
-    private String title;
     private String content;
     private String authorFirstName;
     private String authorLastName;
+    private List<JsonSection> jsonSections;
 
     @Override
     public boolean equals(Object o) {
@@ -23,15 +24,15 @@ public class JsonConference {
         return Objects.equals(id, that.id) &&
                 Objects.equals(contentId, that.contentId) &&
                 Objects.equals(authorId, that.authorId) &&
-                Objects.equals(title, that.title) &&
                 Objects.equals(content, that.content) &&
                 Objects.equals(authorFirstName, that.authorFirstName) &&
-                Objects.equals(authorLastName, that.authorLastName);
+                Objects.equals(authorLastName, that.authorLastName) &&
+                Objects.equals(jsonSections, that.jsonSections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, contentId, authorId, title, content, authorFirstName, authorLastName);
+        return Objects.hash(id, contentId, authorId, content, authorFirstName, authorLastName, jsonSections);
     }
 
     public Long getId() {
@@ -58,14 +59,6 @@ public class JsonConference {
         this.authorId = authorId;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getContent() {
         return content;
     }
@@ -88,5 +81,13 @@ public class JsonConference {
 
     public void setAuthorLastName(String authorLastName) {
         this.authorLastName = authorLastName;
+    }
+
+    public List<JsonSection> getJsonSection() {
+        return jsonSections;
+    }
+
+    public void setJsonSection(List<JsonSection> jsonSection) {
+        this.jsonSections = jsonSection;
     }
 }

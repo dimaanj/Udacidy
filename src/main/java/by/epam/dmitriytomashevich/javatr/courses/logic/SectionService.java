@@ -8,5 +8,5 @@ import java.util.List;
 public interface SectionService {
     Long create(Section section) throws LogicException;
     void delete(Long sectionId) throws LogicException;
-    List<Section> findByConferenceId(Long conferenceId) throws LogicException;
+    List<Section> findSectionsByConferenceId(Long conferenceId) throws LogicException;
 }

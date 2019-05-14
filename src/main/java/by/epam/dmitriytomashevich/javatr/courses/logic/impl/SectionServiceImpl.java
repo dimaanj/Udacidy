@@ -30,7 +30,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public List<Section> findByConferenceId(Long conferenceId) throws LogicException {
+    public List<Section> findSectionsByConferenceId(Long conferenceId) throws LogicException {
         try {
             return SECTION_DAO.findByConferenceId(conferenceId);
         } catch (DAOException e) {
