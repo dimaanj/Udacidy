@@ -580,6 +580,8 @@
         event.preventDefault();
         console.log('1');
 
+        var thisButton = this;
+
         var sectionsUl = this.parentElement.parentElement.firstElementChild;
         var sections = sectionsUl.firstElementChild.children;
 
@@ -592,7 +594,6 @@
                 console.log('true');
                 break;
             }
-
         }
         if(!isCorrectForm){
             console.log('incorrectForm');
@@ -603,6 +604,8 @@
             var alert = createAlertWithTextAndType('You should choose ' +
                 'at least one section of the conference to submit request!', 'alert-danger');
             alert.setAttribute('id', 'singleAlert');
+            alert.classList.add('mt-3');
+            thisButton.parentElement.appendChild(alert);
         }else {
             console.log('will be submited');
             var sectionsLength = 0;
@@ -613,7 +616,9 @@
             }
             var sectionsIds = new Array(sectionsLength);
             for(var j=0; j< sections.length; j++){
-                sectionsIds[j] = sections[j].getAttribute('id');
+                if(sections[z].classList.contains('tox-checklist--checked')) {
+                    sectionsIds[j] = sections[j].getAttribute('id');
+                }
             }
 
             const formData = new FormData();

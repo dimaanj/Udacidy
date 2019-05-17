@@ -111,6 +111,15 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public Long countMessagesByConversationId(Long conversationId) throws LogicException {
+        try {
+            return MESSAGE_DAO.countMessagesByConferenceId(conversationId);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
+
+    @Override
     public JsonMessage toJsonMessage(Message message) {
         JsonMessage jsonMessage = new JsonMessage();
         jsonMessage.setId(message.getId());

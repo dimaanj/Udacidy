@@ -69,6 +69,10 @@ public class MessageDao implements AbstractDao<Long, Message> {
             "    SET m.image_path = ?\n" +
             "WHERE m.id = ?";
 
+    private static final String COUNT_MESSAGES_BY_CONVERSATION_ID = "SELECT COUNT(*) messages_amount\n" +
+            "FROM udacidy.message\n" +
+            "    WHERE conversation_id = ?;";
+
     @Override
     public List<Message> findAll() {
         return null;
@@ -265,6 +269,27 @@ public class MessageDao implements AbstractDao<Long, Message> {
             statement.setString(1, imagePath);
             statement.setLong(2, messageId);
             statement.execute();
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            pool.releaseConnection(connection);
+        }
+    }
+
+    public Long countMessagesByConferenceId(Long conversationId) throws DAOException {
+        Long amount = 0L;
+        Message message = null;
+        Connection connection = null;
+        try {
+            connection = pool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(COUNT_MESSAGES_BY_CONVERSATION_ID);
+            statement.setLong(1, conversationId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                amount = resultSet.getLong("messages_amount");
+            }
+            resultSet.close();
+            return amount;
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {

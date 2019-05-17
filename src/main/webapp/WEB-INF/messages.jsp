@@ -18,15 +18,14 @@
 
 <tag:navbar/>
 
-<c:if test="${firstEnter}">
-    <h3 class="display-4 font-weight-normal text-center">Here you can ask our admins...</h3>
+<c:if test="${not empty firstUserEnter}">
+    <h3 class="display-4 font-weight-normal text-center" id="firstUserEnter">Here you can ask our admins...</h3>
 </c:if>
 <main role="main" class="container-fluid" id="main-tag">
     <input type="hidden" id="conversation-id" name="conversationId" value="${conversationId}">
-
-    <c:if test="${not hideViewMoreButton}">
-        <button class="btn btn-primary btn-lg btn-block w-50 mx-auto shadow" type="submit" id="view-more-button">View
-            more
+    <c:if test="${not empty showViewMoreButton}">
+        <button class="btn btn-primary btn-lg btn-block w-50 mx-auto shadow" type="submit" id="view-more-button">
+            View more
         </button>
     </c:if>
 </main>
@@ -90,46 +89,65 @@
 
 <script>
     window.onload = function () {
-        <c:if test="${not empty messages}">
-            <c:forEach var = "i" begin = "0" end = "${messages.size()-1}">
-                var message = ${messages.get(i)};
-                $('#main-tag').append(jsonMessageToDom(message));
-            </c:forEach>
-        </c:if>
-
-        window.scrollTo(0, document.body.scrollHeight);
-        setInterval(loadMessages, 1500);
+        loadMessages();
+        setInterval(updateMessages, 300);
     };
 
+    function waitFirstResponse () {
+        var row = $('.row');
+        if(row !== null){
+            updateMessages();
+        }
+    }
+
+    function getMessagesRequestForm(url) {
+        var fetchOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+        };
+        var responsePromise = fetch(url, fetchOptions);
+        responsePromise
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (jsonData) {
+                console.log(jsonData);
+                for (var i = 0; i < jsonData.length; i++) {
+                    var messageElement = jsonMessageToDom(jsonData[i]);
+                    document.getElementById('main-tag').appendChild(messageElement);
+                }
+                if(!isEmpty(jsonData)){
+                    window.scrollTo(0, document.body.scrollHeight);
+                }
+            })
+            .catch(function(error) {
+                console.log('There has been a problem with your fetch operation: ', error.message);
+            });
+    }
+
+    function isEmpty(obj) {
+        for(var key in obj) {
+            if(obj.hasOwnProperty(key))
+                return false;
+        }
+        return true;
+    }
+
     function loadMessages() {
+        var url = '/udacidy/loadMessages?' +
+            'conversationId=' + ${conversationId};
+        getMessagesRequestForm(url);
+    }
+
+    function updateMessages() {
         var row = $('.row');
         var lastMessageElementId = row.last().attr('id');
-        if (row.length > 0) {
-            var url = '/udacidy/uploadMessages?' +
+        var url = '/udacidy/updateMessages?' +
                 'lastMessageId=' + lastMessageElementId;
-            var fetchOptions = {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-            };
-            var responsePromise = fetch(url, fetchOptions);
-            responsePromise
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (jsonData) {
-                    console.log(jsonData);
-                    for (var i = 0; i < jsonData.length; i++) {
-                        var messageElement = jsonMessageToDom(jsonData[i]);
-                        var lastId = messageElement.getAttribute('id');
-                        if(lastId !== lastMessageElementId){
-                            $('#main-tag').append(messageElement);
-                        }
-                    }
-                });
-        }
+        getMessagesRequestForm(url);
     }
 
     function jsonMessageToDom(obj) {
@@ -160,8 +178,9 @@
 
         var h6 = document.createElement('h6');
         h6.classList.add('card-text');
-        var text = document.createTextNode(obj.text);
-        h6.appendChild(text);
+
+        console.log(obj.text);
+        h6.appendChild(document.createTextNode(obj.text));
         cardBody.appendChild(h6);
 
         var cardFooter = document.createElement('div');
@@ -233,14 +252,18 @@
                     $('#main-tag').append(message);
 
                     document.getElementById("send-message-form").reset();
-                    document.getElementById(message.id).scrollIntoView();
+                    window.scrollTo(0, document.body.scrollHeight);
+                })
+                .catch(function(error) {
+                    console.log('There has been a problem with your fetch operation: ', error.message);
                 });
             event.preventDefault();
         }
     });
 
-    var viewMoreButton = document.getElementById('view-more-button');
-    viewMoreButton.addEventListener('click', function (event) {
+    <c:if test="${empty firstUserEnter}">
+    var viewMore = document.getElementById('view-more-button');
+    viewMore.addEventListener('click', function (event) {
         var url = '/udacidy/';
         var earliestMessage = $('#view-more-button').next();
         var fetchOptions = {
@@ -273,6 +296,7 @@
             });
         event.preventDefault();
     });
+    </c:if>
 </script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

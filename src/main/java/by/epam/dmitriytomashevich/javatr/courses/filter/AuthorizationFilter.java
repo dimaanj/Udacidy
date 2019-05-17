@@ -34,6 +34,7 @@ public class AuthorizationFilter implements Filter {
 
         userCommands.add(CommandEnum.VIEW_MORE_CONFERENCES.getName());
         userCommands.add(CommandEnum.SEND_REQUEST.getName());
+        userCommands.add(CommandEnum.LOAD_MESSAGES.getName());
 
 
         adminCommands.add(CommandEnum.GREETING.getName());
@@ -55,6 +56,7 @@ public class AuthorizationFilter implements Filter {
         adminCommands.add(CommandEnum.DELETE_CONFERENCE.getName());
 
         adminCommands.add(CommandEnum.VIEW_MORE_CONFERENCES.getName());
+        adminCommands.add(CommandEnum.LOAD_MESSAGES.getName());
     }
 
     @Override

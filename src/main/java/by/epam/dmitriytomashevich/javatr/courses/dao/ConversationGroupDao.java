@@ -42,14 +42,29 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
 
     @Override
     public Long create(ConversationGroup entity) throws DAOException {
+        Long conversationGroupId = null;
         Connection connection = null;
         try {
             connection = pool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(INSERT_CONVERSATION_GROUP);
+            PreparedStatement statement = connection.prepareStatement(INSERT_CONVERSATION_GROUP, Statement.RETURN_GENERATED_KEYS);
             statement.setLong(1, entity.getConversationId());
             statement.setLong(2, entity.getUserId());
-            statement.execute();
-            return entity.getId();
+
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating conversation failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    conversationGroupId = generatedKeys.getLong(1);
+                }
+                else {
+                    throw new SQLException("Creating conversation failed, no ID obtained.");
+                }
+            }
+            return conversationGroupId;
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {

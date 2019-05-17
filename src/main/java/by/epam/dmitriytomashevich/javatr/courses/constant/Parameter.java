@@ -32,4 +32,5 @@ public class Parameter {
 
     public static final String CONTENT = "content";
     public static final String SECTIONS = "sections";
+    public static final String REQUEST_SECTIONS_IDS = "sectionsIds";
 }

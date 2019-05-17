@@ -25,8 +25,6 @@ public class AdminCommand implements Command {
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         List<Conversation> conversationList = CONVERSATION_SERVICE.getAllConversations();
-
-
         List<Map.Entry<User, Conversation>> map = new ArrayList<>();
         for (Conversation c : conversationList) {
             Message m = MESSAGE_SERVICE.getLastOnTimeByConversationId(c.getId());

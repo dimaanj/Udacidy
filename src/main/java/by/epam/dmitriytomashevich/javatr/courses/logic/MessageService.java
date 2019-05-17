@@ -18,6 +18,7 @@ public interface MessageService {
     List<Message> findAllAfterMessageId(Long messageId, Long conversationId) throws LogicException;
     Message getEarliestMessageByConversationId(Long conversationId) throws LogicException;
     void updateMessageImage(String imagePath, Long messageId) throws LogicException;
+    Long countMessagesByConversationId(Long conversationId) throws LogicException;
 
     // todo вынести
     JsonMessage toJsonMessage(Message message);

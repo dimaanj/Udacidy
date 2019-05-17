@@ -7,10 +7,7 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.UserRole;
 import by.epam.dmitriytomashevich.javatr.courses.logic.builder.EntityBuilder;
 import by.epam.dmitriytomashevich.javatr.courses.logic.builder.UserBuilder;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +79,7 @@ public class UserDao implements AbstractDao<Long, User> {
 
     @Override
     public Long create(User entity) throws DAOException {
+        Long userId = null;
         Connection connection = null;
         try {
             connection = pool.getConnection();
@@ -92,11 +90,14 @@ public class UserDao implements AbstractDao<Long, User> {
             statement.setString(3, entity.getPassword());
             statement.setString(4, entity.getEmail());
             statement.execute();
+
             statement = connection.prepareStatement(INSERT_USER_ROLE);
             statement.setString(1, entity.getRole().getValue().toUpperCase());
             statement.execute();
+
+            //todo сделать с возвратом айди
             connection.commit();
-            return entity.getId();
+            return userId;
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {

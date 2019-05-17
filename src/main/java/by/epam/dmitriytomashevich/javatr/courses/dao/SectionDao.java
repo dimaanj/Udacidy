@@ -7,10 +7,7 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.Section;
 import by.epam.dmitriytomashevich.javatr.courses.logic.builder.EntityBuilder;
 import by.epam.dmitriytomashevich.javatr.courses.logic.builder.SectionBuilder;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,14 +56,27 @@ public class SectionDao implements AbstractDao<Long, Section> {
 
     @Override
     public Long create(Section entity) throws DAOException {
+        Long sectionId = null;
         Connection connection = null;
         try {
             connection = pool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(INSERT);
+            PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
             statement.setLong(1, entity.getContentId());
             statement.setLong(2, entity.getConferenceId());
-            statement.execute();
-            return entity.getId();
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating conversation failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    sectionId = generatedKeys.getLong(1);
+                }
+                else {
+                    throw new SQLException("Creating conversation failed, no ID obtained.");
+                }
+            }
+            return sectionId;
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {

@@ -1,8 +1,9 @@
 package by.epam.dmitriytomashevich.javatr.courses.command;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.admin.*;
+import by.epam.dmitriytomashevich.javatr.courses.command.conversation.LoadMessagesCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.conversation.SendMessageCommand;
-import by.epam.dmitriytomashevich.javatr.courses.command.conversation.UploadMessagesCommand;
+import by.epam.dmitriytomashevich.javatr.courses.command.conversation.UpdateMessagesCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.conversation.ViewMoreCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.error.PageNotFoundCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.help.HelpCommand;
@@ -51,9 +52,14 @@ public enum CommandEnum {
             this.command = new ViewMoreCommand();
         }
     },
-    UPLOAD_MESSAGES("/udacidy/uploadMessages"){
+    UPLOAD_MESSAGES("/udacidy/updateMessages"){
         {
-            this.command = new UploadMessagesCommand();
+            this.command = new UpdateMessagesCommand();
+        }
+    },
+    LOAD_MESSAGES("/udacidy/loadMessages"){
+        {
+            command = new LoadMessagesCommand();
         }
     },
 
@@ -67,6 +73,7 @@ public enum CommandEnum {
             this.command = new ViewMoreConferencesCommand();
         }
     },
+
 
 
     ADMIN_PAGE("/udacidy/admin"){
