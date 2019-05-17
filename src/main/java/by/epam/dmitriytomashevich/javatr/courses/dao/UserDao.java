@@ -91,9 +91,21 @@ public class UserDao implements AbstractDao<Long, User> {
             statement.setString(4, entity.getEmail());
             statement.execute();
 
-            statement = connection.prepareStatement(INSERT_USER_ROLE);
+            statement = connection.prepareStatement(INSERT_USER_ROLE, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, entity.getRole().getValue().toUpperCase());
-            statement.execute();
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating conversation failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    userId = generatedKeys.getLong(1);
+                }
+                else {
+                    throw new SQLException("Creating conversation failed, no ID obtained.");
+                }
+            }
 
             //todo сделать с возвратом айди
             connection.commit();

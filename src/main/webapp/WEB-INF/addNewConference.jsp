@@ -120,6 +120,12 @@
 
 
 <style>
+    #responsive-image {
+        width: 50%;
+        height: auto;
+    }
+</style>
+<style>
     .shadow-textarea textarea.form-control::placeholder {
         font-weight: 300;
     }

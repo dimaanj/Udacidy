@@ -5,7 +5,6 @@ import java.util.Objects;
 
 public class Request {
     private Long id;
-    private String comment;
     private Long userId;
     private LocalDateTime creationDateTime;
 
@@ -19,14 +18,13 @@ public class Request {
         }
         Request request = (Request) o;
         return Objects.equals(id, request.id) &&
-                Objects.equals(comment, request.comment) &&
                 Objects.equals(creationDateTime, request.creationDateTime) &&
                 Objects.equals(userId, request.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, comment, userId);
+        return Objects.hash(id, userId, creationDateTime);
     }
 
     public Long getId() {
@@ -35,14 +33,6 @@ public class Request {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
     }
 
     public Long getUserId() {

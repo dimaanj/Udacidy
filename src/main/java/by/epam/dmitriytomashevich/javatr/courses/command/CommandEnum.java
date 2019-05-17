@@ -6,10 +6,10 @@ import by.epam.dmitriytomashevich.javatr.courses.command.conversation.SendMessag
 import by.epam.dmitriytomashevich.javatr.courses.command.conversation.UpdateMessagesCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.conversation.ViewMoreCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.error.PageNotFoundCommand;
-import by.epam.dmitriytomashevich.javatr.courses.command.help.HelpCommand;
+import by.epam.dmitriytomashevich.javatr.courses.command.user.HelpCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.GreetingCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.MainCommand;
-import by.epam.dmitriytomashevich.javatr.courses.command.main.SendRequestCommand;
+import by.epam.dmitriytomashevich.javatr.courses.command.user.SendRequestCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.ViewMoreConferencesCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.profile.LoginCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.profile.LogoutCommand;
@@ -45,6 +45,11 @@ public enum CommandEnum {
     SEND_REQUEST("sendRequest"){
         {
             this.command = new SendRequestCommand();
+        }
+    },
+    REMOVE_REQUEST_COMMAND("removeRequest"){
+        {
+            command = new RemoveConferenceCommand();
         }
     },
     VIEW_MORE("viewMore"){

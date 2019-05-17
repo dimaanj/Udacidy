@@ -10,15 +10,9 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.Section;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonConference;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonSection;
-import by.epam.dmitriytomashevich.javatr.courses.logic.ConferenceService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.ContentService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.SectionService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
+import by.epam.dmitriytomashevich.javatr.courses.logic.*;
 import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConferenceServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ContentServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.SectionServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.UserServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -32,18 +26,21 @@ public class MainCommand implements Command {
     private static final ContentService CONTENT_SERVICE = new ContentServiceImpl();
     private static final UserService USER_SERVICE = new UserServiceImpl();
     private static final SectionService SECTION_SERVICE = new SectionServiceImpl();
+    private static final RequestService REQUEST_SERVICE = new RequestServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
 
         List<Conference> conferenceList = CONFERENCE_SERVICE.findSomeLastConferences(Parameter.CONFERENCES_UPDATE_AMOUNT);
         JsonArray jsonConferencesList = new JsonArray();
+        User user = (User) content.getSession(false).getAttribute(Parameter.USER);
         for (Conference c : conferenceList) {
             Gson gson = new Gson();
 
             User author = USER_SERVICE.findById(c.getAuthorId());
             List<Section> sections = SECTION_SERVICE.findSectionsByConferenceId(c.getId());
             List<JsonSection> jsonSections = new ArrayList<>();
+
             for(Section s : sections){
                 JsonSection jsonSection = new JsonSection();
                 Content sectionContent = CONTENT_SERVICE.findById(s.getContentId());
@@ -52,6 +49,7 @@ public class MainCommand implements Command {
                 jsonSection.setConferenceId(s.getConferenceId());
                 jsonSection.setContent(sectionContent.getContent());
                 jsonSections.add(jsonSection);
+
             }
 
             JsonConference conference = new JsonConference();
@@ -62,6 +60,11 @@ public class MainCommand implements Command {
             conference.setAuthorFirstName(author.getFirstName());
             conference.setAuthorLastName(author.getLastName());
             conference.setJsonSection(jsonSections);
+
+            if(!user.isAdmin()){
+                conference.setRequestAlreadySent(
+                        isRequestAlreadySentRequest(user, sections));
+            }
 
             JsonElement conferenceJsonElement = gson.toJsonTree(conference, JsonConference.class);
             jsonConferencesList.add(conferenceJsonElement);
@@ -75,5 +78,14 @@ public class MainCommand implements Command {
         }
 
         return Optional.of(JSP.MAIN);
+    }
+
+    private boolean isRequestAlreadySentRequest(User user, List<Section> sections) throws LogicException {
+        for(Section s : sections){
+            if (REQUEST_SERVICE.findBySectionId(s.getId()) != null){
+                return true;
+            }
+        }
+        return false;
     }
 }

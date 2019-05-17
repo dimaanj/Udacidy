@@ -1,4 +1,4 @@
-package by.epam.dmitriytomashevich.javatr.courses.command.help;
+package by.epam.dmitriytomashevich.javatr.courses.command.user;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;

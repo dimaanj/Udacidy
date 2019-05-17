@@ -11,6 +11,7 @@ public class JsonConference {
     private String authorFirstName;
     private String authorLastName;
     private List<JsonSection> jsonSections;
+    private boolean isRequestAlreadySent;
 
     @Override
     public boolean equals(Object o) {
@@ -27,12 +28,13 @@ public class JsonConference {
                 Objects.equals(content, that.content) &&
                 Objects.equals(authorFirstName, that.authorFirstName) &&
                 Objects.equals(authorLastName, that.authorLastName) &&
+                Objects.equals(isRequestAlreadySent, that.isRequestAlreadySent) &&
                 Objects.equals(jsonSections, that.jsonSections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, contentId, authorId, content, authorFirstName, authorLastName, jsonSections);
+        return Objects.hash(id, contentId, authorId, content, authorFirstName, authorLastName, jsonSections, isRequestAlreadySent);
     }
 
     public Long getId() {
@@ -89,5 +91,21 @@ public class JsonConference {
 
     public void setJsonSection(List<JsonSection> jsonSection) {
         this.jsonSections = jsonSection;
+    }
+
+    public boolean isRequestAlreadySent() {
+        return isRequestAlreadySent;
+    }
+
+    public void setRequestAlreadySent(boolean requestAlreadySent) {
+        isRequestAlreadySent = requestAlreadySent;
+    }
+
+    public List<JsonSection> getJsonSections() {
+        return jsonSections;
+    }
+
+    public void setJsonSections(List<JsonSection> jsonSections) {
+        this.jsonSections = jsonSections;
     }
 }

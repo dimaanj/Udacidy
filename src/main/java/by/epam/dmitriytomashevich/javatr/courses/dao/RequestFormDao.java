@@ -2,26 +2,29 @@ package by.epam.dmitriytomashevich.javatr.courses.dao;
 
 import by.epam.dmitriytomashevich.javatr.courses.dao.exception.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
-import by.epam.dmitriytomashevich.javatr.courses.domain.RequestForm;
+import by.epam.dmitriytomashevich.javatr.courses.domain.RequestData;
 
 import java.sql.*;
 import java.util.List;
 
-public class RequestFormDao implements AbstractDao<Long, RequestForm> {
+public class RequestFormDao implements AbstractDao<Long, RequestData> {
     private ConnectionPool pool = ConnectionPool.getInstance();
 
-    private static final String INSERT = "INSERT INTO udacidy.request_form\n" +
+    private static final String INSERT = "INSERT INTO udacidy.request_data\n" +
             "    (section_id, request_id)\n" +
             "VALUES (?, ?);";
 
+    private static final String DELETE_BY_REQUEST_ID = "DELETE FROM request_data\n" +
+            "    WHERE request_id = ?";
+
 
     @Override
-    public List<RequestForm> findAll() throws DAOException {
+    public List<RequestData> findAll() throws DAOException {
         return null;
     }
 
     @Override
-    public RequestForm findById(Long id) throws DAOException {
+    public RequestData findById(Long id) throws DAOException {
         return null;
     }
 
@@ -31,7 +34,7 @@ public class RequestFormDao implements AbstractDao<Long, RequestForm> {
     }
 
     @Override
-    public Long create(RequestForm entity) throws DAOException {
+    public Long create(RequestData entity) throws DAOException {
         Long requestFormId = null;
         Connection connection = null;
         try {
@@ -55,6 +58,7 @@ public class RequestFormDao implements AbstractDao<Long, RequestForm> {
                     throw new SQLException("Creating conversation failed, no ID obtained.");
                 }
             }
+            connection.commit();
             return requestFormId;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -64,7 +68,21 @@ public class RequestFormDao implements AbstractDao<Long, RequestForm> {
     }
 
     @Override
-    public void update(RequestForm entity) throws DAOException {
+    public void update(RequestData entity) throws DAOException {
 
+    }
+
+    public void deleteByRequestId(Long requestId) throws DAOException {
+        Connection connection = null;
+        try {
+            connection = pool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE_BY_REQUEST_ID);
+            statement.setLong(1, requestId);
+            statement.execute();
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            pool.releaseConnection(connection);
+        }
     }
 }

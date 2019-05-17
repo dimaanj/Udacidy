@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.domain;
 
 import java.util.Objects;
 
-public class RequestForm {
+public class RequestData {
     private Long id;
     private Long sectionId;
     private Long requestId;
@@ -15,7 +15,7 @@ public class RequestForm {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        RequestForm that = (RequestForm) o;
+        RequestData that = (RequestData) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(requestId, that.requestId) &&
                 Objects.equals(sectionId, that.sectionId);

@@ -17,17 +17,7 @@
     <c:if test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
         <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=n6pc28z5n87xrwjz2invt1y20ws32djsc2jyd67as953ymf6"></script>
         <script>
-            var dfreeHeaderConfig = {
-                selector: '.dfree-header',
-                menubar: false,
-                inline: true,
-                toolbar: false,
-                plugins: ['quickbars'],
-                quickbars_insert_toolbar: 'undo redo',
-                quickbars_selection_toolbar: 'italic underline'
-            };
-
-            var dfreeBodyConfig = {
+             var dfreeBodyConfig = {
                 selector: '.dfree-body',
                 menubar: false,
                 inline: true,
@@ -173,6 +163,7 @@
 </head>
 <body>
 
+
 <tag:navbar/>
 <main role="main" class="container-fluid" id="main-tag">
     <div id="data-container"></div>
@@ -213,6 +204,7 @@
         <c:if test="${not empty conferences}">
             <c:forEach var="i" begin="0" end="${conferences.size()-1}">
                 var jsonConference = ${conferences.get(i)};
+                console.log(jsonConference);
                 var row = createConference(jsonConference);
                 document.getElementById('data-container').append(row);
             </c:forEach>
@@ -221,13 +213,12 @@
 
     function createConference(jsonConference) {
         var conferenceId = jsonConference.id;
-        var conferenceTitle = jsonConference.title;
         var conferenceContent = jsonConference.content;
         var conferenceSections = jsonConference.jsonSections;
 
         var row = document.createElement('div');
         row.classList.add('row');
-        row.classList.add('mt-3');
+        row.classList.add('mt-4');
         row.classList.add('justify-content-md-center');
         row.id = conferenceId;
 
@@ -291,18 +282,14 @@
         flexItem.classList.add('p-2');
         flexItem.classList.add('bd-highlight');
 
-        var chooseSectionsButton = document.createElement('button');
-        chooseSectionsButton.classList.add('btn');
-        chooseSectionsButton.classList.add('btn-primary');
-        chooseSectionsButton.setAttribute('name', 'chooseSectionsButton');
-        chooseSectionsButton.setAttribute('type', 'button');
-        chooseSectionsButton.setAttribute('data-toggle', 'collapse');
-        chooseSectionsButton.setAttribute('data-target', '#collapseSection' + conferenceId);
-        chooseSectionsButton.setAttribute('aria-expanded', 'false');
-        chooseSectionsButton.setAttribute('aria-controls', 'collapseSection' + conferenceId);
-        chooseSectionsButton.appendChild(document.createTextNode('Choose sections'));
+        if(jsonConference.isRequestAlreadySent){
+            var removeRequestButton = removeRequestButtonBuilder();
+            flexItem.appendChild(removeRequestButton);
+        }else {
+            var chooseSectionsButton = selectSectionsButtonBuilder(conferenceId);
+            flexItem.appendChild(chooseSectionsButton);
+        }
 
-        flexItem.appendChild(chooseSectionsButton);
         flexR.appendChild(flexItem);
 
         var collapse = document.createElement('div');
@@ -615,9 +602,11 @@
                 }
             }
             var sectionsIds = new Array(sectionsLength);
+            var k = 0;
             for(var j=0; j< sections.length; j++){
-                if(sections[z].classList.contains('tox-checklist--checked')) {
-                    sectionsIds[j] = sections[j].getAttribute('id');
+                if(sections[j].classList.contains('tox-checklist--checked')) {
+                    sectionsIds[k] = sections[j].getAttribute('id');
+                    k++;
                 }
             }
 
@@ -633,18 +622,64 @@
             var responsePromise = fetch(url, fetchOptions);
             responsePromise
                 .then(function (response) {
-                    return response.json();
+                    return response.text();
                 })
-                .then(function (jsonObj) {
-                    console.log(jsonObj);
+                .then(function (text) {
+                    console.log(text);
+
+                    var alert = createAlertWithTextAndType(text, 'alert-success');
+                    alert.firstElementChild.append(' Go to profile page to look through all your requests.');
+
+                    var col = thisButton.parentNode.parentNode.parentNode.parentNode;
+                    var row = col.parentNode;
+                    var removeRequestButton = removeRequestButtonBuilder(row.getAttribute('id'));
 
 
+                    var dFlex = col.children[1];
+                    dFlex.innerHTML = "";
+                    dFlex.appendChild(removeRequestButton);
+
+                    col.lastChild.remove();
+                    col.appendChild(alert);
                 });
         }
     });
 
+    body.on('click', "button[name='removeRequest']", function (event) {
+        var thisButton = this;
 
+        const formData = new FormData();
+        formData.append('command', 'removeRequest');
+        formData.append('conferenceId', thisButton.getAttribute('id'));
 
+        var url = '/udacidy/';
+        var fetchOptions = {
+            method: 'POST',
+            body: formData,
+        };
+        var responsePromise = fetch(url, fetchOptions);
+        responsePromise
+            .then(function (response) {
+                return response.text();
+            })
+            .then(function (text) {
+                console.log(text);
+
+                var alert = createAlertWithTextAndType(text, 'alert-success');
+                alert.firstElementChild.append(' Your request was successfully removed.');
+
+                var col = thisButton.parentNode.parentNode.parentNode;
+
+                var selectSectionsButton = selectSectionsButtonBuilder(thisButton.getAttribute('id'));
+
+                var dFlex = col.children[1];
+                dFlex.innerHTML = "";
+                dFlex.appendChild(selectSectionsButton);
+
+                col.lastChild.remove();
+                col.appendChild(alert);
+            });
+    });
 
     body.on('click', "button[id='view-more-button']", function (event) {
         var lastRowElement = $('.row').last();
@@ -680,6 +715,32 @@
             });
         event.preventDefault();
     });
+
+    var removeRequestButtonBuilder = function (conferenceId) {
+        var removeRequestButton = document.createElement('button');
+        removeRequestButton.classList.add('btn');
+        removeRequestButton.classList.add('btn-dark');
+        removeRequestButton.setAttribute('name', 'removeRequest');
+        removeRequestButton.setAttribute('id', conferenceId);
+        removeRequestButton.appendChild(document.createTextNode('Remove request'));
+        return removeRequestButton;
+    };
+
+    var selectSectionsButtonBuilder = function (conferenceId) {
+        var chooseSectionsButton = document.createElement('button');
+        chooseSectionsButton.classList.add('btn');
+        chooseSectionsButton.classList.add('btn-primary');
+        chooseSectionsButton.setAttribute('name', 'chooseSectionsButton');
+        chooseSectionsButton.setAttribute('type', 'button');
+        chooseSectionsButton.setAttribute('data-toggle', 'collapse');
+        chooseSectionsButton.setAttribute('data-target', '#collapseSection' + conferenceId);
+        chooseSectionsButton.setAttribute('aria-expanded', 'false');
+        chooseSectionsButton.setAttribute('aria-controls', 'collapseSection' + conferenceId);
+        chooseSectionsButton.appendChild(document.createTextNode('Choose sections'));
+        return chooseSectionsButton;
+    };
+
+
 </script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
