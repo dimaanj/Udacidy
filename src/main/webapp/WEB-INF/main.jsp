@@ -181,8 +181,8 @@
     </c:if>
 </main>
 
-<c:if test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
-    <div class="modal fade" id="deleteConferenceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<%--<c:if test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">--%>
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -193,16 +193,23 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Are you really want delete this conference?
+                <c:choose>
+                    <c:when test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
+                        Are you really want delete this conference?
+                    </c:when>
+                    <c:otherwise>
+                        Are you really want to remove this request?
+                    </c:otherwise>
+                </c:choose>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary" id="deleteConferenceButton">Yes</button>
+                    <button type="button" class="btn btn-primary" id="confirmationButton">Yes</button>
                 </div>
             </div>
         </div>
     </div>
-</c:if>
+<%--</c:if>--%>
 <tag:footer/>
 
 <script>
@@ -246,7 +253,6 @@
 
         <c:choose>
             <c:when test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
-
         var flexRow = document.createElement('div');
         flexRow.classList.add('d-flex');
         flexRow.classList.add('flex-row');
@@ -273,7 +279,7 @@
         deleteConferenceButton.appendChild(document.createTextNode('Delete conference'));
         deleteConferenceButton.setAttribute('name', 'deleteButton');
         deleteConferenceButton.setAttribute('data-toggle', 'modal');
-        deleteConferenceButton.setAttribute('data-target', '#deleteConferenceModal');
+        deleteConferenceButton.setAttribute('data-target', '#confirmationModal');
         flexItem2.appendChild(deleteConferenceButton);
 
         flexRow.appendChild(flexItem1);
@@ -293,7 +299,7 @@
         flexItem.classList.add('bd-highlight');
 
         if(jsonConference.isRequestAlreadySent){
-            var removeRequestButton = removeRequestButtonBuilder(conferenceId);
+            var removeRequestButton = removeRequestButtonBuilder();
             flexItem.appendChild(removeRequestButton);
         }else {
             var chooseSectionsButton = selectSectionsButtonBuilder(conferenceId);
@@ -301,44 +307,11 @@
         }
 
         flexR.appendChild(flexItem);
-
-        var collapse = document.createElement('div');
-        collapse.classList.add('collapse');
-        collapse.setAttribute('id', 'collapseSection' + conferenceId);
-        var cardCollapse = document.createElement('div');
-        cardCollapse.classList.add('card');
-
-
-        var cardBodyCollapse = document.createElement('div');
-        cardBodyCollapse.classList.add('card-body');
-        var ul = document.createElement('ul');
-        ul.classList.add('tox-checklist');
-        for(var i=0; i<conferenceSections.length; i++){
-            var li = document.createElement('li');
-            li.setAttribute('name', 'section');
-            li.setAttribute('id', conferenceSections[i].id);
-            li.appendChild(document.createTextNode(conferenceSections[i].content));
-            ul.appendChild(li);
-        }
-        cardBodyCollapse.appendChild(ul);
-
-        var cardFooter = document.createElement('div');
-        cardFooter.classList.add('card-footer');
-        cardFooter.classList.add('border-white');
-        var submitRequestButton = document.createElement('button');
-        submitRequestButton.classList.add('btn');
-        submitRequestButton.classList.add('btn-primary');
-        submitRequestButton.setAttribute('name', 'submitRequestButton');
-        submitRequestButton.appendChild(document.createTextNode('Submit request'));
-        cardFooter.appendChild(submitRequestButton);
-
-        cardCollapse.appendChild(cardBodyCollapse);
-        cardCollapse.appendChild(cardFooter);
-
-        collapse.appendChild(cardCollapse);
-
         col.appendChild(flexR);
-        col.appendChild(collapse);
+        // if(jsonConference.isAlreadySent) {
+            var collapse = chooseSectionsCollapseElementBuilder(conferenceSections);
+            col.appendChild(collapse);
+        // }
         </c:when>
         </c:choose>
 
@@ -385,59 +358,10 @@
 
     body.on('click', "button[name='deleteButton']", function (event) {
         var rowElement = this.parentElement.parentElement.parentElement.parentElement;
-        document.getElementById('deleteConferenceButton').setAttribute('name', rowElement.getAttribute('id'));
-    });
-
-    body.on('click', '#deleteConferenceButton', function (event) {
-        event.preventDefault();
-
-        var thisButton = this;
-        var conferenceId = this.getAttribute('name');
-        var rowElement = document.getElementById(conferenceId);
-
-        const formData = new FormData();
-        formData.append('command', 'deleteConference');
-        formData.append('conferenceId', conferenceId);
-
-        var url = '/udacidy/';
-        var fetchOptions = {
-            method: 'POST',
-            body: formData,
-        };
-
-        var responsePromise = fetch(url, fetchOptions);
-        responsePromise
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (jsonObj) {
-                console.log(jsonObj);
-                var alert;
-                if(jsonObj.didConferenceExist) {
-                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-info');
-                }else {
-                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
-                }
-                alert.setAttribute('id', conferenceId);
-                alert.classList.add('mx-auto');
-                alert.classList.add('col-sm-8');
-                alert.classList.add('shadow-lg');
-                alert.classList.add('rounded-lg');
-                alert.classList.add('mt-3');
-
-                rowElement.parentNode.replaceChild(alert, rowElement);
-                deletedConferenceId = conferenceId;
-                thisButton.removeAttribute('name');
-                $('#deleteConferenceModal').modal('hide');
-            });
+        document.getElementById('confirmationButton').setAttribute('name', rowElement.getAttribute('id'));
     });
 
     var deletedConferenceId;
-
-    $('#deleteConferenceModal').on('hidden.bs.modal', function (e) {
-        var currentAlert = document.getElementsByName(deletedConferenceId);
-        currentAlert.scrollIntoView();
-    });
 
     body.on('click', "button[name='saveChanges']", function (event) {
         event.preventDefault();
@@ -528,33 +452,7 @@
 
     </c:if>
 
-    function createAlertWithTextAndType(text, type) {
-        var alert = document.createElement('div');
-        alert.classList.add('alert');
-        alert.classList.add(type);
-        alert.classList.add('alert-dismissible');
-        alert.classList.add('fade');
-        alert.classList.add('show');
-        alert.setAttribute('role', 'alert');
-
-        var strong = document.createElement('strong');
-        strong.appendChild(document.createTextNode(text));
-
-        var button = document.createElement('button');
-        button.setAttribute('type', 'button');
-        button.classList.add('close');
-        button.setAttribute('data-dismiss', 'alert');
-        button.setAttribute('aria-label', 'Close');
-
-        var span = document.createElement('span');
-        span.setAttribute('aria-hidden', 'true');
-        span.innerHTML = '&times;';
-
-        button.appendChild(span);
-        alert.appendChild(strong);
-        alert.appendChild(button);
-        return alert;
-    }
+    <c:if test="${not empty sessionScope.user and not sessionScope.user.isAdmin()}">
 
     body.on('click', "li[name='section']", function (event) {
         event.preventDefault();
@@ -633,13 +531,11 @@
                     alert.firstElementChild.append(' Go to profile page to look through all your requests.');
 
                     var col = thisButton.parentNode.parentNode.parentNode.parentNode;
-                    var row = col.parentNode;
-                    var removeRequestButton = removeRequestButtonBuilder(row.getAttribute('id'));
-
+                    var removeRequestButton = removeRequestButtonBuilder();
 
                     var dFlex = col.children[1];
-                    dFlex.innerHTML = "";
-                    dFlex.appendChild(removeRequestButton);
+                    dFlex.firstElementChild.innerHTML = "";
+                    dFlex.firstElementChild.appendChild(removeRequestButton);
 
                     col.lastChild.remove();
                     col.appendChild(alert);
@@ -647,38 +543,240 @@
         }
     });
 
-    body.on('click', "button[name='removeRequest']", function (event) {
-        var thisButton = this;
+    // body.on('click', "button[name='removeRequest']", function (event) {
+    //     event.preventDefault();
+    //
+    //     var thisButton = this;
+    //     var row = thisButton.parentElement.parentElement.parentElement.parentElement;
+    //
+    //     const formData = new FormData();
+    //     formData.append('command', 'removeRequest');
+    //     formData.append('conferenceId', row.getAttribute('id'));
+    //
+    //     var url = '/udacidy/';
+    //     var fetchOptions = {
+    //         method: 'POST',
+    //         body: formData,
+    //     };
+    //     var responsePromise = fetch(url, fetchOptions);
+    //     responsePromise
+    //         .then(function (response) {
+    //             return response.json();
+    //         })
+    //         .then(function (jsonObj) {
+    //             var alert;
+    //             if(jsonObj.didSectionsExists) {
+    //                 var sections = jsonObj.conferenceSections;
+    //                 var selectSectionsButton = selectSectionsButtonBuilder(sections[0].conferenceId);
+    //                 var flexItem = thisButton.parentNode;
+    //                 flexItem.innerHTML = "";
+    //                 flexItem.appendChild(selectSectionsButton);
+    //
+    //                 var collapseSections = chooseSectionsCollapseElementBuilder(sections);
+    //
+    //                 var col = row.firstElementChild;
+    //                 col.lastChild.remove();
+    //                 col.appendChild(collapseSections);
+    //                 alert = createAlertWithTextAndType(jsonObj.message, 'alert-success');
+    //                 col.appendChild(alert);
+    //             }else {
+    //                 alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
+    //
+    //                 alert.classList.add('mx-auto');
+    //                 alert.classList.add('col-sm-8');
+    //                 alert.classList.add('shadow-lg');
+    //                 alert.classList.add('rounded-lg');
+    //                 alert.classList.add('mt-3');
+    //                 alert.setAttribute('id', row.getAttribute('id'));
+    //
+    //                 row.parentNode.replaceChild(alert, row);
+    //                 document.getElementById(alert.getAttribute('id')).scrollIntoView();
+    //             }
+    //         });
+    // });
 
-        const formData = new FormData();
-        formData.append('command', 'removeRequest');
-        formData.append('conferenceId', thisButton.getAttribute('id'));
+    body.on('click', "button[name='removeRequest']", function () {
+        var rowElement = this.parentElement.parentElement.parentElement.parentElement;
+        var confirmationButton = document.getElementById('confirmationButton');
+        confirmationButton.setAttribute('name', rowElement.getAttribute('id'));
+    });
 
-        var url = '/udacidy/';
-        var fetchOptions = {
+    var chooseSectionsCollapseElementBuilder = function (conferenceSections) {
+        var collapse = document.createElement('div');
+        collapse.classList.add('collapse');
+        collapse.setAttribute('id', 'collapseSection' + conferenceSections[0].conferenceId);
+        var cardCollapse = document.createElement('div');
+        cardCollapse.classList.add('card');
+
+        var cardBodyCollapse = document.createElement('div');
+        cardBodyCollapse.classList.add('card-body');
+        var ul = document.createElement('ul');
+        ul.classList.add('tox-checklist');
+        for(var i=0; i<conferenceSections.length; i++){
+            var li = document.createElement('li');
+            li.setAttribute('name', 'section');
+            li.setAttribute('id', conferenceSections[i].id);
+            li.appendChild(document.createTextNode(conferenceSections[i].content));
+            ul.appendChild(li);
+        }
+        cardBodyCollapse.appendChild(ul);
+
+        var cardFooter = document.createElement('div');
+        cardFooter.classList.add('card-footer');
+        cardFooter.classList.add('border-white');
+        var submitRequestButton = document.createElement('button');
+        submitRequestButton.classList.add('btn');
+        submitRequestButton.classList.add('btn-primary');
+        submitRequestButton.setAttribute('name', 'submitRequestButton');
+        submitRequestButton.appendChild(document.createTextNode('Submit request'));
+        cardFooter.appendChild(submitRequestButton);
+
+        cardCollapse.appendChild(cardBodyCollapse);
+        cardCollapse.appendChild(cardFooter);
+
+        collapse.appendChild(cardCollapse);
+        return collapse;
+    };
+
+    var removeRequestButtonBuilder = function () {
+        var removeRequestButton = document.createElement('button');
+        removeRequestButton.classList.add('btn');
+        removeRequestButton.classList.add('btn-dark');
+        removeRequestButton.setAttribute('name', 'removeRequest');
+        removeRequestButton.appendChild(document.createTextNode('Remove request'));
+        removeRequestButton.setAttribute('data-toggle', 'modal');
+        removeRequestButton.setAttribute('data-target', '#confirmationModal');
+        return removeRequestButton;
+    };
+
+    var selectSectionsButtonBuilder = function (conferenceId) {
+        var chooseSectionsButton = document.createElement('button');
+        chooseSectionsButton.classList.add('btn');
+        chooseSectionsButton.classList.add('btn-primary');
+        chooseSectionsButton.setAttribute('name', 'chooseSectionsButton');
+        chooseSectionsButton.setAttribute('type', 'button');
+        chooseSectionsButton.setAttribute('data-toggle', 'collapse');
+        chooseSectionsButton.setAttribute('data-target', '#collapseSection' + conferenceId);
+        chooseSectionsButton.setAttribute('aria-expanded', 'false');
+        chooseSectionsButton.setAttribute('aria-controls', 'collapseSection' + conferenceId);
+        chooseSectionsButton.appendChild(document.createTextNode('Choose sections'));
+        return chooseSectionsButton;
+    };
+
+    </c:if>
+
+    body.on('click', '#confirmationButton', function (event) {
+        event.preventDefault();
+
+        var thisButton;
+        var url;
+        var fetchOptions;
+        var responsePromise;
+        var rowElement;
+        var conferenceId;
+        <c:choose>
+            <c:when test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
+        thisButton = this;
+        conferenceId = this.getAttribute('name');
+        rowElement = document.getElementById(conferenceId);
+
+        var formData = new FormData();
+        formData.append('command', 'deleteConference');
+        formData.append('conferenceId', conferenceId);
+
+        url = '/udacidy/';
+        fetchOptions = {
             method: 'POST',
             body: formData,
         };
-        var responsePromise = fetch(url, fetchOptions);
+
+        responsePromise = fetch(url, fetchOptions);
         responsePromise
             .then(function (response) {
-                return response.text();
+                return response.json();
             })
-            .then(function (text) {
-                console.log(text);
-                var alert = createAlertWithTextAndType(text, 'alert-success');
+            .then(function (jsonObj) {
+                console.log(jsonObj);
+                var alert;
+                if(jsonObj.didConferenceExist) {
+                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-info');
+                }else {
+                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
+                }
+                alert.setAttribute('id', conferenceId);
+                alert.classList.add('mx-auto');
+                alert.classList.add('col-sm-8');
+                alert.classList.add('shadow-lg');
+                alert.classList.add('rounded-lg');
+                alert.classList.add('mt-3');
 
-                var col = thisButton.parentNode.parentNode.parentNode;
-                var selectSectionsButton = selectSectionsButtonBuilder(thisButton.getAttribute('id'));
-
-                var dFlex = col.children[1];
-                dFlex.innerHTML = "";
-                dFlex.appendChild(selectSectionsButton);
-                dFlex.appendChild();
-
-                col.lastChild.remove();
-                col.appendChild(alert);
+                rowElement.parentNode.replaceChild(alert, rowElement);
+                deletedConferenceId = conferenceId;
+                thisButton.removeAttribute('name');
+                $('#confirmationModal').modal('hide');
             });
+            </c:when>
+            <c:otherwise>
+        thisButton = this;
+        rowElement = document.getElementById(thisButton.getAttribute('name'));
+
+        formData = new FormData();
+        formData.append('command', 'removeRequest');
+        formData.append('conferenceId', this.getAttribute('name'));
+
+        url = '/udacidy/';
+        fetchOptions = {
+            method: 'POST',
+            body: formData,
+        };
+        responsePromise = fetch(url, fetchOptions);
+        responsePromise
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (jsonObj) {
+                var alert;
+                if(jsonObj.didSectionsExists) {
+
+                    var selectSectionsButton = selectSectionsButtonBuilder(conferenceId);
+                    var flexItem = rowElement.firstElementChild.children[1].firstElementChild;
+                    flexItem.innerHTML = "";
+                    flexItem.appendChild(selectSectionsButton);
+
+                    var sections = jsonObj.conferenceSections;
+                    var collapseSections = chooseSectionsCollapseElementBuilder(sections);
+
+                    var col = rowElement.firstElementChild;
+                    col.lastChild.remove();
+                    col.appendChild(collapseSections);
+                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-success');
+                    col.appendChild(alert);
+                }else {
+                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
+
+                    alert.classList.add('mx-auto');
+                    alert.classList.add('col-sm-8');
+                    alert.classList.add('shadow-lg');
+                    alert.classList.add('rounded-lg');
+                    alert.classList.add('mt-3');
+                    alert.setAttribute('id', row.getAttribute('id'));
+
+                    rowElement.parentNode.replaceChild(alert, row);
+                    document.getElementById(alert.getAttribute('id')).scrollIntoView();
+                }
+                thisButton.removeAttribute('name');
+                $('#confirmationModal').modal('hide');
+            });
+            </c:otherwise>
+        </c:choose>
+
+
+    });
+
+    // only for admins
+    $('#confirmationModal').on('hidden.bs.modal', function (e) {
+        var currentAlert = document.getElementsByName(deletedConferenceId);
+        currentAlert.scrollIntoView();
     });
 
     body.on('click', "button[id='view-more-button']", function (event) {
@@ -717,30 +815,33 @@
         event.preventDefault();
     });
 
-    var removeRequestButtonBuilder = function (conferenceId) {
-        var removeRequestButton = document.createElement('button');
-        removeRequestButton.classList.add('btn');
-        removeRequestButton.classList.add('btn-dark');
-        removeRequestButton.setAttribute('name', 'removeRequest');
-        removeRequestButton.setAttribute('id', conferenceId);
-        removeRequestButton.appendChild(document.createTextNode('Remove request'));
-        return removeRequestButton;
-    };
+    function createAlertWithTextAndType(text, type) {
+        var alert = document.createElement('div');
+        alert.classList.add('alert');
+        alert.classList.add(type);
+        alert.classList.add('alert-dismissible');
+        alert.classList.add('fade');
+        alert.classList.add('show');
+        alert.setAttribute('role', 'alert');
 
-    var selectSectionsButtonBuilder = function (conferenceId) {
-        var chooseSectionsButton = document.createElement('button');
-        chooseSectionsButton.classList.add('btn');
-        chooseSectionsButton.classList.add('btn-primary');
-        chooseSectionsButton.setAttribute('name', 'chooseSectionsButton');
-        chooseSectionsButton.setAttribute('type', 'button');
-        chooseSectionsButton.setAttribute('data-toggle', 'collapse');
-        chooseSectionsButton.setAttribute('data-target', '#collapseSection' + conferenceId);
-        chooseSectionsButton.setAttribute('aria-expanded', 'false');
-        chooseSectionsButton.setAttribute('aria-controls', 'collapseSection' + conferenceId);
-        chooseSectionsButton.appendChild(document.createTextNode('Choose sections'));
-        return chooseSectionsButton;
-    };
+        var strong = document.createElement('strong');
+        strong.appendChild(document.createTextNode(text));
 
+        var button = document.createElement('button');
+        button.setAttribute('type', 'button');
+        button.classList.add('close');
+        button.setAttribute('data-dismiss', 'alert');
+        button.setAttribute('aria-label', 'Close');
+
+        var span = document.createElement('span');
+        span.setAttribute('aria-hidden', 'true');
+        span.innerHTML = '&times;';
+
+        button.appendChild(span);
+        alert.appendChild(strong);
+        alert.appendChild(button);
+        return alert;
+    }
 
 </script>
 

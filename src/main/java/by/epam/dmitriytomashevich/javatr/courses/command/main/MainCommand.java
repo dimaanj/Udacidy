@@ -49,7 +49,6 @@ public class MainCommand implements Command {
                 jsonSection.setConferenceId(s.getConferenceId());
                 jsonSection.setContent(sectionContent.getContent());
                 jsonSections.add(jsonSection);
-
             }
 
             JsonConference conference = new JsonConference();

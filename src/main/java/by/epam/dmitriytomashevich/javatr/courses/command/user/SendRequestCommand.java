@@ -33,12 +33,13 @@ public class SendRequestCommand implements Command {
         request.setCreationDateTime(LocalDateTime.now());
         Long requestId = REQUEST_SERVICE.create(request);
 
-        for(String stringId : jsonSectionsIds){
-            RequestData requestData = new RequestData();
-            requestData.setSectionId(Long.valueOf(stringId));
-            requestData.setRequestId(requestId);
-            REQUEST_FORM_SERVICE.create(requestData);
-        }
+        //todo  сделать проверку, существует ли конференция
+            for (String stringId : jsonSectionsIds) {
+                RequestData requestData = new RequestData();
+                requestData.setSectionId(Long.valueOf(stringId));
+                requestData.setRequestId(requestId);
+                REQUEST_FORM_SERVICE.create(requestData);
+            }
 
         try {
             content.getResponse().setContentType("text/plain");
