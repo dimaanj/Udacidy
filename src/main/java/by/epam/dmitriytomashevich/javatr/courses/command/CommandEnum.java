@@ -9,6 +9,7 @@ import by.epam.dmitriytomashevich.javatr.courses.command.error.PageNotFoundComma
 import by.epam.dmitriytomashevich.javatr.courses.command.user.HelpCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.GreetingCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.MainCommand;
+import by.epam.dmitriytomashevich.javatr.courses.command.user.RemoveRequestCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.user.SendRequestCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.ViewMoreConferencesCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.profile.LoginCommand;
@@ -49,7 +50,7 @@ public enum CommandEnum {
     },
     REMOVE_REQUEST_COMMAND("removeRequest"){
         {
-            command = new RemoveConferenceCommand();
+            command = new RemoveRequestCommand();
         }
     },
     VIEW_MORE("viewMore"){

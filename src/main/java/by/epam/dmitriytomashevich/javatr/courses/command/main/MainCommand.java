@@ -82,7 +82,7 @@ public class MainCommand implements Command {
 
     private boolean isRequestAlreadySentRequest(User user, List<Section> sections) throws LogicException {
         for(Section s : sections){
-            if (REQUEST_SERVICE.findBySectionId(s.getId()) != null){
+            if (REQUEST_SERVICE.findBySectionIdAndUserId(s.getId(), user.getId()) != null){
                 return true;
             }
         }

@@ -20,13 +20,15 @@ public class RequestDao implements AbstractDao<Long, Request> {
             "    (user_id, creation_date_time)\n" +
             "VALUES (?, ?);";
 
-    private static final String FIND_BY_SECTION_ID = "SELECT r.id, r.user_id, r.creation_date_time\n" +
-            "    FROM request r\n" +
-            "        JOIN request_data rd\n" +
-            "            on r.id = rd.request_id\n" +
-            "        JOIN section s\n" +
-            "            on rd.section_id = s.id\n" +
-            "    WHERE s.id = ?";
+    private static final String FIND_BY_SECTION_ID_AND_USER_ID = "SELECT r.id, r.user_id, r.creation_date_time\n" +
+            "    FROM section s\n" +
+            "        JOIN request_data rd on s.id = rd.section_id\n" +
+            "        JOIN request r on rd.request_id = r.id\n" +
+            "        JOIN user u on r.user_id = u.id\n" +
+            "    WHERE s.id = ? and u.id = ?";
+
+    private static final String DELETE = "DELETE FROM udacidy.request\n" +
+            "    WHERE id = ?";
 
     @Override
     public List<Request> findAll() throws DAOException {
@@ -40,7 +42,17 @@ public class RequestDao implements AbstractDao<Long, Request> {
 
     @Override
     public void deleteById(Long id) throws DAOException {
-
+        Connection connection = null;
+        try {
+            connection = pool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE);
+            statement.setLong(1, id);
+            statement.execute();
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            pool.releaseConnection(connection);
+        }
     }
 
     @Override
@@ -86,13 +98,15 @@ public class RequestDao implements AbstractDao<Long, Request> {
 
     }
 
-    public Request findBySectionId(Long sectionId) throws DAOException {
+    public Request findBySectionIdAndUserId(Long sectionId, Long userId) throws DAOException {
         Connection connection = null;
         Request request = null;
         try {
             connection = pool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(FIND_BY_SECTION_ID);
+            PreparedStatement statement = connection.prepareStatement(FIND_BY_SECTION_ID_AND_USER_ID);
             statement.setLong(1, sectionId);
+            statement.setLong(2, userId);
+
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 request = builder.build(resultSet);
@@ -101,7 +115,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
             return request;
         } catch (SQLException e) {
             throw new DAOException(e);
-        } finally {
+        }  finally {
             pool.releaseConnection(connection);
         }
     }

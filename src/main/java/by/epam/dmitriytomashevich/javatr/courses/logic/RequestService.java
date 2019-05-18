@@ -5,5 +5,6 @@ import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
 
 public interface RequestService {
     Long create(Request request) throws LogicException;
-    Request findBySectionId(Long sectionId) throws LogicException;
+    void delete(Long id) throws LogicException;
+    Request findBySectionIdAndUserId(Long sectionId, Long userId) throws LogicException;
 }

@@ -19,9 +19,18 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request findBySectionId(Long sectionId) throws LogicException {
+    public void delete(Long id) throws LogicException {
         try {
-            return REQUEST_DAO.findBySectionId(sectionId);
+            REQUEST_DAO.deleteById(id);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
+
+    @Override
+    public Request findBySectionIdAndUserId(Long sectionId, Long userId) throws LogicException {
+        try {
+            return REQUEST_DAO.findBySectionIdAndUserId(sectionId, userId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }

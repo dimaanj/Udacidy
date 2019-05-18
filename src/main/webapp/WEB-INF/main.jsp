@@ -164,6 +164,12 @@
 <body>
 
 
+<style>
+    #responsive-image {
+        width: 100%;
+        height: auto;
+    }
+</style>
 <tag:navbar/>
 <main role="main" class="container-fluid" id="main-tag">
     <div id="data-container"></div>
@@ -231,6 +237,10 @@
         var bodyData = document.createElement('div');
         bodyData.setAttribute('id', 'bodyData');
         bodyData.innerHTML = conferenceContent;
+        var images = bodyData.getElementsByTagName('img');
+        for(var k=0; k<images.length; k++){
+            images[k].setAttribute('id', 'responsive-image');
+        }
 
         col.appendChild(bodyData);
 
@@ -283,7 +293,7 @@
         flexItem.classList.add('bd-highlight');
 
         if(jsonConference.isRequestAlreadySent){
-            var removeRequestButton = removeRequestButtonBuilder();
+            var removeRequestButton = removeRequestButtonBuilder(conferenceId);
             flexItem.appendChild(removeRequestButton);
         }else {
             var chooseSectionsButton = selectSectionsButtonBuilder(conferenceId);
@@ -664,17 +674,15 @@
             })
             .then(function (text) {
                 console.log(text);
-
                 var alert = createAlertWithTextAndType(text, 'alert-success');
-                alert.firstElementChild.append(' Your request was successfully removed.');
 
                 var col = thisButton.parentNode.parentNode.parentNode;
-
                 var selectSectionsButton = selectSectionsButtonBuilder(thisButton.getAttribute('id'));
 
                 var dFlex = col.children[1];
                 dFlex.innerHTML = "";
                 dFlex.appendChild(selectSectionsButton);
+                dFlex.appendChild();
 
                 col.lastChild.remove();
                 col.appendChild(alert);

@@ -9,7 +9,6 @@ import java.sql.SQLException;
 public class ContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-
         ConnectionPool.getInstance();
     }
 
