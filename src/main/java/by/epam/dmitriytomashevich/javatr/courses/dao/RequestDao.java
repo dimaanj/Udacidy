@@ -9,6 +9,7 @@ import by.epam.dmitriytomashevich.javatr.courses.logic.builder.RequestBuilder;
 
 import java.sql.*;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +30,12 @@ public class RequestDao implements AbstractDao<Long, Request> {
 
     private static final String DELETE = "DELETE FROM udacidy.request\n" +
             "    WHERE id = ?";
+
+    private static final String FIND_BY_SECTION_ID = "SELECT r.id, r.user_id, r.creation_date_time\n" +
+            "FROM section s\n" +
+            "         JOIN request_data rd on s.id = rd.section_id\n" +
+            "         JOIN request r on rd.request_id = r.id\n" +
+            "WHERE s.id = ?";
 
     @Override
     public List<Request> findAll() throws DAOException {
@@ -113,6 +120,29 @@ public class RequestDao implements AbstractDao<Long, Request> {
             }
             resultSet.close();
             return request;
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }  finally {
+            pool.releaseConnection(connection);
+        }
+    }
+
+    public List<Request> findBySectionId(Long sectionId) throws DAOException {
+        Connection connection = null;
+        List<Request> requests = null;
+        try {
+            connection = pool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(FIND_BY_SECTION_ID);
+            statement.setLong(1, sectionId);
+
+            ResultSet resultSet = statement.executeQuery();
+            requests = new ArrayList<>();
+            while (resultSet.next()) {
+                Request request = builder.build(resultSet);
+                requests.add(request);
+            }
+            resultSet.close();
+            return requests;
         } catch (SQLException e) {
             throw new DAOException(e);
         }  finally {

@@ -6,6 +6,8 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
 
+import java.util.List;
+
 public class RequestServiceImpl implements RequestService {
     private static final RequestDao REQUEST_DAO = new RequestDao();
 
@@ -31,6 +33,15 @@ public class RequestServiceImpl implements RequestService {
     public Request findBySectionIdAndUserId(Long sectionId, Long userId) throws LogicException {
         try {
             return REQUEST_DAO.findBySectionIdAndUserId(sectionId, userId);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
+
+    @Override
+    public List<Request> findBySectionId(Long sectionId) throws LogicException {
+        try {
+            return REQUEST_DAO.findBySectionId(sectionId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }

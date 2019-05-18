@@ -3,14 +3,11 @@ package by.epam.dmitriytomashevich.javatr.courses.command.admin;
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Content;
+import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Section;
-import by.epam.dmitriytomashevich.javatr.courses.logic.ConferenceService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.ContentService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.SectionService;
+import by.epam.dmitriytomashevich.javatr.courses.logic.*;
 import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConferenceServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ContentServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.SectionServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.*;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -23,6 +20,8 @@ public class RemoveConferenceCommand implements Command {
     private static final ContentService CONTENT_SERVICE = new ContentServiceImpl();
     private static final ConferenceService CONFERENCE_SERVICE = new ConferenceServiceImpl();
     private static final SectionService SECTION_SERVICE = new SectionServiceImpl();
+    private static final RequestService REQUEST_SERVICE = new RequestServiceImpl();
+    private static final RequestFormService REQUEST_FORM_SERVICE = new RequestFormServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
@@ -34,6 +33,11 @@ public class RemoveConferenceCommand implements Command {
         List<Section> sectionList = SECTION_SERVICE.findSectionsByConferenceId(conferenceId);
         if(!sectionList.isEmpty()) {
             for (Section s : sectionList) {
+                List<Request> requests = REQUEST_SERVICE.findBySectionId(s.getId());
+                for(Request r : requests){
+                    REQUEST_FORM_SERVICE.deleteByRequestId(r.getId());
+                    REQUEST_SERVICE.delete(r.getId());
+                }
                 SECTION_SERVICE.delete(s.getId());
                 CONTENT_SERVICE.delete(s.getContentId());
             }
