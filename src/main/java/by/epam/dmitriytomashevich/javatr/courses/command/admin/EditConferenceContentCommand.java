@@ -8,6 +8,8 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ContentService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ContentServiceImpl;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,14 +23,26 @@ public class EditConferenceContentCommand implements Command {
         Long conferenceId = Long.valueOf(content.getParameter("conferenceId"));
         String htmlConferenceContent = content.getParameter("content");
 
+        String message = null;
+        boolean isConferenceExists;
         Content conferenceContent = CONTENT_SERVICE.findByConferenceId(conferenceId);
-        conferenceContent.setContent(htmlConferenceContent);
-        CONTENT_SERVICE.update(conferenceContent);
-
+        if(conferenceContent != null) {
+            conferenceContent.setContent(htmlConferenceContent);
+            CONTENT_SERVICE.update(conferenceContent);
+            message = "You successfully updated content of this conference!";
+            isConferenceExists = true;
+        }else {
+            message = "Sorry, this conference already deleted! Please try to refresh the page!";
+            isConferenceExists = false;
+        }
         try {
-            content.getResponse().setContentType("text/plain");
+            final JsonNodeFactory factory = JsonNodeFactory.instance;
+            final ObjectNode node = factory.objectNode();
+            node.put("isConferenceExists", isConferenceExists);
+            node.put("message", message);
+
             PrintWriter writer = content.getResponse().getWriter();
-            writer.print("You successfully updated content of this conference!");
+            writer.print(node);
         } catch (IOException e) {
             throw new LogicException(e);
         }

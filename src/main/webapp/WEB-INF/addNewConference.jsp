@@ -232,6 +232,7 @@
 
     var createConference = document.getElementById('addConferenceButton');
     createConference.addEventListener('click', function () {
+        this.setAttribute('disabled', 'true');
 
         var content = tinymce.get("mytextarea").getContent();
         var sections = tinymce.get("mytextarea").$(".tox-checklist--checked");
@@ -269,6 +270,7 @@
                     "</div>");
                 $(window).scrollTop(0);
             });
+        this.removeAttribute('disabled');
         event.preventDefault();
     });
 

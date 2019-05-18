@@ -11,6 +11,8 @@ import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConferenceServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ContentServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.SectionServiceImpl;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,19 +29,32 @@ public class RemoveConferenceCommand implements Command {
         Long conferenceId = Long.valueOf(content.getParameter("conferenceId"));
         Content conferenceContent = CONTENT_SERVICE.findByConferenceId(conferenceId);
 
+        boolean didConferenceExist;
+        String message = null;
         List<Section> sectionList = SECTION_SERVICE.findSectionsByConferenceId(conferenceId);
-        for(Section s : sectionList){
-            SECTION_SERVICE.delete(s.getId());
-            CONTENT_SERVICE.delete(s.getContentId());
+        if(!sectionList.isEmpty()) {
+            for (Section s : sectionList) {
+                SECTION_SERVICE.delete(s.getId());
+                CONTENT_SERVICE.delete(s.getContentId());
+            }
+
+            CONFERENCE_SERVICE.delete(conferenceId);
+            CONTENT_SERVICE.delete(conferenceContent.getId());
+            message = "You successfully deleted this conference with id=" + conferenceId + "!";
+            didConferenceExist = true;
+        }else {
+            message = "You had tried to delete a conference that didn't existed!";
+            didConferenceExist = false;
         }
 
-        CONFERENCE_SERVICE.delete(conferenceId);
-        CONTENT_SERVICE.delete(conferenceContent.getId());
-
         try {
-            content.getResponse().setContentType("text/plain");
+            final JsonNodeFactory factory = JsonNodeFactory.instance;
+            final ObjectNode node = factory.objectNode();
+            node.put("didConferenceExist", didConferenceExist);
+            node.put("message", message);
+
             PrintWriter writer = content.getResponse().getWriter();
-            writer.print("You successfully deleted this conference with id=" + conferenceId + "!");
+            writer.print(node);
         } catch (IOException e) {
             throw new LogicException(e);
         }

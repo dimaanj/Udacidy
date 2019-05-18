@@ -408,43 +408,22 @@
         var responsePromise = fetch(url, fetchOptions);
         responsePromise
             .then(function (response) {
-                return response.text();
+                return response.json();
             })
-            .then(function (text) {
-                console.log(text);
-
-                var alert = document.createElement('div');
-                alert.classList.add('alert');
-                alert.classList.add('alert-info');
-                alert.classList.add('alert-dismissible');
-                alert.classList.add('fade');
-                alert.classList.add('show');
+            .then(function (jsonObj) {
+                console.log(jsonObj);
+                var alert;
+                if(jsonObj.didConferenceExist) {
+                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-info');
+                }else {
+                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
+                }
+                alert.setAttribute('id', conferenceId);
                 alert.classList.add('mx-auto');
                 alert.classList.add('col-sm-8');
                 alert.classList.add('shadow-lg');
                 alert.classList.add('rounded-lg');
-                alert.classList.add('card');
                 alert.classList.add('mt-3');
-                alert.setAttribute('role', 'alert');
-                alert.setAttribute('id', conferenceId);
-
-
-                var strong = document.createElement('strong');
-                strong.appendChild(document.createTextNode(text));
-
-                var button = document.createElement('button');
-                button.setAttribute('type', 'button');
-                button.classList.add('close');
-                button.setAttribute('data-dismiss', 'alert');
-                button.setAttribute('aria-label', 'Close');
-
-                var span = document.createElement('span');
-                span.setAttribute('aria-hidden', 'true');
-                span.innerHTML = '&times;';
-
-                button.appendChild(span);
-                alert.appendChild(strong);
-                alert.appendChild(button);
 
                 rowElement.parentNode.replaceChild(alert, rowElement);
                 deletedConferenceId = conferenceId;
@@ -495,40 +474,53 @@
         var responsePromise = fetch(url, fetchOptions);
         responsePromise
             .then(function (response) {
-                return response.text();
+                return response.json();
             })
-            .then(function (text) {
-                console.log(text);
+            .then(function (jsonObj) {
+                console.log(jsonObj);
+                if(jsonObj.isConferenceExists) {
 
-                var alert = document.createElement('div');
-                alert.classList.add('alert');
-                alert.classList.add('alert-success');
-                alert.classList.add('alert-dismissible');
-                alert.classList.add('fade');
-                alert.classList.add('show');
-                alert.setAttribute('role', 'alert');
+                    var alert = document.createElement('div');
+                    alert.classList.add('alert');
+                    alert.classList.add('alert-success');
+                    alert.classList.add('alert-dismissible');
+                    alert.classList.add('fade');
+                    alert.classList.add('show');
+                    alert.setAttribute('role', 'alert');
 
-                var strong = document.createElement('strong');
-                strong.appendChild(document.createTextNode(text));
+                    var strong = document.createElement('strong');
+                    strong.appendChild(document.createTextNode(jsonObj.message));
 
-                var button = document.createElement('button');
-                button.setAttribute('type', 'button');
-                button.classList.add('close');
-                button.setAttribute('data-dismiss', 'alert');
-                button.setAttribute('aria-label', 'Close');
+                    var button = document.createElement('button');
+                    button.setAttribute('type', 'button');
+                    button.classList.add('close');
+                    button.setAttribute('data-dismiss', 'alert');
+                    button.setAttribute('aria-label', 'Close');
 
-                var span = document.createElement('span');
-                span.setAttribute('aria-hidden', 'true');
-                span.innerHTML = '&times;';
+                    var span = document.createElement('span');
+                    span.setAttribute('aria-hidden', 'true');
+                    span.innerHTML = '&times;';
 
-                button.appendChild(span);
-                alert.appendChild(strong);
-                alert.appendChild(button);
+                    button.appendChild(span);
+                    alert.appendChild(strong);
+                    alert.appendChild(button);
 
-                var col = dFreeBody.parentElement;
-                col.appendChild(alert);
+                    var col = dFreeBody.parentElement;
+                    col.appendChild(alert);
+                    saveChangesButton.parentElement.remove();
+                }else{
+                    var row = saveChangesButton.parentElement.parentElement.parentElement.parentElement;
+                    var dangerAlert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
 
-                saveChangesButton.parentElement.remove();
+                    dangerAlert.classList.add('mx-auto');
+                    dangerAlert.classList.add('col-sm-8');
+                    dangerAlert.classList.add('shadow-lg');
+                    dangerAlert.classList.add('rounded-lg');
+                    dangerAlert.classList.add('mt-3');
+
+                    row.parentNode.replaceChild(dangerAlert, row);
+                    dangerAlert.scrollIntoView();
+                }
                 tinymce.remove();
             });
         event.preventDefault();
@@ -714,7 +706,8 @@
                 var hideViewMoreButton = jsonObj.hideViewMoreButton;
 
                 for (var i = 0; i < conferences.length; i++) {
-                    createConference(conferences[i]);
+                    var row = createConference(conferences[i]);
+                    document.getElementById('data-container').append(row);
                 }
 
                 if (hideViewMoreButton === true) {
