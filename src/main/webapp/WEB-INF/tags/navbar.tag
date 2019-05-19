@@ -12,11 +12,15 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light shadow">
     <c:choose>
         <c:when test="${not empty sessionScope.user}">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/udacidy/main">Udacidy</a>
+            <h6 class="mt-1">
+                <a class="navbar-brand" href="${pageContext.request.contextPath}/udacidy/main">Udacidy</a>
+            </h6>
         </c:when>
-        <c:when test="${empty sessionScope.user}">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}">Udacidy</a>
-        </c:when>
+        <c:otherwise>
+            <h6 class="mt-1">
+                <a class="navbar-brand" href="${pageContext.request.contextPath}">Udacidy</a>
+            </h6>
+        </c:otherwise>
     </c:choose>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
             aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,35 +30,47 @@
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <c:choose>
                 <c:when test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
-                    <li class="nav-item">
+                    <h6 class="mt-1">
                         <a class="p-2 text-dark" href="${pageContext.request.contextPath}/udacidy/addconference">
                             Add conference
                         </a>
-                    </li>
+                    </h6>
                 </c:when>
                 <c:when test="${not empty sessionScope.user and not sessionScope.user.isAdmin()}">
-                    <li class="nav-item">
+                    <h6 class="mt-1">
                         <a class="p-2 text-dark" href="${pageContext.request.contextPath}/udacidy/help">
                             Help
                         </a>
-                    </li>
+                    </h6>
                 </c:when>
             </c:choose>
         </ul>
         <c:choose>
             <c:when test="${not empty sessionScope.user}">
-                <a class="p-2 text-dark mr-3" href="${pageContext.request.contextPath}/udacidy/admin">
-                        ${sessionScope.user.getFirstName()}
-                    <c:if test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
-                        (Admin)
-                    </c:if>
-                </a>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#logoutModal">Logout</button>
+                <c:choose>
+                    <c:when test="${not empty sessionScope.user and not sessionScope.user.isAdmin()}">
+                        <h6 class="mt-1">
+                            <a class="p-2 text-dark mr-3"
+                               href="${pageContext.request.contextPath}/udacidy/profile"><c:out
+                                    value="${sessionScope.user.getFirstName()}"/></a>
+                        </h6>
+                    </c:when>
+                    <c:when test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
+                        <h6 class="mt-1">
+                            <a class="p-2 text-dark mr-3" href="${pageContext.request.contextPath}/udacidy/admin">
+                                <c:out value="${sessionScope.user.getFirstName()}"/> (Admin)
+                            </a>
+                        </h6>
+                    </c:when>
+                </c:choose>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#logoutModal">Logout
+                </button>
             </c:when>
-            <c:when test="${empty sessionScope.user}">
-                <a class="btn btn-outline-secondary mr-2" href="${pageContext.request.contextPath}/udacidy/registration">Sign up</a>
+            <c:otherwise>
+                <a class="btn btn-outline-secondary mr-2"
+                   href="${pageContext.request.contextPath}/udacidy/registration">Sign up</a>
                 <a class="btn btn-outline-primary" href="${pageContext.request.contextPath}/udacidy/login">Sign in</a>
-            </c:when>
+            </c:otherwise>
         </c:choose>
     </div>
 </nav>

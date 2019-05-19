@@ -28,15 +28,17 @@ public class LoginCommand implements Command {
             if (user != null) {
                 HttpSession session = content.getSession();
                 session.setAttribute(Parameter.USER, user);
-                if (user.isAlreadyLoggedIn()) {
-                    session.removeAttribute(Parameter.USER);
-                    content.setRequestAttribute("errorLoginPassMessage", "User has already logged in!");
-                    content.setActionType(SessionRequestContent.ActionType.FORWARD);
-                    page = JSP.LOGIN;
-                } else {
-                    session.setAttribute(Parameter.USER, user);
-                    page = JSP.GREETING_ACTION;
-                }
+
+//                if (LogInUserListener.isAlreadyLoggedIn()) {
+////                if (user.isAlreadyLoggedIn()) {
+//                    session.removeAttribute(Parameter.USER);
+//                    content.setRequestAttribute("errorLoginPassMessage", "User has already logged in!");
+//                    content.setActionType(SessionRequestContent.ActionType.FORWARD);
+//                    page = JSP.LOGIN;
+//                } else {
+                   // session.setAttribute(Parameter.USER, user);
+                    page = JSP.MAIN_ACTION;
+                //}
             } else {
                 content.setRequestAttribute("errorLoginPassMessage", "Invalid credentials!");
                 content.setActionType(SessionRequestContent.ActionType.FORWARD);

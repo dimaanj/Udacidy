@@ -13,23 +13,39 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<body>
+<style>
+    .cover {
+        padding: 0 1.5rem;
+    }
 
-<div class="container">
-    <div class="row">
-        <div class="span12">
-            <div class="hero-unit center">
-                <h1>Page Not Found
-                    <small><font face="Tahoma" color="red">Error 404, ${wrongAction}</font></small>
-                </h1>
-                <br/>
-                <p>The page you requested could not be found, either contact your webmaster or try again. Use your
-                    browsers <b>Back</b> button to navigate to the page you have prevously come from</p>
-                <p><b>Or you could just press this neat little button:</b></p>
-                <a href="${pageContext.request.contextPath}/udacidy/" class="btn btn-large btn-info"><i class="icon-home icon-white"></i> Take Me Home</a>
-            </div>
-        </div>
-    </div>
+    .cover .btn-lg {
+        padding: .75rem 1.25rem;
+        font-weight: 700;
+    }
+
+    .cover-container {
+        max-width: 42em;
+    }
+</style>
+<body class="text-center">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <main role="main" class="inner cover">
+        <h1 class="cover-heading">Sorry.</h1>
+        <p class="lead">The page you requested could not be found, either contact your webmaster or try again. Use your
+            browsers Back button to navigate to the page you have previously come from
+            Or you could just press this neat little button.
+        </p>
+        <p class="lead">
+            <c:choose>
+                <c:when test="${not empty sessionScope.user}">
+                    <a href="${pageContext.request.contextPath}/udacidy/main" class="btn btn-lg btn-primary">Go main page</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="${pageContext.request.contextPath}/udacidy/" class="btn btn-lg btn-primary">Go back</a>
+                </c:otherwise>
+            </c:choose>
+        </p>
+    </main>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
@@ -38,6 +54,5 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-
 </body>
 </html>

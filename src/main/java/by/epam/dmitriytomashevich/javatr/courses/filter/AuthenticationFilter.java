@@ -28,12 +28,6 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        if (isStaticPicture(request.getRequestURI(), request)) {
-            RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher(request.getRequestURI());
-            dispatcher.forward(request, response);
-            return;
-        }
-
         String command = null;
         if (request.getMethod().equals(Parameter.METHOD_GET)) {
             try {
@@ -41,7 +35,6 @@ public class AuthenticationFilter implements Filter {
             } catch (IllegalArgumentException e) {
                 RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher(JSP.PAGE_NOT_FOUND_ACTION);
                 dispatcher.forward(request, response);
-                //response.sendRedirect(request.getContextPath() + JSP.PAGE_NOT_FOUND_ACTION);
                 return;
             }
         } else if ((command = request.getParameter(Parameter.COMMAND)) == null) {
@@ -62,9 +55,5 @@ public class AuthenticationFilter implements Filter {
     @Override
     public void destroy() {
 
-    }
-
-    private boolean isStaticPicture(String uri, HttpServletRequest request) {
-        return uri.startsWith(Parameter.STATIC_IMAGES_PATH) || uri.startsWith("/images/tmp");
     }
 }

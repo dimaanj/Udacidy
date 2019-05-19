@@ -1,17 +1,9 @@
 package by.epam.dmitriytomashevich.javatr.courses.domain;
 
-import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-// TODO: 4/18/2019 Listener should be separated from User entity!
-@WebListener
-public class User implements HttpSessionBindingListener {
+public class User {
     private Long id;
     private String firstName;
     private String lastName;
@@ -20,9 +12,6 @@ public class User implements HttpSessionBindingListener {
 
     private UserRole role;
     private Set<Message> messages;
-
-    private static Map<User, HttpSession> logins = new HashMap<>();
-    private boolean alreadyLoggedIn;
 
     @Override
     public String toString() {
@@ -35,21 +24,6 @@ public class User implements HttpSessionBindingListener {
                 ",\n role=" + role +
                 ",\n messages=" + messages +
                 "\n }";
-    }
-
-    @Override
-    public void valueBound(HttpSessionBindingEvent event) {
-        HttpSession oldSession = logins.get(this);
-        if (oldSession != null) {
-            alreadyLoggedIn = true;
-        } else {
-            logins.put(this, event.getSession());
-        }
-    }
-
-    @Override
-    public void valueUnbound(HttpSessionBindingEvent httpSessionBindingEvent) {
-        logins.remove(this);
     }
 
     @Override
@@ -133,9 +107,5 @@ public class User implements HttpSessionBindingListener {
 
     public boolean isAdmin(){
         return role.equals(UserRole.ADMIN);
-    }
-
-    public boolean isAlreadyLoggedIn() {
-        return alreadyLoggedIn;
     }
 }

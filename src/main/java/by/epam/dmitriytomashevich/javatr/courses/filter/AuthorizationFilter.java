@@ -1,7 +1,6 @@
 package by.epam.dmitriytomashevich.javatr.courses.filter;
 
 
-import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.CommandEnum;
 import by.epam.dmitriytomashevich.javatr.courses.constant.JSP;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
@@ -22,7 +21,7 @@ public class AuthorizationFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        userCommands.add(CommandEnum.GREETING.getName());
+        userCommands.add(CommandEnum.USER_PAGE.getName());
         userCommands.add(CommandEnum.HELP.getName());
         userCommands.add(CommandEnum.LOG_OUT.getName());
         userCommands.add(CommandEnum.PAGE_NOT_FOUND.getName());
@@ -38,7 +37,6 @@ public class AuthorizationFilter implements Filter {
         userCommands.add(CommandEnum.REMOVE_REQUEST_COMMAND.getName());
 
 
-        adminCommands.add(CommandEnum.GREETING.getName());
         adminCommands.add(CommandEnum.LOG_OUT.getName());
         adminCommands.add(CommandEnum.PAGE_NOT_FOUND.getName());
         adminCommands.add(CommandEnum.MAIN.getName());
@@ -65,12 +63,6 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        if(isStaticPicture(request.getRequestURI(), request)){
-            RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher(request.getRequestURI());
-            dispatcher.forward(request, response);
-            return;
-        }
-
         HttpSession currentSession = request.getSession(false);
         if (currentSession != null && currentSession.getAttribute(Parameter.USER) != null) {
             User user = (User) request.getSession().getAttribute(Parameter.USER);
@@ -87,8 +79,6 @@ public class AuthorizationFilter implements Filter {
             } else if ((command = request.getParameter(Parameter.COMMAND)) == null) {
                 RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher(JSP.PAGE_NOT_FOUND_ACTION);
                 dispatcher.forward(request, response);
-                //response.sendRedirect(request.getContextPath() + JSP.PAGE_NOT_FOUND_ACTION);
-                //response.sendRedirect(request.getContextPath() + JSP.GREETING_ACTION);
                 return;
             }
 
@@ -105,9 +95,5 @@ public class AuthorizationFilter implements Filter {
     @Override
     public void destroy() {
 
-    }
-
-    private boolean isStaticPicture(String uri, HttpServletRequest request){
-        return uri.startsWith(Parameter.STATIC_IMAGES_PATH) || uri.startsWith("/images/tmp");
     }
 }

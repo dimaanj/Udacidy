@@ -13,6 +13,7 @@ public class JSP {
     public static final String ADMIN = "/WEB-INF/admin-page.jsp";
     public static final String MAIN = "/WEB-INF/main.jsp";
     public static final String ADD_NEW_COURSE = "/WEB-INF/addNewConference.jsp";
+    public static final String PROFILE = "/WEB-INF/user-page.jsp";
 
     /**
      * Request URI

@@ -80,7 +80,7 @@
             <div class="card shadow-lg rounded-lg">
                 <textarea id="mytextarea" name="mytextarea">
                     <h1 style="text-align: center;">9<sup>th</sup>&nbsp;International Colloids Conference</h1>
-                    <p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://premc.org/wp-content/uploads/2019/05/ICMF_2019_Banner.jpg" width="643" height="127" /></p>
+                    <p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://rci.bsu.by/images/news/150.jpg" alt="" width="631" height="304" /></p>
                     <p>16-19 June 2019 | Melia Hotel, Sitges, Barcelona, Spain</p>
                     <p>Colloid and Interface Science is the foundation for today&rsquo;s advanced material science and engineering, nano-science, soft matter science and catalysis. As such, Colloid and Interface Sciences underpin new advances in energy efficiency, generation and storage, nano-medicine and drug delivery, sensing and diagnostics, amongst other applications.</p>
                     <p>This meeting aims to attract international researchers to communicate and share the latest developments in these dynamic and ever-expanding fields.</p>

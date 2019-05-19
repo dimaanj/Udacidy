@@ -90,7 +90,7 @@
 <script>
     window.onload = function () {
         loadMessages();
-        setInterval(updateMessages, 300);
+        //setInterval(updateMessages, 300);
     };
 
     function waitFirstResponse () {

@@ -33,7 +33,6 @@ public class Message {
                 Objects.equals(conversationId, message.conversationId) &&
                 Objects.equals(creator, message.creator) &&
                 Objects.equals(imageUrl, message.imageUrl);
-
     }
 
     @Override

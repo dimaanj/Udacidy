@@ -11,14 +11,25 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-
 </head>
 <body>
 
 <tag:navbar/>
 <main role="main" class="container-fluid">
-
+    <div class="row mt-4 justify-content-md-center">
+        <div class="col-sm-7 shadow-lg rounded-lg">
+<%--            <div class="card w-100" style="width: 18rem;">--%>
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                        card's content.</p>
+                    <a href="#" class="card-link">Card link</a>
+                    <a href="#" class="card-link">Another link</a>
+                </div>
+<%--            </div>--%>
+        </div>
+    </div>
 </main>
 <tag:footer/>
 

@@ -6,6 +6,7 @@ import by.epam.dmitriytomashevich.javatr.courses.command.conversation.SendMessag
 import by.epam.dmitriytomashevich.javatr.courses.command.conversation.UpdateMessagesCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.conversation.ViewMoreCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.error.PageNotFoundCommand;
+import by.epam.dmitriytomashevich.javatr.courses.command.profile.ProfileCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.user.HelpCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.GreetingCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.MainCommand;
@@ -79,8 +80,11 @@ public enum CommandEnum {
             this.command = new ViewMoreConferencesCommand();
         }
     },
-
-
+    USER_PAGE("/udacidy/profile"){
+        {
+            command = new ProfileCommand();
+        }
+    },
 
     ADMIN_PAGE("/udacidy/admin"){
         {

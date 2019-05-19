@@ -7,6 +7,7 @@ public class Parameter {
     public static final String COMMAND = "command";
 
     public static final String STATIC_IMAGES_PATH ="/images";
+    public static final String TMP_IMAGES_PATH = "/images/tmp";
 
     public static final String METHOD_GET = "GET";
     public static final String METHOD_POST = "POST";

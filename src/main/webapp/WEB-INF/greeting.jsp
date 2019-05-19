@@ -14,20 +14,33 @@
 
 <body class="text-center">
 
+<style>
+    .cover {
+        padding: 0 1.5rem;
+    }
 
+    .cover .btn-lg {
+        padding: .75rem 1.25rem;
+        font-weight: 700;
+    }
+
+    .cover-container {
+        max-width: 42em;
+    }
+</style>
 <tag:navbar/>
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <main role="main" class="inner cover">
-        <h1 class="cover-heading">Cover your page.</h1>
-        <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the
-            text, and add your own fullscreen background photo to make it your own.</p>
+        <h1 class="cover-heading">Hello guest.</h1>
+        <p class="lead">We are very grateful to you for using our product. Here you can find any upcoming conferences
+            that you like.</p>
         <p class="lead">
-            <a href="#" class="btn btn-lg btn-primary">Learn more</a>
+            <a href="${pageContext.request.contextPath}/udacidy/login" class="btn btn-lg btn-primary">Sign
+                in</a>
+            <a href="${pageContext.request.contextPath}/udacidy/registration" class="btn btn-link">Sign up</a>
         </p>
     </main>
 </div>
-
-
 <tag:footer/>
 
 
