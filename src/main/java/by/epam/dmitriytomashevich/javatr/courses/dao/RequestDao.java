@@ -2,7 +2,6 @@ package by.epam.dmitriytomashevich.javatr.courses.dao;
 
 import by.epam.dmitriytomashevich.javatr.courses.dao.exception.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
-import by.epam.dmitriytomashevich.javatr.courses.domain.ConversationGroup;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
 import by.epam.dmitriytomashevich.javatr.courses.logic.builder.EntityBuilder;
 import by.epam.dmitriytomashevich.javatr.courses.logic.builder.RequestBuilder;
@@ -28,14 +27,17 @@ public class RequestDao implements AbstractDao<Long, Request> {
             "        JOIN user u on r.user_id = u.id\n" +
             "    WHERE s.id = ? and u.id = ?";
 
-    private static final String DELETE = "DELETE FROM udacidy.request\n" +
-            "    WHERE id = ?";
-
     private static final String FIND_BY_SECTION_ID = "SELECT r.id, r.user_id, r.creation_date_time\n" +
             "FROM section s\n" +
             "         JOIN request_data rd on s.id = rd.section_id\n" +
             "         JOIN request r on rd.request_id = r.id\n" +
             "WHERE s.id = ?";
+
+    private static final String DELETE = "DELETE FROM udacidy.request\n" +
+            "    WHERE id = ?";
+
+    private static final String DELETE_REQUEST_FORM_BY_REQUEST_ID = "DELETE FROM request_data \n" +
+            "    WHERE request_id = ?";
 
     @Override
     public List<Request> findAll() throws DAOException {
@@ -49,17 +51,6 @@ public class RequestDao implements AbstractDao<Long, Request> {
 
     @Override
     public void deleteById(Long id) throws DAOException {
-        Connection connection = null;
-        try {
-            connection = pool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(DELETE);
-            statement.setLong(1, id);
-            statement.execute();
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } finally {
-            pool.releaseConnection(connection);
-        }
     }
 
     @Override
@@ -146,6 +137,27 @@ public class RequestDao implements AbstractDao<Long, Request> {
         } catch (SQLException e) {
             throw new DAOException(e);
         }  finally {
+            pool.releaseConnection(connection);
+        }
+    }
+
+    public void deleteRequestWithRequestData(Long requestId) throws DAOException {
+        Connection connection = null;
+        try {
+            connection = pool.getConnection();
+            connection.setAutoCommit(false);
+            PreparedStatement statement = connection.prepareStatement(DELETE_REQUEST_FORM_BY_REQUEST_ID);
+            statement.setLong(1, requestId);
+            statement.execute();
+
+            statement = connection.prepareStatement(DELETE);
+            statement.setLong(1, requestId);
+            statement.execute();
+
+            connection.commit();
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
             pool.releaseConnection(connection);
         }
     }

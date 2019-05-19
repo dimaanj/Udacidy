@@ -37,4 +37,22 @@ public class SectionServiceImpl implements SectionService {
             throw new LogicException(e);
         }
     }
+
+    @Override
+    public Section findById(Long sectionId) throws LogicException {
+        try {
+            return SECTION_DAO.findById(sectionId);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
+
+    @Override
+    public void deleteSectionWithTheirContent(Long sectionId, Long contentId) throws LogicException {
+        try {
+            SECTION_DAO.deleteSectionWithTheirContent(sectionId, contentId);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
 }

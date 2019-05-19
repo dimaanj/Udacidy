@@ -21,7 +21,7 @@ public class RemoveConferenceCommand implements Command {
     private static final ConferenceService CONFERENCE_SERVICE = new ConferenceServiceImpl();
     private static final SectionService SECTION_SERVICE = new SectionServiceImpl();
     private static final RequestService REQUEST_SERVICE = new RequestServiceImpl();
-    private static final RequestFormService REQUEST_FORM_SERVICE = new RequestFormServiceImpl();
+    private static final RequestDataService REQUEST_FORM_SERVICE = new RequestDataServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
@@ -35,15 +35,11 @@ public class RemoveConferenceCommand implements Command {
             for (Section s : sectionList) {
                 List<Request> requests = REQUEST_SERVICE.findBySectionId(s.getId());
                 for(Request r : requests){
-                    REQUEST_FORM_SERVICE.deleteByRequestId(r.getId());
-                    REQUEST_SERVICE.delete(r.getId());
+                    REQUEST_SERVICE.deleteRequestWithRequestData(r.getId());
                 }
-                SECTION_SERVICE.delete(s.getId());
-                CONTENT_SERVICE.delete(s.getContentId());
+                SECTION_SERVICE.deleteSectionWithTheirContent(s.getId(), s.getContentId());
             }
-
-            CONFERENCE_SERVICE.delete(conferenceId);
-            CONTENT_SERVICE.delete(conferenceContent.getId());
+            CONFERENCE_SERVICE.deleteConferenceWithTheirContent(conferenceId, conferenceContent.getId());
             message = "You successfully deleted this conference with id=" + conferenceId + "!";
             didConferenceExist = true;
         }else {

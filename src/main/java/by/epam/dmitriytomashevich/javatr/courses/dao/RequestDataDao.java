@@ -3,20 +3,19 @@ package by.epam.dmitriytomashevich.javatr.courses.dao;
 import by.epam.dmitriytomashevich.javatr.courses.dao.exception.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
 import by.epam.dmitriytomashevich.javatr.courses.domain.RequestData;
+import by.epam.dmitriytomashevich.javatr.courses.logic.builder.EntityBuilder;
+import by.epam.dmitriytomashevich.javatr.courses.logic.builder.RequestDataBuilder;
 
 import java.sql.*;
 import java.util.List;
 
-public class RequestFormDao implements AbstractDao<Long, RequestData> {
+public class RequestDataDao implements AbstractDao<Long, RequestData> {
     private ConnectionPool pool = ConnectionPool.getInstance();
+    private EntityBuilder<RequestData> builder = new RequestDataBuilder();
 
     private static final String INSERT = "INSERT INTO udacidy.request_data\n" +
             "    (section_id, request_id)\n" +
             "VALUES (?, ?);";
-
-    private static final String DELETE_BY_REQUEST_ID = "DELETE FROM request_data\n" +
-            "    WHERE request_id = ?";
-
 
     @Override
     public List<RequestData> findAll() throws DAOException {
@@ -30,7 +29,6 @@ public class RequestFormDao implements AbstractDao<Long, RequestData> {
 
     @Override
     public void deleteById(Long id) throws DAOException {
-
     }
 
     @Override
@@ -70,19 +68,5 @@ public class RequestFormDao implements AbstractDao<Long, RequestData> {
     @Override
     public void update(RequestData entity) throws DAOException {
 
-    }
-
-    public void deleteByRequestId(Long requestId) throws DAOException {
-        Connection connection = null;
-        try {
-            connection = pool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(DELETE_BY_REQUEST_ID);
-            statement.setLong(1, requestId);
-            statement.execute();
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } finally {
-            pool.releaseConnection(connection);
-        }
     }
 }

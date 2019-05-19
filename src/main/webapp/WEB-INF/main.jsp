@@ -468,6 +468,7 @@
         console.log('1');
 
         var thisButton = this;
+        thisButton.setAttribute('disabled', 'true');
 
         var sectionsUl = this.parentElement.parentElement.firstElementChild;
         var sections = sectionsUl.firstElementChild.children;
@@ -522,78 +523,42 @@
             var responsePromise = fetch(url, fetchOptions);
             responsePromise
                 .then(function (response) {
-                    return response.text();
+                    return response.json();
                 })
-                .then(function (text) {
-                    console.log(text);
+                .then(function (jsonObj) {
+                    console.log(jsonObj);
+                    var alert;
+                    if (jsonObj.isSectionExists) {
 
-                    var alert = createAlertWithTextAndType(text, 'alert-success');
-                    alert.firstElementChild.append(' Go to profile page to look through all your requests.');
+                        alert = createAlertWithTextAndType(jsonObj.message, 'alert-success');
+                        alert.firstElementChild.append(' Go to profile page to look through all your requests.');
 
-                    var col = thisButton.parentNode.parentNode.parentNode.parentNode;
-                    var removeRequestButton = removeRequestButtonBuilder();
+                        var col = thisButton.parentNode.parentNode.parentNode.parentNode;
+                        var removeRequestButton = removeRequestButtonBuilder();
 
-                    var dFlex = col.children[1];
-                    dFlex.firstElementChild.innerHTML = "";
-                    dFlex.firstElementChild.appendChild(removeRequestButton);
+                        var dFlex = col.children[1];
+                        dFlex.firstElementChild.innerHTML = "";
+                        dFlex.firstElementChild.appendChild(removeRequestButton);
 
-                    col.lastChild.remove();
-                    col.appendChild(alert);
+                        col.lastChild.remove();
+                        col.appendChild(alert);
+                    } else {
+                        var row = thisButton.parentNode.parentNode.parentNode.parentNode;
+
+                        alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
+                        alert.classList.add('mx-auto');
+                        alert.classList.add('col-sm-8');
+                        alert.classList.add('shadow-lg');
+                        alert.classList.add('rounded-lg');
+                        alert.classList.add('mt-3');
+                        alert.setAttribute('id', row.getAttribute('id'));
+
+                        row.parentNode.replaceChild(alert, row);
+                        document.getElementById(alert.getAttribute('id')).scrollIntoView();
+                    }
                 });
         }
     });
-
-    // body.on('click', "button[name='removeRequest']", function (event) {
-    //     event.preventDefault();
-    //
-    //     var thisButton = this;
-    //     var row = thisButton.parentElement.parentElement.parentElement.parentElement;
-    //
-    //     const formData = new FormData();
-    //     formData.append('command', 'removeRequest');
-    //     formData.append('conferenceId', row.getAttribute('id'));
-    //
-    //     var url = '/udacidy/';
-    //     var fetchOptions = {
-    //         method: 'POST',
-    //         body: formData,
-    //     };
-    //     var responsePromise = fetch(url, fetchOptions);
-    //     responsePromise
-    //         .then(function (response) {
-    //             return response.json();
-    //         })
-    //         .then(function (jsonObj) {
-    //             var alert;
-    //             if(jsonObj.didSectionsExists) {
-    //                 var sections = jsonObj.conferenceSections;
-    //                 var selectSectionsButton = selectSectionsButtonBuilder(sections[0].conferenceId);
-    //                 var flexItem = thisButton.parentNode;
-    //                 flexItem.innerHTML = "";
-    //                 flexItem.appendChild(selectSectionsButton);
-    //
-    //                 var collapseSections = chooseSectionsCollapseElementBuilder(sections);
-    //
-    //                 var col = row.firstElementChild;
-    //                 col.lastChild.remove();
-    //                 col.appendChild(collapseSections);
-    //                 alert = createAlertWithTextAndType(jsonObj.message, 'alert-success');
-    //                 col.appendChild(alert);
-    //             }else {
-    //                 alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
-    //
-    //                 alert.classList.add('mx-auto');
-    //                 alert.classList.add('col-sm-8');
-    //                 alert.classList.add('shadow-lg');
-    //                 alert.classList.add('rounded-lg');
-    //                 alert.classList.add('mt-3');
-    //                 alert.setAttribute('id', row.getAttribute('id'));
-    //
-    //                 row.parentNode.replaceChild(alert, row);
-    //                 document.getElementById(alert.getAttribute('id')).scrollIntoView();
-    //             }
-    //         });
-    // });
 
     body.on('click', "button[name='removeRequest']", function () {
         var rowElement = this.parentElement.parentElement.parentElement.parentElement;
@@ -719,10 +684,11 @@
             <c:otherwise>
         thisButton = this;
         rowElement = document.getElementById(thisButton.getAttribute('name'));
+        conferenceId = rowElement.getAttribute('id');
 
         formData = new FormData();
         formData.append('command', 'removeRequest');
-        formData.append('conferenceId', this.getAttribute('name'));
+        formData.append('conferenceId', conferenceId);
 
         url = '/udacidy/';
         fetchOptions = {
@@ -750,6 +716,7 @@
                     col.lastChild.remove();
                     col.appendChild(collapseSections);
                     alert = createAlertWithTextAndType(jsonObj.message, 'alert-success');
+                    alert.classList.add('mt-3');
                     col.appendChild(alert);
                 }else {
                     alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
@@ -759,9 +726,9 @@
                     alert.classList.add('shadow-lg');
                     alert.classList.add('rounded-lg');
                     alert.classList.add('mt-3');
-                    alert.setAttribute('id', row.getAttribute('id'));
+                    alert.setAttribute('id', rowElement.getAttribute('id'));
 
-                    rowElement.parentNode.replaceChild(alert, row);
+                    rowElement.parentNode.replaceChild(alert, rowElement);
                     document.getElementById(alert.getAttribute('id')).scrollIntoView();
                 }
                 thisButton.removeAttribute('name');
@@ -769,8 +736,6 @@
             });
             </c:otherwise>
         </c:choose>
-
-
     });
 
     // only for admins

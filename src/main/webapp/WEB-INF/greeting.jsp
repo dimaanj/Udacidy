@@ -11,120 +11,22 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<body>
+
+<body class="text-center">
+
 
 <tag:navbar/>
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <main role="main" class="inner cover">
+        <h1 class="cover-heading">Cover your page.</h1>
+        <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the
+            text, and add your own fullscreen background photo to make it your own.</p>
+        <p class="lead">
+            <a href="#" class="btn btn-lg btn-primary">Learn more</a>
+        </p>
+    </main>
+</div>
 
-<main class="ml-5 mr-5">
-        <div class="row">
-
-
-            <div class="col-md-7 mb-4">
-                <div class="view overlay z-depth-1-half">
-                    <img src="https://mdbootstrap.com/img/Photos/Slides/img%20(70).jpg" class="card-img-top" alt="">
-                    <div class="mask rgba-white-light"></div>
-                </div>
-            </div>
-
-
-
-            <div class="col-md-5 mb-4">
-                <h2>Some awesome heading</h2>
-                <hr>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis pariatur quod ipsum atque quam
-                    dolorem
-                    voluptate officia sunt placeat consectetur alias fugit cum praesentium ratione sint mollitia, perferendis
-                    natus quaerat!</p>
-                <a href="https://mdbootstrap.com/" class="btn btn-indigo">Get it now!</a>
-            </div>
-        </div>
-
-
-
-        <div class="row">
-
-
-            <div class="col-lg-4 col-md-12 mb-4">
-
-
-                <div class="card">
-
-                    <div class="view overlay">
-                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(72).jpg" class="card-img-top"
-                             alt="">
-                        <a href="#">
-                            <div class="mask rgba-white-slight"></div>
-                        </a>
-                    </div>
-
-
-                    <div class="card-body">
-                        <h4 class="card-title">Card title</h4>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                            card's content.</p>
-                        <a href="#!" class="btn btn-indigo">Button</a>
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-            <div class="col-lg-4 col-md-6 mb-4">
-
-                <div class="card">
-
-                    <div class="view overlay">
-                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(74).jpg" class="card-img-top"
-                             alt="">
-                        <a href="#">
-                            <div class="mask rgba-white-slight"></div>
-                        </a>
-                    </div>
-
-                    <!--Card content-->
-                    <div class="card-body">
-                        <!--Title-->
-                        <h4 class="card-title">Card title</h4>
-                        <!--Text-->
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                            card's content.</p>
-                        <a href="#" class="btn btn-indigo">Button</a>
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-            <div class="col-lg-4 col-md-6 mb-4">
-
-                <div class="card">
-
-                    <div class="view overlay">
-                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(75).jpg" class="card-img-top"
-                             alt="">
-                        <a href="#">
-                            <div class="mask rgba-white-slight"></div>
-                        </a>
-                    </div>
-
-                    <div class="card-body">
-                        <!--Title-->
-                        <h4 class="card-title">Card title</h4>
-                        <!--Text-->
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                            card's content.</p>
-                        <a href="#" class="btn btn-indigo">Button</a>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-</main>
 
 <tag:footer/>
 

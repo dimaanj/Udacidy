@@ -64,4 +64,13 @@ public class ConferenceServiceImpl implements ConferenceService {
             throw new LogicException(e);
         }
     }
+
+    @Override
+    public void deleteConferenceWithTheirContent(Long conferenceId, Long contentId) throws LogicException {
+        try {
+            CONFERENCE_DAO.deleteConferenceWithTheirContent(conferenceId, contentId);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
 }

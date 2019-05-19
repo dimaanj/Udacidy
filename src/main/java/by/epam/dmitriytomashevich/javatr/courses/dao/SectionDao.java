@@ -19,6 +19,10 @@ public class SectionDao implements AbstractDao<Long, Section> {
             "    (content_id, conference_id)\n" +
             "VALUES (?, ?);";
 
+    private static final String FIND_BY_ID = "SELECT s.id, s.content_id, s.conference_id\n" +
+            "FROM section s\n" +
+            "WHERE s.id = ?";
+
     private static final String DELETE = "DELETE\n" +
             "FROM udacidy.section\n" +
             "WHERE id = ?";
@@ -29,6 +33,9 @@ public class SectionDao implements AbstractDao<Long, Section> {
             "        on s.conference_id = c.id\n" +
             "WHERE c.id = ?";
 
+    private static final String DELETE_CONTENT = "DELETE FROM udacidy.content\n" +
+            "WHERE id = ?;";
+
     @Override
     public List<Section> findAll() throws DAOException {
         return null;
@@ -36,7 +43,23 @@ public class SectionDao implements AbstractDao<Long, Section> {
 
     @Override
     public Section findById(Long id) throws DAOException {
-        return null;
+        Section section = null;
+        Connection connection = null;
+        try {
+            connection = pool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(FIND_BY_ID);
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                section = builder.build(resultSet);
+            }
+            resultSet.close();
+            return section;
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            pool.releaseConnection(connection);
+        }
     }
 
     @Override
@@ -105,6 +128,27 @@ public class SectionDao implements AbstractDao<Long, Section> {
             }
             resultSet.close();
             return sections;
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } finally {
+            pool.releaseConnection(connection);
+        }
+    }
+
+    public void deleteSectionWithTheirContent(Long sectionId, Long contentId) throws DAOException {
+        Connection connection = null;
+        try {
+            connection = pool.getConnection();
+            connection.setAutoCommit(false);
+            PreparedStatement statement = connection.prepareStatement(DELETE);
+            statement.setLong(1, sectionId);
+            statement.execute();
+
+            statement = connection.prepareStatement(DELETE_CONTENT);
+            statement.setLong(1, contentId);
+            statement.execute();
+
+            connection.commit();
         } catch (SQLException e) {
             throw new DAOException(e);
         } finally {

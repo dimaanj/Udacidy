@@ -106,8 +106,6 @@ public class UserDao implements AbstractDao<Long, User> {
                     throw new SQLException("Creating conversation failed, no ID obtained.");
                 }
             }
-
-            //todo сделать с возвратом айди
             connection.commit();
             return userId;
         } catch (SQLException e) {

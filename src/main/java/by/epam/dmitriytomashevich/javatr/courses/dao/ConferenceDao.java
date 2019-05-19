@@ -43,6 +43,9 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
             "ORDER BY id DESC\n" +
             "LIMIT 10";
 
+    private static final String DELETE_CONTENT = "DELETE FROM udacidy.content\n" +
+            "WHERE id = ?;";
+
     @Override
     public List<Conference> findAll() throws DAOException {
         return null;
@@ -179,6 +182,27 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
             resultSet.close();
             return conferences;
         } catch (SQLException | DAOException e) {
+            throw new DAOException(e);
+        } finally {
+            pool.releaseConnection(connection);
+        }
+    }
+
+    public void deleteConferenceWithTheirContent(Long conferenceId, Long contentId) throws DAOException {
+        Connection connection = null;
+        try {
+            connection = pool.getConnection();
+            connection.setAutoCommit(false);
+            PreparedStatement statement = connection.prepareStatement(DELETE);
+            statement.setLong(1, conferenceId);
+            statement.execute();
+
+            statement = connection.prepareStatement(DELETE_CONTENT);
+            statement.setLong(1, contentId);
+            statement.execute();
+
+            connection.commit();
+        } catch (SQLException e) {
             throw new DAOException(e);
         } finally {
             pool.releaseConnection(connection);

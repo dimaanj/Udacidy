@@ -4,15 +4,14 @@ import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
 import by.epam.dmitriytomashevich.javatr.courses.domain.*;
-import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonSection;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ContentService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.RequestFormService;
+import by.epam.dmitriytomashevich.javatr.courses.logic.RequestDataService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.SectionService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ContentServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.RequestFormServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.RequestDataServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.RequestServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.SectionServiceImpl;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -20,17 +19,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.mysql.cj.Session;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class RemoveRequestCommand implements Command {
     private static final RequestService REQUEST_SERVICE = new RequestServiceImpl();
-    private static final RequestFormService REQUEST_FORM_SERVICE = new RequestFormServiceImpl();
+    private static final RequestDataService REQUEST_FORM_SERVICE = new RequestDataServiceImpl();
     private static final SectionService SECTION_SERVICE = new SectionServiceImpl();
     private static final ContentService CONTENT_SERVICE = new ContentServiceImpl();
 
@@ -45,7 +42,7 @@ public class RemoveRequestCommand implements Command {
         String message = null;
         if(!sectionList.isEmpty()) {
             jsonSections = sectionsToJson(sectionList);
-            deleteRequest(sectionList, user);
+            deleteRequest(conferenceId, user, sectionList);
             message = "Your request was removed successfully!";
             didSectionsExists = true;
         }else {
@@ -71,15 +68,15 @@ public class RemoveRequestCommand implements Command {
         return Optional.empty();
     }
 
-    private void deleteRequest(List<Section> sections, User user) throws LogicException {
+    private void deleteRequest(Long conferenceId, User user, List<Section> sections) throws LogicException {
+        Request request = null;
         for (Section s : sections) {
-            Request request = null;
             if ((request = REQUEST_SERVICE.findBySectionIdAndUserId(s.getId(), user.getId())) != null) {
-                REQUEST_FORM_SERVICE.deleteByRequestId(request.getId());
-                REQUEST_SERVICE.delete(request.getId());
+                REQUEST_SERVICE.deleteRequestWithRequestData(request.getId());
                 break;
             }
         }
+
     }
 
     private JsonArray sectionsToJson(List<Section> sectionList) throws LogicException {

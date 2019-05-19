@@ -65,17 +65,23 @@ public class ConnectionPool {
     }
 
     public Connection getConnection() {
-        Connection connection = null;
-        while (connection == null) {
-            connection = connectionPool.poll();
-        }
+        Connection connection = connectionPool.poll();
         usedConnections.add(connection);
+
+        System.out.println("pool size = " + connectionPool.size());
+        System.out.println("used connections = " + usedConnections.size());
+        System.out.println("-----------------------------------------");
         return connection;
     }
 
     public boolean releaseConnection(Connection connection) {
         connectionPool.add(connection);
-        return usedConnections.remove(connection);
+        boolean isConnectionInUsedConnectionQueue = usedConnections.remove(connection);
+
+        System.out.println("pool size = " + connectionPool.size());
+        System.out.println("used connections = " + usedConnections.size());
+        System.out.println("-----------------------------------------");
+        return isConnectionInUsedConnectionQueue;
     }
 
     public void shutdown() throws SQLException {

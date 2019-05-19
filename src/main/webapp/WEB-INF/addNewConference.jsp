@@ -232,6 +232,7 @@
 
     var createConference = document.getElementById('addConferenceButton');
     createConference.addEventListener('click', function () {
+        $('#previewModal').modal('hide');
         this.setAttribute('disabled', 'true');
 
         var content = tinymce.get("mytextarea").getContent();
@@ -260,7 +261,6 @@
             })
             .then(function (text) {
                 console.log(text);
-                $('#previewModal').modal('hide');
                 createAlertWithTextAndType(text, 'alert-success')
                 $('#alert-message').append("<div class=\"alert alert-success alert-dismissible fade show shadow\" role=\"alert\">\n" +
                     "  <strong>"+text+"!</strong> Aww yeah, you successfully read this important alert message. \n" +
