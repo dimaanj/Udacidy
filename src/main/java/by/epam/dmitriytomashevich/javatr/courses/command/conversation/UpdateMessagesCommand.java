@@ -6,13 +6,11 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Message;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
+import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConversationServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.MessageServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.UserServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -23,25 +21,32 @@ import java.util.List;
 import java.util.Optional;
 
 public class UpdateMessagesCommand implements Command {
-    private static final MessageService MESSAGE_SERVICE = new MessageServiceImpl();
-    private static final ConversationService CONVERSATION_SERVICE = new ConversationServiceImpl();
-    private static final UserService USER_SERVICE = new UserServiceImpl();
+    private final MessageService messageService;
+    private final ConversationService conversationService;
+    private final UserService userService;
+
+    public UpdateMessagesCommand(ServiceFactory serviceFactory){
+        messageService = serviceFactory.createMessageService();
+        conversationService = serviceFactory.createConversationService();
+        userService = serviceFactory.createUserService();
+    }
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         Long lastMessageId = Long.parseLong(content.getParameter("lastMessageId"));
-        Conversation conversation = CONVERSATION_SERVICE.getByMessageId(lastMessageId);
+        Conversation conversation = conversationService.getByMessageId(lastMessageId);
 
-        List<Message> messages = MESSAGE_SERVICE.findAllAfterMessageId(lastMessageId, conversation.getId());
+        List<Message> messages = messageService.findAllAfterMessageId(lastMessageId, conversation.getId());
         JsonArray jsonMessagesList = new JsonArray();
-
-        for (Message m : messages) {
-            User creator = USER_SERVICE.findById(m.getCreatorId());
-            m.setCreator(creator);
-            JsonMessage jsonMessage = MESSAGE_SERVICE.toJsonMessage(m);
-            Gson gson = new Gson();
-            JsonElement element = gson.toJsonTree(jsonMessage, JsonMessage.class);
-            jsonMessagesList.add(element);
+        if(messages != null) {
+            for (Message m : messages) {
+                User creator = userService.findById(m.getCreatorId());
+                m.setCreator(creator);
+                JsonMessage jsonMessage = messageService.toJsonMessage(m);
+                Gson gson = new Gson();
+                JsonElement element = gson.toJsonTree(jsonMessage, JsonMessage.class);
+                jsonMessagesList.add(element);
+            }
         }
 
         try {

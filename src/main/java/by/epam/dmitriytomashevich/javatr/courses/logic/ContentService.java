@@ -1,7 +1,7 @@
 package by.epam.dmitriytomashevich.javatr.courses.logic;
 
 import by.epam.dmitriytomashevich.javatr.courses.domain.Content;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 public interface ContentService {
     Long create(Content content) throws LogicException;

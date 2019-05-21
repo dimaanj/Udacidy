@@ -1,20 +1,25 @@
 package by.epam.dmitriytomashevich.javatr.courses.logic.impl;
 
-import by.epam.dmitriytomashevich.javatr.courses.dao.ConferenceDao;
-import by.epam.dmitriytomashevich.javatr.courses.dao.exception.DAOException;
+import by.epam.dmitriytomashevich.javatr.courses.db.dao.ConferenceDao;
+import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conference;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConferenceService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 import java.util.List;
 
 public class ConferenceServiceImpl implements ConferenceService {
-    private static final ConferenceDao CONFERENCE_DAO = new ConferenceDao();
+    private final ConferenceDao conferenceDao;
+
+    public ConferenceServiceImpl(DaoFactory daoFactory){
+        conferenceDao = daoFactory.createConferenceDao();
+    }
 
     @Override
     public Long create(Conference conference) throws LogicException {
         try {
-            return CONFERENCE_DAO.create(conference);
+            return conferenceDao.create(conference);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -23,7 +28,7 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Override
     public List<Conference> findSomeLastConferences(int amount) throws LogicException {
         try {
-            return CONFERENCE_DAO.findSomeLastConferences(amount);
+            return conferenceDao.findSomeLastConferences(amount);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -32,7 +37,7 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Override
     public Conference getById(Long id) throws LogicException {
         try {
-            return CONFERENCE_DAO.findById(id);
+            return conferenceDao.findById(id);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -41,7 +46,7 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Override
     public void delete(Long id) throws LogicException {
         try {
-            CONFERENCE_DAO.deleteById(id);
+            conferenceDao.deleteById(id);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -50,7 +55,7 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Override
     public Conference getTheOldest() throws LogicException {
         try {
-            return CONFERENCE_DAO.findTheOldest();
+            return conferenceDao.findTheOldest();
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -59,7 +64,7 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Override
     public List<Conference> findSomeOlderStartsWithConversationId(Long id) throws LogicException {
         try {
-            return CONFERENCE_DAO.findSomeOlderStartsWithConferenceId(id);
+            return conferenceDao.findSomeOlderStartsWithConferenceId(id);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -68,7 +73,16 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Override
     public void deleteConferenceWithTheirContent(Long conferenceId, Long contentId) throws LogicException {
         try {
-            CONFERENCE_DAO.deleteConferenceWithTheirContent(conferenceId, contentId);
+            conferenceDao.deleteConferenceWithTheirContent(conferenceId, contentId);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
+
+    @Override
+    public List<Conference> findAllConferencesAsUserRequestsByUserId(Long userId) throws LogicException {
+        try {
+            return conferenceDao.findAllConferencesAsUserRequestsByUserId(userId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }

@@ -7,11 +7,10 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Message;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
+import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConversationServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.MessageServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,14 +27,19 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SendMessageCommand implements Command {
-    private static final ConversationService CONVERSATION_SERVICE = new ConversationServiceImpl();
-    private static final MessageService MESSAGE_SERVICE = new MessageServiceImpl();
+    private final ConversationService conversationService;
+    private final MessageService messageService;
+
+    public SendMessageCommand(ServiceFactory serviceFactory){
+        conversationService = serviceFactory.createConversationService();
+        messageService = serviceFactory.createMessageService();
+    }
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         User user = (User) content.getSession(false).getAttribute(Parameter.USER);
         Long conversationId = Long.parseLong(content.getParameter("conversationId"));
-        Conversation conversation = CONVERSATION_SERVICE.getById(conversationId);
+        Conversation conversation = conversationService.getById(conversationId);
         String text = content.getParameter("message");
 
         Optional<StringBuilder> fileName = uploadToServer(content.getRequest());
@@ -44,7 +48,7 @@ public class SendMessageCommand implements Command {
             imageServerPath = ".." + File.separator + "images" + File.separator + "tmp" + File.separator + fileName.get();
         }
         Message message = createMessage(user, text, conversation, imageServerPath);
-        Long messageId = MESSAGE_SERVICE.add(message);
+        Long messageId = messageService.add(message);
 
         fileName.ifPresent(stringBuilder -> new Thread(() -> {
             String cloudImageUrl = addToCloud(
@@ -52,14 +56,14 @@ public class SendMessageCommand implements Command {
                             + File.separator + "images" + File.separator + "tmp" + File.separator + stringBuilder)
             );
             try {
-                MESSAGE_SERVICE.updateMessageImage(cloudImageUrl, messageId);
+                messageService.updateMessageImage(cloudImageUrl, messageId);
             } catch (LogicException e) {
                 e.printStackTrace();
             }
         }).start());
 
         message.setId(messageId);
-        JsonMessage jsonMessage = MESSAGE_SERVICE.toJsonMessage(message);
+        JsonMessage jsonMessage = messageService.toJsonMessage(message);
         try {
             content.getResponse().setContentType("application/json;charset=UTF-8");
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();

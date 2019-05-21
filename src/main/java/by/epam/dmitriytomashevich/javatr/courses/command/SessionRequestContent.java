@@ -2,13 +2,10 @@ package by.epam.dmitriytomashevich.javatr.courses.command;
 
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
 
-import javax.servlet.AsyncContext;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SessionRequestContent {
     private Map<String, Object> requestAttributes;
@@ -18,7 +15,6 @@ public class SessionRequestContent {
     private ActionType actionType;
     private HttpServletRequest request;
     private HttpServletResponse response;
-    private String action;
 
     public SessionRequestContent(HttpServletRequest request, HttpServletResponse response) {
         this.request = request;
@@ -58,10 +54,6 @@ public class SessionRequestContent {
         return response;
     }
 
-    public ServletContext getServletContext(){
-        return request.getServletContext();
-    }
-
     public HttpServletRequest getRequest(){
         return request;
     }
@@ -72,14 +64,6 @@ public class SessionRequestContent {
 
     public void setRequestAttribute(String attr, Object value){
         requestAttributes.put(attr, value);
-    }
-
-    public void setSessionAttribute(String attr, Object value){
-        sessionAttributes.put(attr, value);
-    }
-
-    public boolean isValidSession() {
-        return validSession;
     }
 
     public void invalidateSession() {
@@ -94,28 +78,12 @@ public class SessionRequestContent {
         return this.request.getSession(arg);
     }
 
-    public Object getSessionAttributeByName(String arg){
-        return sessionAttributes.get(arg);
-    }
-
     public ActionType getActionType() {
         return actionType;
     }
 
     public void setActionType(ActionType actionType) {
         this.actionType = actionType;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public void setAction(String action) {
-        this.action = action;
-    }
-
-    public Map<String, Object> getSessionAttributes() {
-        return sessionAttributes;
     }
 
     public enum ActionType{

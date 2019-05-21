@@ -5,15 +5,20 @@ import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.JSP;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
-import by.epam.dmitriytomashevich.javatr.courses.logic.LogInService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.LogInServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
+import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.util.UserServiceHandler;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 public class LoginCommand implements Command {
-    private static final LogInService LOG_IN_LOGIC = new LogInServiceImpl();
+    private final UserService userService;
+
+    public LoginCommand(ServiceFactory serviceFactory){
+        userService = serviceFactory.createUserService();
+    }
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
@@ -23,22 +28,15 @@ public class LoginCommand implements Command {
         }else {
             String email = content.getParameter("email");
             String password = content.getParameter("password");
-            User user = LOG_IN_LOGIC.checkLogin(email, password);
+
+            User user = userService.findUserByEmail(email);
+            UserServiceHandler handler = new UserServiceHandler();
+            user = handler.checkLogin(email, password, user);
 
             if (user != null) {
                 HttpSession session = content.getSession();
                 session.setAttribute(Parameter.USER, user);
-
-//                if (LogInUserListener.isAlreadyLoggedIn()) {
-////                if (user.isAlreadyLoggedIn()) {
-//                    session.removeAttribute(Parameter.USER);
-//                    content.setRequestAttribute("errorLoginPassMessage", "User has already logged in!");
-//                    content.setActionType(SessionRequestContent.ActionType.FORWARD);
-//                    page = JSP.LOGIN;
-//                } else {
-                   // session.setAttribute(Parameter.USER, user);
-                    page = JSP.MAIN_ACTION;
-                //}
+                page = JSP.MAIN_ACTION;
             } else {
                 content.setRequestAttribute("errorLoginPassMessage", "Invalid credentials!");
                 content.setActionType(SessionRequestContent.ActionType.FORWARD);

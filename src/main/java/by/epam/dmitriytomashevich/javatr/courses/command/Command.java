@@ -1,9 +1,7 @@
 package by.epam.dmitriytomashevich.javatr.courses.command;
 
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
-import javafx.fxml.LoadException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public interface Command {

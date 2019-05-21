@@ -5,15 +5,11 @@ import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
 import by.epam.dmitriytomashevich.javatr.courses.domain.*;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonSection;
+import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ContentService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.RequestDataService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.SectionService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ContentServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.RequestDataServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.RequestServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.SectionServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
@@ -26,16 +22,21 @@ import java.util.List;
 import java.util.Optional;
 
 public class RemoveRequestCommand implements Command {
-    private static final RequestService REQUEST_SERVICE = new RequestServiceImpl();
-    private static final RequestDataService REQUEST_FORM_SERVICE = new RequestDataServiceImpl();
-    private static final SectionService SECTION_SERVICE = new SectionServiceImpl();
-    private static final ContentService CONTENT_SERVICE = new ContentServiceImpl();
+    private final RequestService requestService;
+    private final SectionService sectionService;
+    private final ContentService contentService;
+
+    public RemoveRequestCommand(ServiceFactory serviceFactory){
+        requestService = serviceFactory.createRequestService();
+        sectionService = serviceFactory.createSectionService();
+        contentService = serviceFactory.createContentService();
+    }
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         User user = (User) content.getSession(false).getAttribute(Parameter.USER);
         Long conferenceId = Long.valueOf(content.getParameter("conferenceId"));
-        List<Section> sectionList = SECTION_SERVICE.findSectionsByConferenceId(conferenceId);
+        List<Section> sectionList = sectionService.findSectionsByConferenceId(conferenceId);
 
         JsonArray jsonSections = null;
         boolean didSectionsExists;
@@ -71,8 +72,8 @@ public class RemoveRequestCommand implements Command {
     private void deleteRequest(Long conferenceId, User user, List<Section> sections) throws LogicException {
         Request request = null;
         for (Section s : sections) {
-            if ((request = REQUEST_SERVICE.findBySectionIdAndUserId(s.getId(), user.getId())) != null) {
-                REQUEST_SERVICE.deleteRequestWithRequestData(request.getId());
+            if ((request = requestService.findBySectionIdAndUserId(s.getId(), user.getId())) != null) {
+                requestService.deleteRequestWithRequestData(request.getId());
                 break;
             }
         }
@@ -83,7 +84,7 @@ public class RemoveRequestCommand implements Command {
         JsonArray jsonSections = new JsonArray();
         for(Section s : sectionList){
             JsonSection jsonSection = new JsonSection();
-            Content content = CONTENT_SERVICE.findById(s.getContentId());
+            Content content = contentService.findById(s.getContentId());
 
             jsonSection.setId(s.getId());
             jsonSection.setContent(content.getContent());

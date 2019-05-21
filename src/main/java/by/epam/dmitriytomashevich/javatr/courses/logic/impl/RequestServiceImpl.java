@@ -1,20 +1,25 @@
 package by.epam.dmitriytomashevich.javatr.courses.logic.impl;
 
-import by.epam.dmitriytomashevich.javatr.courses.dao.RequestDao;
-import by.epam.dmitriytomashevich.javatr.courses.dao.exception.DAOException;
+import by.epam.dmitriytomashevich.javatr.courses.db.dao.RequestDao;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
+import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 import java.util.List;
 
 public class RequestServiceImpl implements RequestService {
-    private static final RequestDao REQUEST_DAO = new RequestDao();
+    private final RequestDao requestDao;
+
+    public RequestServiceImpl(DaoFactory daoFactory){
+        requestDao = daoFactory.createRequestDao();
+    }
 
     @Override
     public Long create(Request request) throws LogicException {
         try {
-            return REQUEST_DAO.create(request);
+            return requestDao.create(request);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -23,7 +28,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Request findBySectionIdAndUserId(Long sectionId, Long userId) throws LogicException {
         try {
-            return REQUEST_DAO.findBySectionIdAndUserId(sectionId, userId);
+            return requestDao.findBySectionIdAndUserId(sectionId, userId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -32,7 +37,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<Request> findBySectionId(Long sectionId) throws LogicException {
         try {
-            return REQUEST_DAO.findBySectionId(sectionId);
+            return requestDao.findBySectionId(sectionId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -41,7 +46,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public void deleteRequestWithRequestData(Long requestId) throws LogicException {
         try {
-            REQUEST_DAO.deleteRequestWithRequestData(requestId);
+            requestDao.deleteRequestWithRequestData(requestId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }

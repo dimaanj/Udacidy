@@ -3,7 +3,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.error;
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.JSP;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 import java.util.Optional;
 

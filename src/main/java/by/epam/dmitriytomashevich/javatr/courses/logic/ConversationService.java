@@ -2,10 +2,8 @@ package by.epam.dmitriytomashevich.javatr.courses.logic;
 
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
-import javafx.fxml.LoadException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
-import javax.security.auth.login.LoginException;
 import java.util.List;
 
 public interface ConversationService {

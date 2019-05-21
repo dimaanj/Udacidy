@@ -1,18 +1,23 @@
 package by.epam.dmitriytomashevich.javatr.courses.logic.impl;
 
-import by.epam.dmitriytomashevich.javatr.courses.dao.ContentDao;
-import by.epam.dmitriytomashevich.javatr.courses.dao.exception.DAOException;
+import by.epam.dmitriytomashevich.javatr.courses.db.dao.ContentDao;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Content;
+import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ContentService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 public class ContentServiceImpl implements ContentService {
-    private static final ContentDao CONTENT_DAO = new ContentDao();
+    private final ContentDao contentDao;
+
+    public ContentServiceImpl(DaoFactory daoFactory){
+        contentDao = daoFactory.createContentDao();
+    }
 
     @Override
     public Long create(Content content) throws LogicException {
         try {
-            return CONTENT_DAO.create(content);
+            return contentDao.create(content);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -21,7 +26,7 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public Content findById(Long id) throws LogicException {
         try {
-            return CONTENT_DAO.findById(id);
+            return contentDao.findById(id);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -30,7 +35,7 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public Content findByConferenceId(Long conferenceId) throws LogicException {
         try {
-            return CONTENT_DAO.findByConferenceId(conferenceId);
+            return contentDao.findByConferenceId(conferenceId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -40,7 +45,7 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public void update(Content content) throws LogicException {
         try {
-            CONTENT_DAO.update(content);
+            contentDao.update(content);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -49,7 +54,7 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public void delete(Long id) throws LogicException {
         try {
-            CONTENT_DAO.deleteById(id);
+            contentDao.deleteById(id);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -58,7 +63,7 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public Content findBySectionId(Long sectionId) throws LogicException {
         try {
-            return CONTENT_DAO.findBySectionId(sectionId);
+            return contentDao.findBySectionId(sectionId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }

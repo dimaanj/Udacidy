@@ -1,5 +1,6 @@
 package by.epam.dmitriytomashevich.javatr.courses.domain;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Conference {
@@ -9,26 +10,24 @@ public class Conference {
 
     private User author;
     private Content content;
+    private List<Section> sections;
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Conference conference = (Conference) o;
-        return Objects.equals(id, conference.id) &&
-                Objects.equals(contentId, conference.contentId) &&
-                Objects.equals(authorId, conference.authorId) &&
-                Objects.equals(author, conference.author) &&
-                Objects.equals(content, conference.content);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Conference that = (Conference) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(contentId, that.contentId) &&
+                Objects.equals(authorId, that.authorId) &&
+                Objects.equals(author, that.author) &&
+                Objects.equals(content, that.content) &&
+                Objects.equals(sections, that.sections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, contentId, authorId, author, content);
+        return Objects.hash(id, contentId, authorId, author, content, sections);
     }
 
     public Long getId() {
@@ -69,5 +68,13 @@ public class Conference {
 
     public void setContent(Content content) {
         this.content = content;
+    }
+
+    public List<Section> getSections() {
+        return sections;
+    }
+
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
     }
 }

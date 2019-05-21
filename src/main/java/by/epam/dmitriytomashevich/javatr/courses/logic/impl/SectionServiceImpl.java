@@ -1,20 +1,25 @@
 package by.epam.dmitriytomashevich.javatr.courses.logic.impl;
 
-import by.epam.dmitriytomashevich.javatr.courses.dao.SectionDao;
-import by.epam.dmitriytomashevich.javatr.courses.dao.exception.DAOException;
+import by.epam.dmitriytomashevich.javatr.courses.db.dao.SectionDao;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Section;
+import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.SectionService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 import java.util.List;
 
 public class SectionServiceImpl implements SectionService {
-    private static final SectionDao SECTION_DAO = new SectionDao();
+    private final SectionDao sectionDao;
+
+    public SectionServiceImpl(DaoFactory daoFactory){
+        sectionDao = daoFactory.createSectionDao();
+    }
 
     @Override
     public Long create(Section section) throws LogicException {
         try {
-            return SECTION_DAO.create(section);
+            return sectionDao.create(section);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -23,7 +28,7 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public void delete(Long sectionId) throws LogicException {
         try {
-            SECTION_DAO.deleteById(sectionId);
+            sectionDao.deleteById(sectionId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -32,7 +37,7 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public List<Section> findSectionsByConferenceId(Long conferenceId) throws LogicException {
         try {
-            return SECTION_DAO.findByConferenceId(conferenceId);
+            return sectionDao.findByConferenceId(conferenceId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -41,7 +46,7 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public Section findById(Long sectionId) throws LogicException {
         try {
-            return SECTION_DAO.findById(sectionId);
+            return sectionDao.findById(sectionId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -50,7 +55,7 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public void deleteSectionWithTheirContent(Long sectionId, Long contentId) throws LogicException {
         try {
-            SECTION_DAO.deleteSectionWithTheirContent(sectionId, contentId);
+            sectionDao.deleteSectionWithTheirContent(sectionId, contentId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }

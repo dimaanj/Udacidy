@@ -6,13 +6,11 @@ import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conference;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonConference;
+import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConferenceService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ContentService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConferenceServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ContentServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.UserServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
@@ -25,23 +23,29 @@ import java.util.List;
 import java.util.Optional;
 
 public class ViewMoreConferencesCommand implements Command {
-    private static final ConferenceService CONFERENCE_SERVICE = new ConferenceServiceImpl();
-    private static final ContentService CONTENT_SERVICE = new ContentServiceImpl();
-    private static final UserService USER_SERVICE = new UserServiceImpl();
+    private final ConferenceService conferenceService;
+    private final ContentService contentService;
+    private final UserService userService;
+
+    public ViewMoreConferencesCommand(ServiceFactory serviceFactory){
+        conferenceService = serviceFactory.createConferenceService();
+        contentService = serviceFactory.createContentService();
+        userService = serviceFactory.createUserService();
+    }
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         Long lastConferenceId = Long.valueOf(content.getParameter("lastConferenceId"));
-        List<Conference> conferenceList = CONFERENCE_SERVICE.findSomeOlderStartsWithConversationId(lastConferenceId);
+        List<Conference> conferenceList = conferenceService.findSomeOlderStartsWithConversationId(lastConferenceId);
 
         JsonArray jsonConferencesList = new JsonArray();
         for (Conference c : conferenceList) {
-            User author = USER_SERVICE.findById(c.getAuthorId());
+            User author = userService.findById(c.getAuthorId());
 
             JsonConference conference = new JsonConference();
             conference.setId(c.getId());
             conference.setAuthorId(author.getId());
-            conference.setContent(CONTENT_SERVICE.findById(c.getContentId()).getContent());
+            conference.setContent(contentService.findById(c.getContentId()).getContent());
             conference.setContentId(c.getContentId());
             conference.setAuthorFirstName(author.getFirstName());
             conference.setAuthorLastName(author.getLastName());
@@ -53,7 +57,7 @@ public class ViewMoreConferencesCommand implements Command {
 
         boolean hideViewMoreButton = false;
         if(jsonConferencesList.size() < Parameter.CONFERENCES_UPDATE_AMOUNT ||
-                CONFERENCE_SERVICE.getTheOldest().getId().equals(conferenceList.get(0).getId())){
+                conferenceService.getTheOldest().getId().equals(conferenceList.get(0).getId())){
             hideViewMoreButton = true;
         }
 

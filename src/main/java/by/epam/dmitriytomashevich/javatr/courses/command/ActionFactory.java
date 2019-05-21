@@ -4,27 +4,20 @@ import by.epam.dmitriytomashevich.javatr.courses.command.error.PageNotFoundComma
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 public class ActionFactory {
-    public Command defineCommand(HttpServletRequest request) {
-        Command current = new EmptyCommand();
-
+    public Command defineCommand(HttpServletRequest request, CommandFactory commandFactory) {
         String action = null;
-        if(request.getMethod().equals(Parameter.METHOD_GET)){
-             action = request.getRequestURI();
-        }else if(request.getMethod().equals(Parameter.METHOD_POST)){
-             action = request.getParameter(Parameter.COMMAND);
+        if (request.getMethod().equals(Parameter.METHOD_GET)) {
+            action = request.getRequestURI();
+        } else if (request.getMethod().equals(Parameter.METHOD_POST)) {
+            action = request.getParameter(Parameter.COMMAND);
             if (action == null || action.isEmpty()) {
-                return current;
+                return new PageNotFoundCommand();
             }
         }
-
-        try {
-            CommandEnum currentEnum = CommandEnum.fromValue(action);
-            current = currentEnum.getCommand();
-        } catch (IllegalArgumentException e) {
-            current = new PageNotFoundCommand();
-        }
-        return current;
+        Optional<Command> command = commandFactory.createCommand(action);
+        return command.orElseGet(PageNotFoundCommand::new);
     }
 }

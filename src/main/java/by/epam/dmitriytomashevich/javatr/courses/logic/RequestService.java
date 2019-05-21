@@ -1,7 +1,7 @@
 package by.epam.dmitriytomashevich.javatr.courses.logic;
 
 import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 import java.util.List;
 

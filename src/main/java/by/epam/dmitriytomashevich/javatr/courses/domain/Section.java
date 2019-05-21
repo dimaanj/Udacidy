@@ -7,23 +7,22 @@ public class Section {
     private Long conferenceId;
     private Long contentId;
 
+    private Content content;
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Section section = (Section) o;
         return Objects.equals(id, section.id) &&
                 Objects.equals(conferenceId, section.conferenceId) &&
-                Objects.equals(contentId, section.contentId);
+                Objects.equals(contentId, section.contentId) &&
+                Objects.equals(content, section.content);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, conferenceId, contentId);
+        return Objects.hash(id, conferenceId, contentId, content);
     }
 
     public Long getId() {
@@ -49,4 +48,13 @@ public class Section {
     public void setContentId(Long contentId) {
         this.contentId = contentId;
     }
+
+    public Content getContent() {
+        return content;
+    }
+
+    public void setContent(Content content) {
+        this.content = content;
+    }
 }
+

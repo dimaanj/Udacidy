@@ -90,7 +90,8 @@
 <script>
     window.onload = function () {
         loadMessages();
-        //setInterval(updateMessages, 300);
+        setInterval(updateMessages, 300);
+        window.scrollTo(0, document.body.scrollHeight);
     };
 
     function waitFirstResponse () {

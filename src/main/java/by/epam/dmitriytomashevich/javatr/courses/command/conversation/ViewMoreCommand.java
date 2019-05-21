@@ -7,13 +7,11 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Message;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
+import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConversationServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.MessageServiceImpl;
-import by.epam.dmitriytomashevich.javatr.courses.logic.impl.UserServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
@@ -26,22 +24,28 @@ import java.util.List;
 import java.util.Optional;
 
 public class ViewMoreCommand implements Command {
-    private static final MessageService MESSAGE_SERVICE = new MessageServiceImpl();
-    private static final ConversationService CONVERSATION_SERVICE = new ConversationServiceImpl();
-    private static final UserService USER_SERVICE = new UserServiceImpl();
+    private final MessageService messageService;
+    private final ConversationService conversationService;
+    private final UserService userService;
+
+    public ViewMoreCommand(ServiceFactory serviceFactory){
+        messageService = serviceFactory.createMessageService();
+        conversationService = serviceFactory.createConversationService();
+        userService = serviceFactory.createUserService();
+    }
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         Long earliestDisplayedMessageId = Long.parseLong(content.getParameter("earliestMessageId"));
-        Conversation conversation = CONVERSATION_SERVICE.getByMessageId(earliestDisplayedMessageId);
-        List<Message> messages = MESSAGE_SERVICE.findSomeLastByConversationIdStartsWithMessageId(
+        Conversation conversation = conversationService.getByMessageId(earliestDisplayedMessageId);
+        List<Message> messages = messageService.findSomeLastByConversationIdStartsWithMessageId(
                 Parameter.MESSAGES_UPDATE_AMOUNT, conversation.getId(), earliestDisplayedMessageId);
 
         JsonArray jsonMessagesList = new JsonArray();
         for (Message m : messages) {
-            User creator = USER_SERVICE.findById(m.getCreatorId());
+            User creator = userService.findById(m.getCreatorId());
             m.setCreator(creator);
-            JsonMessage jsonMessage = MESSAGE_SERVICE.toJsonMessage(m);
+            JsonMessage jsonMessage = messageService.toJsonMessage(m);
             Gson gson = new Gson();
             JsonElement element = gson.toJsonTree(jsonMessage, JsonMessage.class);
             jsonMessagesList.add(element);
@@ -50,7 +54,7 @@ public class ViewMoreCommand implements Command {
         content.getResponse().setContentType("application/json;charset=UTF-8");
         boolean hideViewMoreButton = false;
         if(messages.size() < Parameter.MESSAGES_UPDATE_AMOUNT ||
-                MESSAGE_SERVICE.getEarliestMessageByConversationId(conversation.getId()).getId()
+                messageService.getEarliestMessageByConversationId(conversation.getId()).getId()
                         .equals(messages.get(messages.size()-1).getId())){
             hideViewMoreButton = true;
         }

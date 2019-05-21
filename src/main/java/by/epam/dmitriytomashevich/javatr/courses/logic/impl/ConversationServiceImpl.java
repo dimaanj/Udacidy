@@ -1,24 +1,26 @@
 package by.epam.dmitriytomashevich.javatr.courses.logic.impl;
 
-import by.epam.dmitriytomashevich.javatr.courses.dao.ConversationDao;
-import by.epam.dmitriytomashevich.javatr.courses.dao.exception.DAOException;
+import by.epam.dmitriytomashevich.javatr.courses.db.dao.ConversationDao;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
+import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
-import javafx.fxml.LoadException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
-import javax.security.auth.login.LoginException;
-import java.time.LocalDate;
 import java.util.List;
 
 public class ConversationServiceImpl implements ConversationService {
-    private static final ConversationDao CONVERSATION_DAO = new ConversationDao();
+    private final ConversationDao conversationDao;
+
+    public ConversationServiceImpl(DaoFactory daoFactory){
+        this.conversationDao = daoFactory.createConversationDao();
+    }
 
     @Override
     public List<Conversation> getAllConversations() throws LogicException {
         try {
-            return CONVERSATION_DAO.findAll();
+            return conversationDao.findAll();
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -27,7 +29,7 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public Conversation getById(Long id) throws LogicException {
         try {
-            return CONVERSATION_DAO.findById(id);
+            return conversationDao.findById(id);
         } catch (DAOException e) {
             e.printStackTrace();
             throw new LogicException(e);
@@ -37,7 +39,7 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public Conversation getSingleQuestionConversationForUser(User user) throws LogicException {
         try {
-            return CONVERSATION_DAO.findUserConversationByType(user.getId(),
+            return conversationDao.findUserConversationByType(user.getId(),
                     Conversation.ConversationType.QUESTION_CONVERSATION);
         } catch (DAOException e) {
             throw new LogicException(e);
@@ -47,7 +49,7 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public boolean isQuestionConversationCreatedForUser(User user) throws LogicException {
         try {
-            return CONVERSATION_DAO.findUserConversationByType(user.getId(),
+            return conversationDao.findUserConversationByType(user.getId(),
                     Conversation.ConversationType.QUESTION_CONVERSATION) != null;
         } catch (DAOException e) {
             throw new LogicException(e);
@@ -57,7 +59,7 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public boolean isUserInConversation(User user, Long conversationId) throws LogicException {
         try {
-            List<Conversation> conversations = CONVERSATION_DAO.findAllByUserId(user.getId());
+            List<Conversation> conversations = conversationDao.findAllByUserId(user.getId());
             for(Conversation c : conversations){
                 if(c != null && c.getId().equals(conversationId)){
                     return true;
@@ -76,7 +78,7 @@ public class ConversationServiceImpl implements ConversationService {
         try {
             //Conversation group = new Conversation();
            // group.setCreateDate();
-            Long conversationId = CONVERSATION_DAO.create(conversation);
+            Long conversationId = conversationDao.create(conversation);
             conversation.setId(conversationId);
             return conversation;
         } catch (DAOException e) {
@@ -88,7 +90,7 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public Conversation getByMessageId(Long messageId) throws LogicException {
         try {
-            return CONVERSATION_DAO.findByMessageId(messageId);
+            return conversationDao.findByMessageId(messageId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }

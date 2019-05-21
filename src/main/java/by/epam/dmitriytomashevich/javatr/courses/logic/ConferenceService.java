@@ -1,7 +1,7 @@
 package by.epam.dmitriytomashevich.javatr.courses.logic;
 
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conference;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 import java.util.List;
 
@@ -13,4 +13,5 @@ public interface ConferenceService {
     Conference getTheOldest() throws LogicException;
     List<Conference> findSomeOlderStartsWithConversationId(Long id) throws LogicException;
     void deleteConferenceWithTheirContent(Long conferenceId, Long contentId) throws LogicException;
+    List<Conference> findAllConferencesAsUserRequestsByUserId(Long userId) throws LogicException;
 }

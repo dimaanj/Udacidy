@@ -1,10 +1,8 @@
 package by.epam.dmitriytomashevich.javatr.courses.logic;
 
-import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Message;
-import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 import java.util.List;
 

@@ -50,10 +50,6 @@ public class ConnectionPool {
         }
     }
 
-//    private void init() {
-//
-//    }
-
     private static Connection createConnection(String driverName, String url, String user, String password)
             throws SQLException {
         try {

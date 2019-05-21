@@ -1,20 +1,23 @@
 package by.epam.dmitriytomashevich.javatr.courses.logic.impl;
 
-import by.epam.dmitriytomashevich.javatr.courses.dao.RequestDataDao;
-import by.epam.dmitriytomashevich.javatr.courses.dao.exception.DAOException;
+import by.epam.dmitriytomashevich.javatr.courses.db.dao.RequestDataDao;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.RequestData;
+import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestDataService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.exception.LogicException;
-
-import java.util.List;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 public class RequestDataServiceImpl implements RequestDataService {
-    private static final RequestDataDao REQUEST_FORM_DAO = new RequestDataDao();
+    private final RequestDataDao requestDataDao;
+
+    public RequestDataServiceImpl(DaoFactory daoFactory){
+        requestDataDao = daoFactory.createRequestDataDao();
+    }
 
     @Override
     public Long create(RequestData requestForm) throws LogicException {
         try {
-            return REQUEST_FORM_DAO.create(requestForm);
+            return requestDataDao.create(requestForm);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
