@@ -51,4 +51,13 @@ public class RequestServiceImpl implements RequestService {
             throw new LogicException(e);
         }
     }
+
+    @Override
+    public Request findByUserIdAndConferenceId(Long userId, Long conferenceId) throws LogicException {
+        try {
+            return requestDao.findRequestByUserIdAndConferenceId(userId, conferenceId);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
 }

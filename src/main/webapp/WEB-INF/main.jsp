@@ -213,6 +213,7 @@
 <tag:footer/>
 
 <script>
+
     window.onload = function () {
         <c:if test="${not empty conferences}">
             <c:forEach var="i" begin="0" end="${conferences.size()-1}">
@@ -223,6 +224,12 @@
             </c:forEach>
         </c:if>
     };
+
+    <%--window.onbeforeunload = function () {--%>
+    <%--    window.location.replace('${pageContext.request.contextPath}/udacidy/main');--%>
+    <%--    console.log('${pageContext.request.contextPath}/udacidy/main');--%>
+    <%--    console.log(1234);--%>
+    <%--};--%>
 
     function createConference(jsonConference) {
         var conferenceId = jsonConference.id;
@@ -293,25 +300,28 @@
         flexR.classList.add('flex-row');
         flexR.classList.add('bd-highlight');
         flexR.classList.add('mb-3');
+        flexR.setAttribute('id', 'flex-row'+conferenceId);
 
         var flexItem = document.createElement('div');
         flexItem.classList.add('p-2');
         flexItem.classList.add('bd-highlight');
 
-        if(jsonConference.isRequestAlreadySent){
-            var removeRequestButton = removeRequestButtonBuilder();
-            flexItem.appendChild(removeRequestButton);
-        }else {
+        if(!jsonConference.isRequestAlreadySent){
             var chooseSectionsButton = selectSectionsButtonBuilder(conferenceId);
             flexItem.appendChild(chooseSectionsButton);
+        }else{
+
         }
+
+        // else {
+        //     var removeRequestButton = removeRequestButtonBuilder();
+        //     flexItem.appendChild(removeRequestButton);
+        // }
 
         flexR.appendChild(flexItem);
         col.appendChild(flexR);
-        // if(jsonConference.isAlreadySent) {
-            var collapse = chooseSectionsCollapseElementBuilder(conferenceSections);
-            col.appendChild(collapse);
-        // }
+        var collapse = chooseSectionsCollapseElementBuilder(conferenceSections);
+        col.appendChild(collapse);
         </c:when>
         </c:choose>
 
@@ -432,6 +442,7 @@
                     var col = dFreeBody.parentElement;
                     col.appendChild(alert);
                     saveChangesButton.parentElement.remove();
+
                 }else{
                     var row = saveChangesButton.parentElement.parentElement.parentElement.parentElement;
                     var dangerAlert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
@@ -447,7 +458,6 @@
                 }
                 tinymce.remove();
             });
-        event.preventDefault();
     });
 
     </c:if>
@@ -468,7 +478,6 @@
         console.log('1');
 
         var thisButton = this;
-        thisButton.setAttribute('disabled', 'true');
 
         var sectionsUl = this.parentElement.parentElement.firstElementChild;
         var sections = sectionsUl.firstElementChild.children;
@@ -534,14 +543,15 @@
                         alert.firstElementChild.append(' Go to profile page to look through all your requests.');
 
                         var col = thisButton.parentNode.parentNode.parentNode.parentNode;
-                        var removeRequestButton = removeRequestButtonBuilder();
 
                         var dFlex = col.children[1];
                         dFlex.firstElementChild.innerHTML = "";
-                        dFlex.firstElementChild.appendChild(removeRequestButton);
 
-                        col.lastChild.remove();
+                        $("#collapseSections"+col.parentElement.getAttribute('id')).remove();
                         col.appendChild(alert);
+
+                        window.location.replace('${pageContext.request.contextPath}/udacidy/main');
+
                     } else {
                         var row = thisButton.parentNode.parentNode.parentNode.parentNode;
 
@@ -569,7 +579,7 @@
     var chooseSectionsCollapseElementBuilder = function (conferenceSections) {
         var collapse = document.createElement('div');
         collapse.classList.add('collapse');
-        collapse.setAttribute('id', 'collapseSection' + conferenceSections[0].conferenceId);
+        collapse.setAttribute('id', 'collapseSections' + conferenceSections[0].conferenceId);
         var cardCollapse = document.createElement('div');
         cardCollapse.classList.add('card');
 
@@ -621,9 +631,9 @@
         chooseSectionsButton.setAttribute('name', 'chooseSectionsButton');
         chooseSectionsButton.setAttribute('type', 'button');
         chooseSectionsButton.setAttribute('data-toggle', 'collapse');
-        chooseSectionsButton.setAttribute('data-target', '#collapseSection' + conferenceId);
+        chooseSectionsButton.setAttribute('data-target', '#collapseSections' + conferenceId);
         chooseSectionsButton.setAttribute('aria-expanded', 'false');
-        chooseSectionsButton.setAttribute('aria-controls', 'collapseSection' + conferenceId);
+        chooseSectionsButton.setAttribute('aria-controls', 'collapseSections' + conferenceId);
         chooseSectionsButton.appendChild(document.createTextNode('Choose sections'));
         return chooseSectionsButton;
     };
@@ -632,6 +642,7 @@
 
     body.on('click', '#confirmationButton', function (event) {
         event.preventDefault();
+        $('#confirmationModal').modal('hide');
 
         var thisButton;
         var url;
@@ -674,11 +685,9 @@
                 alert.classList.add('shadow-lg');
                 alert.classList.add('rounded-lg');
                 alert.classList.add('mt-3');
-
                 rowElement.parentNode.replaceChild(alert, rowElement);
                 deletedConferenceId = conferenceId;
                 thisButton.removeAttribute('name');
-                $('#confirmationModal').modal('hide');
             });
             </c:when>
             <c:otherwise>
@@ -703,24 +712,15 @@
             .then(function (jsonObj) {
                 var alert;
                 if(jsonObj.didSectionsExists) {
-
-                    var selectSectionsButton = selectSectionsButtonBuilder(conferenceId);
-                    var flexItem = rowElement.firstElementChild.children[1].firstElementChild;
-                    flexItem.innerHTML = "";
-                    flexItem.appendChild(selectSectionsButton);
-
-                    var sections = jsonObj.conferenceSections;
-                    var collapseSections = chooseSectionsCollapseElementBuilder(sections);
+                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-info');
+                    console.log(conferenceId);
+                    document.getElementById('flex-row' + conferenceId).remove();
 
                     var col = rowElement.firstElementChild;
-                    col.lastChild.remove();
-                    col.appendChild(collapseSections);
-                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-success');
-                    alert.classList.add('mt-3');
                     col.appendChild(alert);
+                    window.location.replace('${pageContext.request.contextPath}/udacidy/main');
                 }else {
                     alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
-
                     alert.classList.add('mx-auto');
                     alert.classList.add('col-sm-8');
                     alert.classList.add('shadow-lg');
@@ -732,10 +732,10 @@
                     document.getElementById(alert.getAttribute('id')).scrollIntoView();
                 }
                 thisButton.removeAttribute('name');
-                $('#confirmationModal').modal('hide');
             });
             </c:otherwise>
         </c:choose>
+
     });
 
     // only for admins

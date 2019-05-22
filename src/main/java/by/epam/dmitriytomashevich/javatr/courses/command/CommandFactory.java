@@ -13,6 +13,7 @@ import by.epam.dmitriytomashevich.javatr.courses.command.profile.LoginCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.profile.LogoutCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.profile.ProfileCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.profile.RegistrationCommand;
+import by.epam.dmitriytomashevich.javatr.courses.command.user.ConferencesCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.user.HelpCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.user.RemoveRequestCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.user.SendRequestCommand;
@@ -48,6 +49,8 @@ public class CommandFactory {
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.PREVIEW_COURSE_CONTENT, new PreviewCourseContent()));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.MAIN, new MainCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.PAGE_NOT_FOUND, new PageNotFoundCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CONTENT_EDITING, new ContentEditingCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CONFERENCES, new ConferencesCommand(serviceFactory)));
     }
 
     /**

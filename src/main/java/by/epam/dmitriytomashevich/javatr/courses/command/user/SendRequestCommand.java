@@ -3,10 +3,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.user;
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
-import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
-import by.epam.dmitriytomashevich.javatr.courses.domain.RequestData;
-import by.epam.dmitriytomashevich.javatr.courses.domain.Section;
-import by.epam.dmitriytomashevich.javatr.courses.domain.User;
+import by.epam.dmitriytomashevich.javatr.courses.domain.*;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestDataService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestService;
@@ -45,6 +42,7 @@ public class SendRequestCommand implements Command {
             Request request = new Request();
             request.setUserId(user.getId());
             request.setCreationDateTime(LocalDateTime.now());
+            request.setRequestStatus(RequestStatus.SHIPPED);
             Long requestId = requestService.create(request);
 
             for (String stringId : jsonSectionsIds) {

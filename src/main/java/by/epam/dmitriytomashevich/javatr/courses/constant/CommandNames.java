@@ -23,4 +23,6 @@ public class CommandNames {
     public static final String MAIN = "/udacidy/main";
     public static final String PAGE_NOT_FOUND = "/udacidy/404";
     public static final String ADMIN_CONVERSATION_COMMAND = "/udacidy/conversation";
+    public static final String CONTENT_EDITING = "/udacidy/contentediting";
+    public static final String CONFERENCES = "/udacidy/conferences";
 }

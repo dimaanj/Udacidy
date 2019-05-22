@@ -3,15 +3,13 @@ package by.epam.dmitriytomashevich.javatr.courses.command.conversation;
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
-import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
-import by.epam.dmitriytomashevich.javatr.courses.domain.Message;
-import by.epam.dmitriytomashevich.javatr.courses.domain.User;
+import by.epam.dmitriytomashevich.javatr.courses.domain.*;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
+import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonSection;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
-import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
-import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
+import by.epam.dmitriytomashevich.javatr.courses.logic.*;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.util.converter.MessageConverter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
@@ -20,6 +18,7 @@ import com.google.gson.JsonElement;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +44,7 @@ public class ViewMoreCommand implements Command {
         for (Message m : messages) {
             User creator = userService.findById(m.getCreatorId());
             m.setCreator(creator);
-            JsonMessage jsonMessage = messageService.toJsonMessage(m);
+            JsonMessage jsonMessage = new MessageConverter().convert(m);
             Gson gson = new Gson();
             JsonElement element = gson.toJsonTree(jsonMessage, JsonMessage.class);
             jsonMessagesList.add(element);

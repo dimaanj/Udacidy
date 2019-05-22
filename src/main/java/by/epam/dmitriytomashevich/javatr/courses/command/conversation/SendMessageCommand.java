@@ -11,6 +11,7 @@ import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.util.converter.MessageConverter;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,7 +64,7 @@ public class SendMessageCommand implements Command {
         }).start());
 
         message.setId(messageId);
-        JsonMessage jsonMessage = messageService.toJsonMessage(message);
+        JsonMessage jsonMessage = new MessageConverter().convert(message);
         try {
             content.getResponse().setContentType("application/json;charset=UTF-8");
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();

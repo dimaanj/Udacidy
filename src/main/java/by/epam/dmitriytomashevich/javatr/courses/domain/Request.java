@@ -7,24 +7,30 @@ public class Request {
     private Long id;
     private Long userId;
     private LocalDateTime creationDateTime;
+    private RequestStatus requestStatus;
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Request request = (Request) o;
         return Objects.equals(id, request.id) &&
+                Objects.equals(userId, request.userId) &&
                 Objects.equals(creationDateTime, request.creationDateTime) &&
-                Objects.equals(userId, request.userId);
+                requestStatus == request.requestStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, creationDateTime);
+        return Objects.hash(id, userId, creationDateTime, requestStatus);
+    }
+
+    public RequestStatus getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
     }
 
     public Long getId() {

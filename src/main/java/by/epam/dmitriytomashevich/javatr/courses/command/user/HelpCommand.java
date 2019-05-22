@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.user;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.JSP;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.ConversationGroup;
@@ -50,6 +50,6 @@ public class HelpCommand implements Command {
         } else if(messagesAmount == 0){
             content.setRequestAttribute("firstUserEnter", true);
         }
-        return Optional.of(JSP.MESSAGES);
+        return Optional.of(ActionNames.MESSAGES);
     }
 }

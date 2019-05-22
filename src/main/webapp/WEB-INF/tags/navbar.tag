@@ -11,9 +11,14 @@
 
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light shadow">
     <c:choose>
-        <c:when test="${not empty sessionScope.user}">
+        <c:when test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
             <h6 class="mt-1">
-                <a class="navbar-brand" href="${pageContext.request.contextPath}/udacidy/main">Udacidy</a>
+                <a class="navbar-brand" href="${pageContext.request.contextPath}/udacidy/contentediting">Udacidy</a>
+            </h6>
+        </c:when>
+        <c:when test="${not empty sessionScope.user and not sessionScope.user.isAdmin()}">
+            <h6 class="mt-1">
+                <a class="navbar-brand" href="${pageContext.request.contextPath}/udacidy/conferences">Udacidy</a>
             </h6>
         </c:when>
         <c:otherwise>

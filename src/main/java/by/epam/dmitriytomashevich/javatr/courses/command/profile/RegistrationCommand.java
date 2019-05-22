@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.profile;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.JSP;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.domain.UserRole;
@@ -24,14 +24,14 @@ public class RegistrationCommand implements Command {
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         String action = null;
         if(content.getActionType().equals(SessionRequestContent.ActionType.FORWARD)){
-            action = JSP.REGISTRATION;
+            action = ActionNames.REGISTRATION;
         }else{
             if(userService.addUser(defineUserData(content))){
-                action = JSP.LOGIN_ACTION;
+                action = ActionNames.LOGIN_ACTION;
             }else {
                 content.setRequestAttribute("errorRegistrationPassMessage", "User already exists!");
                 content.setActionType(SessionRequestContent.ActionType.FORWARD);
-                action = JSP.REGISTRATION;
+                action = ActionNames.REGISTRATION;
             }
         }
         return Optional.of(action);

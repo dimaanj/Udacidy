@@ -10,6 +10,7 @@ import by.epam.dmitriytomashevich.javatr.courses.logic.ContentService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.SectionService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.util.converter.SectionConverter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
@@ -38,12 +39,10 @@ public class RemoveRequestCommand implements Command {
         Long conferenceId = Long.valueOf(content.getParameter("conferenceId"));
         List<Section> sectionList = sectionService.findSectionsByConferenceId(conferenceId);
 
-        JsonArray jsonSections = null;
         boolean didSectionsExists;
         String message = null;
         if(!sectionList.isEmpty()) {
-            jsonSections = sectionsToJson(sectionList);
-            deleteRequest(conferenceId, user, sectionList);
+            deleteRequest(conferenceId, user);
             message = "Your request was removed successfully!";
             didSectionsExists = true;
         }else {
@@ -55,9 +54,6 @@ public class RemoveRequestCommand implements Command {
             content.getResponse().setContentType("application/json;charset=UTF-8");
             final JsonNodeFactory factory = JsonNodeFactory.instance;
             final ObjectNode node = factory.objectNode();
-            if(didSectionsExists){
-                node.putPOJO("conferenceSections", jsonSections);
-            }
             node.put("didSectionsExists", didSectionsExists);
             node.put("message", message);
 
@@ -69,32 +65,8 @@ public class RemoveRequestCommand implements Command {
         return Optional.empty();
     }
 
-    private void deleteRequest(Long conferenceId, User user, List<Section> sections) throws LogicException {
-        Request request = null;
-        for (Section s : sections) {
-            if ((request = requestService.findBySectionIdAndUserId(s.getId(), user.getId())) != null) {
-                requestService.deleteRequestWithRequestData(request.getId());
-                break;
-            }
-        }
-
-    }
-
-    private JsonArray sectionsToJson(List<Section> sectionList) throws LogicException {
-        JsonArray jsonSections = new JsonArray();
-        for(Section s : sectionList){
-            JsonSection jsonSection = new JsonSection();
-            Content content = contentService.findById(s.getContentId());
-
-            jsonSection.setId(s.getId());
-            jsonSection.setContent(content.getContent());
-            jsonSection.setContentId(content.getId());
-            jsonSection.setConferenceId(s.getConferenceId());
-
-            Gson gson = new Gson();
-            JsonElement element = gson.toJsonTree(jsonSection, JsonSection.class);
-            jsonSections.add(element);
-        }
-        return jsonSections;
+    private void deleteRequest(Long conferenceId, User user) throws LogicException {
+        Request request = requestService.findByUserIdAndConferenceId(user.getId(), conferenceId);
+        requestService.deleteRequestWithRequestData(request.getId());
     }
 }

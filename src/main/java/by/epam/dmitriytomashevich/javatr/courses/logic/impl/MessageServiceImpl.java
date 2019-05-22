@@ -21,16 +21,6 @@ public class MessageServiceImpl implements MessageService {
         userService = new UserServiceImpl(daoFactory);
     }
 
-
-    @Override
-    public List<Message> findChatMessagesByConversationId(Long id) throws LogicException {
-        try {
-            return messageDao.findByConversationId(id);
-        } catch (DAOException e) {
-            throw new LogicException(e);
-        }
-    }
-
     @Override
     public Long add(Message message) throws LogicException {
         try {
@@ -48,19 +38,6 @@ public class MessageServiceImpl implements MessageService {
         } catch (DAOException e) {
             throw new LogicException(e);
         }
-    }
-
-    @Override
-    public List<Message> getMessagesByConversationId(Long conversationId) throws LogicException {
-        List<Message> messages = findChatMessagesByConversationId(conversationId);
-
-        for (int i = 0; i < messages.size(); i++) {
-            Message m = messages.get(i);
-            User author = userService.findById(m.getCreatorId());
-            m.setCreator(author);
-            messages.set(i, m);
-        }
-        return messages;
     }
 
     @Override
@@ -120,20 +97,5 @@ public class MessageServiceImpl implements MessageService {
         } catch (DAOException e) {
             throw new LogicException(e);
         }
-    }
-
-    @Override
-    public JsonMessage toJsonMessage(Message message) {
-        JsonMessage jsonMessage = new JsonMessage();
-        jsonMessage.setId(message.getId());
-        jsonMessage.setFormattedCreationDateTime(message.getFormattedCreationDateTime());
-        jsonMessage.setCreatorFirstName(message.getCreator().getFirstName());
-        jsonMessage.setCreatorLastName(message.getCreator().getLastName());
-        jsonMessage.setText(message.getText());
-        jsonMessage.setCreatorId(message.getCreator().getId());
-        jsonMessage.setCreatorRole(message.getCreator().getRole());
-        jsonMessage.setConversationId(message.getConversationId());
-        jsonMessage.setImageUrl(message.getImageUrl());
-        return jsonMessage;
     }
 }

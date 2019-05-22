@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.admin;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.JSP;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Message;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
@@ -44,6 +44,6 @@ public class AdminCommand implements Command {
         }
         content.setRequestAttribute("askingUsersWithTheirsConversations", map);
 
-        return Optional.of(JSP.ADMIN);
+        return Optional.of(ActionNames.ADMIN);
     }
 }

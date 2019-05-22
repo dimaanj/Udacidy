@@ -1,4 +1,4 @@
-package by.epam.dmitriytomashevich.javatr.courses.command.main;
+package by.epam.dmitriytomashevich.javatr.courses.command.user;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
@@ -19,24 +19,23 @@ import com.google.gson.JsonElement;
 import java.util.List;
 import java.util.Optional;
 
-public class MainCommand implements Command {
+public class ConferencesCommand implements Command {
     private final ConferenceService conferenceService;
-    private final ContentService contentService;
     private final UserService userService;
     private final SectionService sectionService;
+    private final ContentService contentService;
     private final RequestService requestService;
 
-    public MainCommand(ServiceFactory serviceFactory){
+    public ConferencesCommand(ServiceFactory serviceFactory){
         conferenceService = serviceFactory.createConferenceService();
-        contentService = serviceFactory.createContentService();
         userService = serviceFactory.createUserService();
         sectionService = serviceFactory.createSectionService();
+        contentService = serviceFactory.createContentService();
         requestService = serviceFactory.createRequestService();
     }
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
-
         List<Conference> conferenceList = conferenceService.findSomeLastConferences(Parameter.CONFERENCES_UPDATE_AMOUNT);
         JsonArray jsonConferencesList = new JsonArray();
         User user = (User) content.getSession(false).getAttribute(Parameter.USER);
@@ -68,7 +67,7 @@ public class MainCommand implements Command {
             content.setRequestAttribute("hideViewMoreButton",  Boolean.TRUE);
         }
 
-        return Optional.of(ActionNames.MAIN);
+        return Optional.of(ActionNames.CONFERENCES);
     }
 
     private boolean isRequestAlreadySentRequest(User user, List<Section> sections) throws LogicException {

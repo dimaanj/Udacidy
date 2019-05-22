@@ -10,6 +10,7 @@ import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.util.converter.MessageConverter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
@@ -46,7 +47,7 @@ public class LoadMessagesCommand implements Command {
         for (Message m : messages) {
             User creator = userService.findById(m.getCreatorId());
             m.setCreator(creator);
-            JsonMessage jsonMessage = messageService.toJsonMessage(m);
+            JsonMessage jsonMessage =new MessageConverter().convert(m);
             Gson gson = new Gson();
             JsonElement element = gson.toJsonTree(jsonMessage, JsonMessage.class);
             jsonMessagesList.add(element);

@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.admin;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.JSP;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.ConversationGroup;
@@ -38,7 +38,7 @@ public class AdminConversationCommand implements Command {
                 group.setUserId(admin.getId());
                 conversationGroupService.add(group);
             }
-            return Optional.of(JSP.ADMIN_CONVERSATION_ACTION + conversationId);
+            return Optional.of(ActionNames.ADMIN_CONVERSATION_ACTION + conversationId);
         } else {
             Conversation conversation = conversationService.getById(conversationId);
             content.setRequestAttribute("conversationId", conversation.getId());
@@ -46,7 +46,7 @@ public class AdminConversationCommand implements Command {
             if(messagesAmount > Parameter.MESSAGES_UPDATE_AMOUNT){
                 content.setRequestAttribute("showViewMoreButton", true);
             }
-            return Optional.of(JSP.MESSAGES);
+            return Optional.of(ActionNames.MESSAGES);
         }
     }
 }

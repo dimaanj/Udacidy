@@ -31,13 +31,13 @@
     <main role="main" class="inner cover">
         <h1 class="cover-heading">Sorry.</h1>
         <p class="lead">
-            Request from <c:out value="${pageContext.errorData.requestURI}"/> is failed
+            Request from ${pageContext.errorData.requestURI} is failed
             <br/>
-            Servlet name or type: <c:out value="${pageContext.errorData.servletName}"/>
+            Servlet name or type: ${pageContext.errorData.servletName}
             <br/>
-            Status code: <c:out value="${pageContext.errorData.statusCode}"/>
+            Status code: ${pageContext.errorData.statusCode}
             <br/>
-            Exception: <c:out value="${pageContext.errorData.throwable}"/>
+            Exception: ${pageContext.errorData.throwable}
         </p>
     </main>
 </div>

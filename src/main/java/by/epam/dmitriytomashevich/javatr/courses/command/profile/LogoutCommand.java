@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.profile;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.JSP;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
@@ -15,7 +15,7 @@ public class LogoutCommand implements Command {
         String page;
         content.getSession().removeAttribute(Parameter.USER);
         content.invalidateSession();
-        page = JSP.LOGIN_ACTION;
+        page = ActionNames.LOGIN_ACTION;
         return Optional.of(page);
     }
 }

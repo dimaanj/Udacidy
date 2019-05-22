@@ -17,17 +17,17 @@ public class RequestDao implements AbstractDao<Long, Request> {
     private final Connection connection;
 
     private static final String INSERT = "INSERT INTO udacidy.request\n" +
-            "    (user_id, creation_date_time)\n" +
-            "VALUES (?, ?);";
+            "    (user_id, creation_date_time, status)\n" +
+            "VALUES (?, ?, ?);";
 
-    private static final String FIND_BY_SECTION_ID_AND_USER_ID = "SELECT r.id, r.user_id, r.creation_date_time\n" +
+    private static final String FIND_BY_SECTION_ID_AND_USER_ID = "SELECT r.id, r.user_id, r.creation_date_time, r.status\n" +
             "    FROM section s\n" +
             "        JOIN request_data rd on s.id = rd.section_id\n" +
             "        JOIN request r on rd.request_id = r.id\n" +
             "        JOIN user u on r.user_id = u.id\n" +
             "    WHERE s.id = ? and u.id = ?";
 
-    private static final String FIND_BY_SECTION_ID = "SELECT r.id, r.user_id, r.creation_date_time\n" +
+    private static final String FIND_BY_SECTION_ID = "SELECT r.id, r.user_id, r.creation_date_time, r.status\n" +
             "FROM section s\n" +
             "         JOIN request_data rd on s.id = rd.section_id\n" +
             "         JOIN request r on rd.request_id = r.id\n" +
@@ -38,6 +38,14 @@ public class RequestDao implements AbstractDao<Long, Request> {
 
     private static final String DELETE_REQUEST_FORM_BY_REQUEST_ID = "DELETE FROM request_data \n" +
             "    WHERE request_id = ?";
+
+    private static final String FIND_REQUEST_BY_USER_ID_AND_CONFERENCE_ID = "SELECT r.id, r.user_id, r.creation_date_time, r.status\n" +
+            "FROM user u\n" +
+            "    JOIN request r on u.id = r.user_id\n" +
+            "    JOIN request_data rd on r.id = rd.request_id\n" +
+            "    JOIN section s on rd.section_id = s.id\n" +
+            "    JOIN conference c on s.conference_id = c.id\n" +
+            "    WHERE u.id = ? and conference_id = ?";
 
     public RequestDao(Connection connection){
         this.connection = connection;
@@ -69,6 +77,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
                             .toInstant());
             Object param = new java.sql.Timestamp(dateTime.getTime());
             statement.setObject(2, param);
+            statement.setString(3, entity.getRequestStatus().getStatus().toUpperCase());
 
             int affectedRows = statement.executeUpdate();
 
@@ -145,6 +154,23 @@ public class RequestDao implements AbstractDao<Long, Request> {
             statement.execute();
 
             connection.commit();
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    public Request findRequestByUserIdAndConferenceId(Long userId, Long conferenceId) throws DAOException {
+        Request request = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement(FIND_REQUEST_BY_USER_ID_AND_CONFERENCE_ID);
+            statement.setLong(1, userId);
+            statement.setLong(2, conferenceId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                request = builder.build(resultSet);
+            }
+            resultSet.close();
+            return request;
         } catch (SQLException e) {
             throw new DAOException(e);
         }

@@ -23,8 +23,6 @@ import java.util.Optional;
         maxFileSize = 1024 * 1024 * 5,
         maxRequestSize = 1024 * 1024 * 5 * 5)
 public class Controller extends HttpServlet {
-    private Connection connection;
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         processRequest(req, resp);
@@ -41,9 +39,7 @@ public class Controller extends HttpServlet {
 
         ConnectionPool connectionPool=ConnectionPool.getInstance();
         Connection connection = connectionPool.getConnection();
-
         CommandFactory commandFactory = createCommandFactory(connection);
-
         Command command = new ActionFactory().defineCommand(request, commandFactory);
 
         try {

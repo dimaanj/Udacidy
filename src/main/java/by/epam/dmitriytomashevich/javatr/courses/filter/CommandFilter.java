@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.filter;
 
 
 import by.epam.dmitriytomashevich.javatr.courses.constant.CommandNames;
-import by.epam.dmitriytomashevich.javatr.courses.constant.JSP;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.util.validator.CommandValidator;
@@ -31,7 +31,6 @@ public class CommandFilter implements Filter {
         userCommands.add(CommandNames.HELP);
         userCommands.add(CommandNames.LOG_OUT);
         userCommands.add(CommandNames.PAGE_NOT_FOUND);
-        userCommands.add(CommandNames.MAIN);
         userCommands.add(CommandNames.AJAX_SEND_MESSAGE);
         userCommands.add(CommandNames.VIEW_MORE);
         userCommands.add(CommandNames.UPLOAD_MESSAGES);
@@ -39,11 +38,11 @@ public class CommandFilter implements Filter {
         userCommands.add(CommandNames.SEND_REQUEST);
         userCommands.add(CommandNames.LOAD_MESSAGES);
         userCommands.add(CommandNames.REMOVE_REQUEST_COMMAND);
+        userCommands.add(CommandNames.CONFERENCES);
 
 
         adminCommands.add(CommandNames.LOG_OUT);
         adminCommands.add(CommandNames.PAGE_NOT_FOUND);
-        adminCommands.add(CommandNames.MAIN);
         adminCommands.add(CommandNames.ADMIN_CONVERSATION_COMMAND);
         adminCommands.add(CommandNames.AJAX_SEND_MESSAGE);
         adminCommands.add(CommandNames.VIEW_MORE);
@@ -56,6 +55,7 @@ public class CommandFilter implements Filter {
         adminCommands.add(CommandNames.DELETE_CONFERENCE);
         adminCommands.add(CommandNames.VIEW_MORE_CONFERENCES);
         adminCommands.add(CommandNames.LOAD_MESSAGES);
+        adminCommands.add(CommandNames.CONTENT_EDITING);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class CommandFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         HttpSession currentSession = request.getSession(false);
-        boolean isAdmin = false;
+        Boolean isAdmin = null;
         User user = currentSession != null ? (User) currentSession.getAttribute(Parameter.USER) : null;
         if (user != null) {
             isAdmin = user.isAdmin();
@@ -78,11 +78,11 @@ public class CommandFilter implements Filter {
         }
 
         if ((user == null && CommandValidator.defineCommand(guestAllowedCommands, stringCommand)) ||
-                (isAdmin && CommandValidator.defineCommand(adminCommands, stringCommand)) ||
-                (user != null && CommandValidator.defineCommand(userCommands, stringCommand))) {
+                (isAdmin != null && isAdmin && CommandValidator.defineCommand(adminCommands, stringCommand)) ||
+                (isAdmin != null && !isAdmin && CommandValidator.defineCommand(userCommands, stringCommand))) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-            RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher(JSP.PAGE_NOT_FOUND_ACTION);
+            RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher(ActionNames.PAGE_NOT_FOUND_ACTION);
             dispatcher.forward(request, response);
         }
     }

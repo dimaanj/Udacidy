@@ -11,6 +11,7 @@ import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.util.converter.MessageConverter;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -42,7 +43,7 @@ public class UpdateMessagesCommand implements Command {
             for (Message m : messages) {
                 User creator = userService.findById(m.getCreatorId());
                 m.setCreator(creator);
-                JsonMessage jsonMessage = messageService.toJsonMessage(m);
+                JsonMessage jsonMessage = new MessageConverter().convert(m);
                 Gson gson = new Gson();
                 JsonElement element = gson.toJsonTree(jsonMessage, JsonMessage.class);
                 jsonMessagesList.add(element);

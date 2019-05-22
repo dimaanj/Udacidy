@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.profile;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.JSP;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
@@ -24,7 +24,7 @@ public class LoginCommand implements Command {
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         String page;
         if(content.getActionType().equals(SessionRequestContent.ActionType.FORWARD)){
-            page = JSP.LOGIN;
+            page = ActionNames.LOGIN;
         }else {
             String email = content.getParameter("email");
             String password = content.getParameter("password");
@@ -36,11 +36,15 @@ public class LoginCommand implements Command {
             if (user != null) {
                 HttpSession session = content.getSession();
                 session.setAttribute(Parameter.USER, user);
-                page = JSP.MAIN_ACTION;
+                if(user.isAdmin()){
+                    page = ActionNames.CONTENT_EDITING_ACTION;
+                }else {
+                    page = ActionNames.CONFERENCES_ACTION;
+                }
             } else {
                 content.setRequestAttribute("errorLoginPassMessage", "Invalid credentials!");
                 content.setActionType(SessionRequestContent.ActionType.FORWARD);
-                page = JSP.LOGIN;
+                page = ActionNames.LOGIN;
             }
         }
         return Optional.of(page);

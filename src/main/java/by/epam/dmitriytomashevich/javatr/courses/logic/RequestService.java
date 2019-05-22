@@ -10,4 +10,5 @@ public interface RequestService {
     Request findBySectionIdAndUserId(Long sectionId, Long userId) throws LogicException;
     List<Request> findBySectionId(Long sectionId) throws LogicException;
     void deleteRequestWithRequestData(Long requestId) throws LogicException;
+    Request findByUserIdAndConferenceId(Long userId, Long conferenceId) throws LogicException;
 }

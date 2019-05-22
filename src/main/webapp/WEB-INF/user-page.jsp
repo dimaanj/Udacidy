@@ -11,9 +11,15 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-
+<style>
+    #responsive-image {
+        width: 100%;
+        height: auto;
+    }
+</style>
 <tag:navbar/>
 <main role="main" class="container-fluid">
     <div class="row mt-4 justify-content-md-center">
@@ -42,43 +48,99 @@
             </div>
         </div>
     </div>
+    <c:if test="${not empty conferences}">
+        <div class="row mt-4 justify-content-md-center">
+            <div class="py-2">
+                <h2>Requests</h2>
+            </div>
+        </div>
+    </c:if>
     <div id="container">
 
     </div>
-<%--    <c:if test="${not empty conferences}">--%>
-<%--        --%>
-<%--    </c:if>--%>
-<%--    <div class="row mt-4 justify-content-md-center">--%>
-
-<%--        <div class="py-2">--%>
-<%--            <h2>Requests</h2>--%>
-<%--        </div>--%>
-<%--        --%>
-<%--        <c:if test="${not empty conferences}">--%>
-<%--            <c:forEach items="${conferences}" var="conference">--%>
-<%--                <div class="col-sm-7 shadow-lg rounded-lg">--%>
-<%--                    <div name="container">--%>
-<%--                        <c:out value="${conference.getContent().getContent()}"/>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </c:forEach>--%>
-<%--        </c:if>--%>
-<%--    </div>--%>
-
 </main>
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you really want to remove this request?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" id="confirmationButton">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
 <tag:footer/>
 
 <script>
     window.onload = function () {
         <c:if test="${not empty conferences}">
-            <c:forEach items="${conferences}" var="conference">
-                var conference = ${conference};
-                console.log(conference);
-                var row = createConference(conference);
-
-            </c:forEach>
+        <c:forEach var="i" begin="0" end="${conferences.size()-1}">
+        var conference = ${conferences.get(i)};
+        console.log(conference);
+        var row = createConference(conference);
+        document.getElementById('container').appendChild(row);
+        </c:forEach>
         </c:if>
     };
+
+    var body = $("body");
+
+    body.on('click', "button[name='removeRequest']", function () {
+        var rowElement = this.parentElement.parentElement.parentElement.parentElement;
+        var confirmationButton = document.getElementById('confirmationButton');
+        confirmationButton.setAttribute('name', rowElement.getAttribute('id'));
+    });
+
+    body.on('click', '#confirmationButton', function (event) {
+        var thisButton = this;
+        var conferenceId = this.getAttribute('name');
+        var rowElement = document.getElementById(conferenceId);
+        const formData = new FormData();
+        formData.append('command', 'removeRequest');
+        formData.append('conferenceId', conferenceId);
+
+        var url = '/udacidy/';
+        var fetchOptions = {
+            method: 'POST',
+            body: formData,
+        };
+        var responsePromise = fetch(url, fetchOptions);
+        responsePromise
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (jsonObj) {
+                var alert;
+                if (jsonObj.didSectionsExists) {
+                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-info');
+                } else {
+                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
+                }
+                alert.classList.add('mx-auto');
+                alert.classList.add('col-sm-8');
+                alert.classList.add('shadow-lg');
+                alert.classList.add('rounded-lg');
+                alert.classList.add('mt-3');
+                alert.setAttribute('id', rowElement.getAttribute('id'));
+
+                rowElement.parentNode.replaceChild(alert, rowElement);
+                document.getElementById(alert.getAttribute('id')).scrollIntoView();
+
+                thisButton.removeAttribute('name');
+                $('#confirmationModal').modal('hide');
+            });
+    });
+
     function createConference(jsonConference) {
         var conferenceId = jsonConference.id;
         var conferenceContent = jsonConference.content;
@@ -100,7 +162,7 @@
         bodyData.setAttribute('id', 'bodyData');
         bodyData.innerHTML = conferenceContent;
         var images = bodyData.getElementsByTagName('img');
-        for(var k=0; k<images.length; k++){
+        for (var k = 0; k < images.length; k++) {
             images[k].setAttribute('id', 'responsive-image');
         }
 
@@ -122,9 +184,6 @@
         flexR.appendChild(flexItem);
         col.appendChild(flexR);
 
-        var collapse = chooseSectionsCollapseElementBuilder(conferenceSections);
-        col.appendChild(collapse);
-
         row.appendChild(col);
         return row;
     }
@@ -139,6 +198,37 @@
         removeRequestButton.setAttribute('data-target', '#confirmationModal');
         return removeRequestButton;
     };
+
+    function createAlertWithTextAndType(text, type) {
+        var alert = document.createElement('div');
+        alert.classList.add('alert');
+        alert.classList.add(type);
+        alert.classList.add('alert-dismissible');
+        alert.classList.add('fade');
+        alert.classList.add('show');
+        alert.setAttribute('role', 'alert');
+
+        var strong = document.createElement('strong');
+        strong.appendChild(document.createTextNode(text));
+
+        var button = document.createElement('button');
+        button.setAttribute('type', 'button');
+        button.classList.add('close');
+        button.setAttribute('data-dismiss', 'alert');
+        button.setAttribute('aria-label', 'Close');
+
+        var span = document.createElement('span');
+        span.setAttribute('aria-hidden', 'true');
+        span.innerHTML = '&times;';
+
+        button.appendChild(span);
+        alert.appendChild(strong);
+        alert.appendChild(button);
+        return alert;
+    }
+
+
+
 </script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
