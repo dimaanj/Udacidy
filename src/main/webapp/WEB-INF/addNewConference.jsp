@@ -15,59 +15,13 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-    <script>
-        var mainArea = {
-            selector: '#mytextarea',
-            height: 700,
-            plugins: [
-                "advlist autolink lists link image charmap print preview anchor",
-                "searchreplace visualblocks code fullscreen",
-                "insertdatetime media table paste imagetools wordcount checklist"
-            ],
-            content_css: [
-                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-                '//www.tiny.cloud/css/codepen.min.css'
-            ],
-            mobile: {
-                theme: 'mobile',
-                plugins: ['autosave', 'lists', 'autolink'],
-                toolbar: ['undo', 'bold', 'italic', 'styleselect']
-            },
-            toolbar: ' insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | checklist',
-        };
-
-        tinymce.init(mainArea);
-    </script>
-    <style>
-        .tox-checklist > li:not(.tox-checklist--hidden) {
-            list-style: none;
-            margin: .25em 0;
-            position: relative;
-        }
-
-        .tox-checklist > li:not(.tox-checklist--hidden)::before {
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cg%20id%3D%22checklist-unchecked%22%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Crect%20id%3D%22Rectangle%22%20width%3D%2215%22%20height%3D%2215%22%20x%3D%22.5%22%20y%3D%22.5%22%20fill-rule%3D%22nonzero%22%20stroke%3D%22%234C4C4C%22%20rx%3D%222%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E%0A");
-            background-size: 100%;
-            content: '';
-            cursor: pointer;
-            height: 1em;
-            left: -1.5em;
-            position: absolute;
-            top: .125em;
-            width: 1em;
-        }
-
-        .tox-checklist li:not(.tox-checklist--hidden).tox-checklist--checked::before {
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cg%20id%3D%22checklist-checked%22%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Crect%20id%3D%22Rectangle%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%234099FF%22%20fill-rule%3D%22nonzero%22%20rx%3D%222%22%2F%3E%3Cpath%20id%3D%22Path%22%20fill%3D%22%23FFF%22%20fill-rule%3D%22nonzero%22%20d%3D%22M11.5703186%2C3.14417309%20C11.8516238%2C2.73724603%2012.4164781%2C2.62829933%2012.83558%2C2.89774797%20C13.260121%2C3.17069355%2013.3759736%2C3.72932262%2013.0909105%2C4.14168582%20L7.7580587%2C11.8560195%20C7.43776896%2C12.3193404%206.76483983%2C12.3852142%206.35607322%2C11.9948725%20L3.02491697%2C8.8138662%20C2.66090143%2C8.46625845%202.65798871%2C7.89594698%203.01850234%2C7.54483354%20C3.373942%2C7.19866177%203.94940006%2C7.19592841%204.30829608%2C7.5386474%20L6.85276923%2C9.9684299%20L11.5703186%2C3.14417309%20Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E%0A");
-        }
-    </style>
+    <script src="../js/tinymceCreatorConfig.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/checkList.css">
 </head>
 <body>
 
 <tag:navbar/>
-
 <main role="main" class="container-fluid">
-
     <div class="row justify-content-md-center">
         <div class="col-sm-9">
             <div id="alert-message">
@@ -118,15 +72,6 @@
     </div>
 </main>
 
-<style>
-    .shadow-textarea textarea.form-control::placeholder {
-        font-weight: 300;
-    }
-
-    .shadow-textarea textarea.form-control {
-        padding-left: 0.8rem;
-    }
-</style>
 <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
@@ -156,127 +101,8 @@
         </div>
     </div>
 </div>
-
-<script>
-
-    var nextStepButton = document.getElementById('nextStepButton');
-    nextStepButton.addEventListener('click', function (event) {
-        var alertContainer = $('#alert-message');
-
-        alertContainer.innerHTML = "";
-        document.getElementById("data-container").innerHTML = "";
-
-        var content = tinymce.get("mytextarea").getContent();
-        var sections = tinymce.get("mytextarea").$(".tox-checklist--checked");
-
-        console.log("1");
-        var alert;
-        if(content !== ""){
-            console.log("2");
-            if(isEmpty(sections) || sections.length === 0){
-                console.log("3");
-                alert = createAlertWithTextAndType('Your conference should contain at least one checked element.' +
-                    'You can find it in toolbar menu. And try to submit again!', 'alert-danger');
-                alertContainer.append(alert);
-                $(window).scrollTop(0);
-            }else {
-                console.log("4");
-                console.log(tinymce.get("mytextarea").getContent());
-                document.getElementById('data-container').innerHTML = content;
-                $('#previewModal').modal('show');
-            }
-        }else {
-            console.log("5");
-            alert = createAlertWithTextAndType('Content empty! Fill in your conference!', 'alert-danger');
-            alertContainer.append(alert);
-            $(window).scrollTop(0);
-        }
-    });
-
-    function createAlertWithTextAndType(text, type) {
-        var alert = document.createElement('div');
-        alert.classList.add('alert');
-        alert.classList.add(type);
-        alert.classList.add('alert-dismissible');
-        alert.classList.add('fade');
-        alert.classList.add('show');
-        alert.setAttribute('role', 'alert');
-
-        var strong = document.createElement('strong');
-        strong.appendChild(document.createTextNode(text));
-
-        var button = document.createElement('button');
-        button.setAttribute('type', 'button');
-        button.classList.add('close');
-        button.setAttribute('data-dismiss', 'alert');
-        button.setAttribute('aria-label', 'Close');
-
-        var span = document.createElement('span');
-        span.setAttribute('aria-hidden', 'true');
-        span.innerHTML = '&times;';
-
-        button.appendChild(span);
-        alert.appendChild(strong);
-        alert.appendChild(button);
-        return alert;
-    }
-
-    function isEmpty(obj) {
-        for(var key in obj) {
-            if(obj.hasOwnProperty(key)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    var createConference = document.getElementById('addConferenceButton');
-    createConference.addEventListener('click', function () {
-        $('#previewModal').modal('hide');
-        this.setAttribute('disabled', 'true');
-
-        var content = tinymce.get("mytextarea").getContent();
-        var sections = tinymce.get("mytextarea").$(".tox-checklist--checked");
-
-        var sectionsArray = new Array(sections.length);
-        for(var i=0; i<sections.length; i++){
-            console.log(sections[i].innerHTML);
-            sectionsArray[i] = sections[i].innerHTML;
-        }
-
-        const formData = new FormData();
-        formData.append('command', 'createConference');
-        formData.append('content', content);
-        formData.append('sections', JSON.stringify(sectionsArray));
-
-        var url = '/udacidy/';
-        var fetchOptions = {
-            method: 'POST',
-            body: formData
-        };
-        var responsePromise = fetch(url, fetchOptions);
-        responsePromise
-            .then(function (response) {
-                return response.text();
-            })
-            .then(function (text) {
-                console.log(text);
-                createAlertWithTextAndType(text, 'alert-success')
-                $('#alert-message').append("<div class=\"alert alert-success alert-dismissible fade show shadow\" role=\"alert\">\n" +
-                    "  <strong>"+text+"!</strong> Aww yeah, you successfully read this important alert message. \n" +
-                    "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">\n" +
-                    "    <span aria-hidden=\"true\">&times;</span>\n" +
-                    "  </button>\n" +
-                    "</div>");
-                $(window).scrollTop(0);
-            });
-        this.removeAttribute('disabled');
-        event.preventDefault();
-    });
-
-</script>
-
 <tag:footer/>
+<script src="../js/contentCreator.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"

@@ -10,24 +10,11 @@
     <title>Checkout example · Bootstrap</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/cover.css">
 </head>
 
 <body class="text-center">
 
-<style>
-    .cover {
-        padding: 0 1.5rem;
-    }
-
-    .cover .btn-lg {
-        padding: .75rem 1.25rem;
-        font-weight: 700;
-    }
-
-    .cover-container {
-        max-width: 42em;
-    }
-</style>
 <tag:navbar/>
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <main role="main" class="inner cover">

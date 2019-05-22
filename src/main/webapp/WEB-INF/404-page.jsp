@@ -11,21 +11,9 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/cover.css">
 </head>
-<style>
-    .cover {
-        padding: 0 1.5rem;
-    }
 
-    .cover .btn-lg {
-        padding: .75rem 1.25rem;
-        font-weight: 700;
-    }
-
-    .cover-container {
-        max-width: 42em;
-    }
-</style>
 <body class="text-center">
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <main role="main" class="inner cover">
@@ -36,11 +24,14 @@
         </p>
         <p class="lead">
             <c:choose>
-                <c:when test="${not empty sessionScope.user}">
-                    <a href="${pageContext.request.contextPath}/udacidy/main" class="btn btn-lg btn-primary">Go main page</a>
+                <c:when test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
+                    <a href="${pageContext.request.contextPath}/udacidy/contentediting" class="btn btn-lg btn-primary">Go main page</a>
+                </c:when>
+                <c:when test="${not empty sessionScope.user and not sessionScope.user.isAdmin()}">
+                    <a href="${pageContext.request.contextPath}/udacidy/conferences" class="btn btn-lg btn-primary">Go main page</a>
                 </c:when>
                 <c:otherwise>
-                    <a href="${pageContext.request.contextPath}/udacidy/" class="btn btn-lg btn-primary">Go back</a>
+                    <a href="${pageContext.request.contextPath}/udacidy/" class="btn btn-lg btn-primary">Go main page</a>
                 </c:otherwise>
             </c:choose>
         </p>
