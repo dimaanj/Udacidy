@@ -9,7 +9,7 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.UserRole;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.util.UserServiceHandler;
+import by.epam.dmitriytomashevich.javatr.courses.util.logic_helper.UserServiceHandler;
 
 import java.util.Optional;
 

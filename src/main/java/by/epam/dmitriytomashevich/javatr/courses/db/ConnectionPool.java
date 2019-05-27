@@ -46,7 +46,6 @@ public class ConnectionPool {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -63,21 +62,17 @@ public class ConnectionPool {
     public Connection getConnection() {
         Connection connection = connectionPool.poll();
         usedConnections.add(connection);
-
-        System.out.println("pool size = " + connectionPool.size());
-        System.out.println("used connections = " + usedConnections.size());
-        System.out.println("-----------------------------------------");
         return connection;
     }
 
     public boolean releaseConnection(Connection connection) {
+        try {
+            connection.clearWarnings();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         connectionPool.add(connection);
-        boolean isConnectionInUsedConnectionQueue = usedConnections.remove(connection);
-
-        System.out.println("pool size = " + connectionPool.size());
-        System.out.println("used connections = " + usedConnections.size());
-        System.out.println("-----------------------------------------");
-        return isConnectionInUsedConnectionQueue;
+        return usedConnections.remove(connection);
     }
 
     public void shutdown() throws SQLException {

@@ -6,7 +6,6 @@ public class CommandNames {
     public static final String LOGIN = "/udacidy/login";
     public static final String LOG_OUT = "logout";
     public static final String HELP = "/udacidy/help";
-    public static final String SEND_REQUEST = "sendRequest";
     public static final String REMOVE_REQUEST_COMMAND = "removeRequest";
     public static final String VIEW_MORE = "viewMore";
     public static final String UPLOAD_MESSAGES = "/udacidy/updateMessages";
@@ -25,4 +24,9 @@ public class CommandNames {
     public static final String ADMIN_CONVERSATION_COMMAND = "/udacidy/conversation";
     public static final String CONTENT_EDITING = "/udacidy/contentediting";
     public static final String CONFERENCES = "/udacidy/conferences";
+    public static final String GET_CONFERENCES = "getconferences";
+    public static final String CHANGE_PASSWORD = "changePassword";
+    public static final String GET_CONFERENCE_CONTENT = "getConferenceContent";
+    
+    public static final String SEND_CLIENT_REQUEST = "sendClientRequest";
 }

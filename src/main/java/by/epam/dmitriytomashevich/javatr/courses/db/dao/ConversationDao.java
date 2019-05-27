@@ -74,6 +74,7 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
                 conversations.add(conversation);
             }
             resultSet.close();
+            statement.close();
             return conversations;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -91,6 +92,7 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
                 conversation = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return conversation;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -127,6 +129,7 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
             statement.setString(1, entity.getType().getValue());
             statement.execute();
             connection.commit();
+            statement.close();
             return conversationId;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -150,6 +153,7 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
                 conversations.add(conversation);
             }
             resultSet.close();
+            statement.close();
             return conversations;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -166,6 +170,7 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
                 conversation = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return conversation;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -183,6 +188,7 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
                 conversation = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return conversation;
         } catch (SQLException e) {
             throw new DAOException(e);

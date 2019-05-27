@@ -11,6 +11,8 @@ public class Conference {
     private User author;
     private Content content;
     private List<Section> sections;
+    private boolean requestSent;
+    private RequestStatus requestStatus;
 
     @Override
     public boolean equals(Object o) {
@@ -22,12 +24,14 @@ public class Conference {
                 Objects.equals(authorId, that.authorId) &&
                 Objects.equals(author, that.author) &&
                 Objects.equals(content, that.content) &&
-                Objects.equals(sections, that.sections);
+                Objects.equals(requestSent, that.requestSent) &&
+                Objects.equals(sections, that.sections) &&
+                Objects.equals(requestStatus, that.requestStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, contentId, authorId, author, content, sections);
+        return Objects.hash(requestStatus, requestSent, id, contentId, authorId, author, content, sections);
     }
 
     public Long getId() {
@@ -76,5 +80,21 @@ public class Conference {
 
     public void setSections(List<Section> sections) {
         this.sections = sections;
+    }
+
+    public boolean isRequestSent() {
+        return requestSent;
+    }
+
+    public void setRequestSent(boolean wasRequestSent) {
+        this.requestSent = wasRequestSent;
+    }
+
+    public RequestStatus getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
     }
 }

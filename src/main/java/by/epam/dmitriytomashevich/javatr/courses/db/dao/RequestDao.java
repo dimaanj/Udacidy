@@ -24,8 +24,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
             "    FROM section s\n" +
             "        JOIN request_data rd on s.id = rd.section_id\n" +
             "        JOIN request r on rd.request_id = r.id\n" +
-            "        JOIN user u on r.user_id = u.id\n" +
-            "    WHERE s.id = ? and u.id = ?";
+            "    WHERE s.id = ? and r.user_id = ?";
 
     private static final String FIND_BY_SECTION_ID = "SELECT r.id, r.user_id, r.creation_date_time, r.status\n" +
             "FROM section s\n" +
@@ -40,12 +39,11 @@ public class RequestDao implements AbstractDao<Long, Request> {
             "    WHERE request_id = ?";
 
     private static final String FIND_REQUEST_BY_USER_ID_AND_CONFERENCE_ID = "SELECT r.id, r.user_id, r.creation_date_time, r.status\n" +
-            "FROM user u\n" +
-            "    JOIN request r on u.id = r.user_id\n" +
-            "    JOIN request_data rd on r.id = rd.request_id\n" +
-            "    JOIN section s on rd.section_id = s.id\n" +
-            "    JOIN conference c on s.conference_id = c.id\n" +
-            "    WHERE u.id = ? and conference_id = ?";
+            "FROM request r\n" +
+            "         JOIN request_data rd on r.id = rd.request_id\n" +
+            "         JOIN section s on rd.section_id = s.id\n" +
+            "         JOIN conference c on s.conference_id = c.id\n" +
+            "WHERE r.user_id = ? and c.id = ?";
 
     public RequestDao(Connection connection){
         this.connection = connection;
@@ -94,6 +92,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
                 }
             }
             connection.commit();
+            statement.close();
             return requestFormId;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -117,6 +116,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
                 request = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return request;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -136,6 +136,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
                 requests.add(request);
             }
             resultSet.close();
+            statement.close();
             return requests;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -154,6 +155,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
             statement.execute();
 
             connection.commit();
+            statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }
@@ -170,6 +172,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
                 request = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return request;
         } catch (SQLException e) {
             throw new DAOException(e);

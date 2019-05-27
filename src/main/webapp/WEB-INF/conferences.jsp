@@ -18,16 +18,79 @@
 </head>
 <body>
 
+${pageContext.response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate")}
+${pageContext.response.setHeader("Pragma", "no-cache")}
+${pageContext.response.setHeader("Expires", "0")}
+
 <tag:navbar/>
 <main role="main" class="container-fluid" id="main-tag">
-    <div id="data-container"></div>
-
+    <c:if test="${not empty conferences}">
+        <c:forEach items="${conferences}" var="conference">
+            <div class="row mt-4 justify-content-md-center" id="${conference.getId()}">
+                <div class="col-sm-7 shadow-lg rounded-lg p-5">
+                    <div id="bodyData${conference.getId()}">
+                            ${conference.getContent().getContent()}
+                    </div>
+                    <div class="d-flex flex-row bd-highlight mt-3" id="flex-row${conference.getId()}">
+                        <div class="p-2 bd-highlight">
+                            <c:choose>
+                                <c:when test="${not empty conference.getRequestStatus()}">
+                            <span><a href="${pageContext.request.contextPath}/udacidy/profile">Go profile</a>
+                                to check details of your request</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <button class="btn btn-primary"
+                                            name="chooseSectionsButton"
+                                            type="button"
+                                            data-toggle="collapse"
+                                            data-target="#collapseSections${conference.getId()}"
+                                            aria-expanded="false"
+                                            aria-controls="collapseSections${conference.getId()}">
+                                        Choose sections
+                                    </button>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+                    <div class="collapse"
+                         id="collapseSections${conference.getId()}">
+                        <div class="card">
+                            <div class="card-body">
+                                <c:if test="${not empty conference.getSections()}">
+                                    <ul class="tox-checklist" id="sectionsUl${conference.getId()}">
+                                        <c:forEach items="${conference.getSections()}" var="section">
+                                            <li name="section" id="${section.getId()}">
+                                                    ${section.getContent().getContent()}
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </c:if>
+                            </div>
+                            <div class="card-footer border-white">
+                                <button class="btn btn-primary"
+                                        name="submitRequestButton"
+                                        type="button"
+                                        form="sendRequestForm"
+                                        id="submitRequestButton${conference.getId()}">
+                                    Submit request
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
+    </c:if>
     <c:if test="${not hideViewMoreButton}">
         <button class="btn btn-primary btn-lg btn-block w-50 mx-auto shadow-lg mt-3" type="button"
                 id="view-more-button">View more
         </button>
     </c:if>
 </main>
+<form method="post" id="sendRequestForm" action="${pageContext.request.contextPath}/udacidy/profile">
+    <input type="hidden" name="command" value="sendClientRequest"/>
+
+</form>
 
 <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -50,20 +113,10 @@
     </div>
 </div>
 
+
+
 <tag:footer/>
 <script src="../js/conferences.js"></script>
-<script>
-    window.onload = function () {
-        <c:if test="${not empty conferences}">
-        <c:forEach var="i" begin="0" end="${conferences.size()-1}">
-        var jsonConference = ${conferences.get(i)};
-        console.log(jsonConference);
-        var row = createConference(jsonConference);
-        document.getElementById('data-container').append(row);
-        </c:forEach>
-        </c:if>
-    };
-</script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

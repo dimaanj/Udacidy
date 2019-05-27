@@ -16,48 +16,130 @@
 </head>
 <body>
 
+${pageContext.response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate")}
+${pageContext.response.setHeader("Pragma", "no-cache")}
+${pageContext.response.setHeader("Expires", "0")}
+
 <tag:navbar/>
 <main role="main" class="container-fluid">
+    <div id="removeRequestMessagePlace"></div>
     <div class="row mt-4 justify-content-md-center">
         <div class="col-sm-7 shadow-lg rounded-lg">
-            <div class="card-body">
+            <div class="card-body" id="profileBody">
                 <h5 class="card-title">
                     <c:out value="${sessionScope.user.getFirstName()}"/> <c:out
                         value="${sessionScope.user.getLastName()}"/>
                 </h5>
+                <h6>Email address: ${sessionScope.user.getEmail()}</h6>
                 <h6 class="card-subtitle mb-2 text-muted">
-                    <c:choose>
-                        <c:when test="${sessionScope.user.isAdmin()}">
-                            Status: admin
-                        </c:when>
-                        <c:otherwise>
-                            Status: client
-                        </c:otherwise>
-                    </c:choose>
+                    Status: client
                 </h6>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                    card's content.</p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal">Change password
+                </button>
             </div>
         </div>
     </div>
+
     <c:if test="${not empty conferences}">
         <div class="row mt-4 justify-content-md-center">
-            <div class="py-2">
-                <h2>Requests</h2>
+            <div class="col-sm-7 shadow-lg rounded-lg">
+                <div class="my-3 p-3">
+                    <h6 class="border-bottom border-gray pb-2 mb-0">My Requests</h6>
+                    <c:forEach items="${conferences}" var="conference">
+                        <div class="media text-muted pt-3">
+                            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                                <div class="d-flex justify-content-between align-items-center w-100">
+                                    <strong class="text-gray-dark">Conference id <c:out
+                                            value="${conference.getId()}"/></strong>
+                                    <div class="d-flex flex-row-reverse bd-highlight">
+                                        <div class="p-2 bd-highlight">
+                                            <button name="removeRequestButton"
+                                                    id="removeRequestButton${conference.getId()}"
+                                                    type="button" class="mt-1 btn btn-dark btn-sm" data-toggle="modal"
+                                                    data-target="#confirmationModal">Remove request
+                                            </button>
+
+                                        </div>
+                                        <div class="p-2 bd-highlight">
+                                            <button name="viewDetailsButton" id="viewDetailsButton${conference.getId()}"
+                                                    type="button" class="btn btn-link" data-toggle="modal"
+                                                    data-target="#viewDetails">View details
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="d-block">author @ <c:out value="${conference.getAuthor().getFirstName()}"/>
+                                    <c:out value="${conference.getAuthor().getLastName()}"/>,
+                                </span>
+                                <c:choose>
+                                    <c:when test="${conference.getRequestStatus().toString() eq 'SHIPPED'}">
+                                        <span class="card-title text-primary">Request status:
+                                            <c:out value="${conference.getRequestStatus().toString().toLowerCase()}"/>
+                                        </span>
+                                    </c:when>
+                                    <c:when test="${conference.getRequestStatus().toString() eq 'ACCEPTED'}">
+                                        <span class="card-title text-success">Request status:
+                                            <c:out value="${conference.getRequestStatus().toString().toLowerCase()}"/>
+                                        </span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="card-title text-secondary">Request status:
+                                            <c:out value="${conference.getRequestStatus().toString().toLowerCase()}"/>
+                                        </span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
             </div>
         </div>
     </c:if>
-    <div id="container">
-    </div>
 </main>
+
+<%--Change password modal--%>
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Change password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="change-password-modal-body">
+                <div class="form-group">
+                    <label for="previousPassword">Previous password</label>
+                    <input type="password" name="password" class="form-control" id="previousPassword"
+                           placeholder="previous">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New password</label>
+                    <input type="password" name="password" class="form-control" id="newPassword" placeholder="new">
+                </div>
+                <div class="form-group">
+                    <label for="confirmedPassword">Confirm new password</label>
+                    <input type="password" name="password" class="form-control" id="confirmedPassword"
+                           placeholder="confirm">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="changePasswordButton">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<%--Confirmation remove request modal--%>
 <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+                <h5 class="modal-title" id="confirmationRemoveRequestLabel">Confirmation</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -66,27 +148,86 @@
                 Are you really want to remove this request?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="confirmationButton">Yes</button>
+                <form method="post" id="removeRequestForm" action="${pageContext.request.contextPath}/udacidy/profile">
+                    <input type="hidden" name="command" value="removeRequest"/>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary" id="confirmationButton">Yes</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+<%--View details modal--%>
+<div class="modal fade" id="viewDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Conference content</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body" id="data-container">
+            </div>
+        </div>
+    </div>
+</div>
+
 <tag:footer/>
 
+
 <script src="../js/userPage.js"></script>
+
 <script>
+    function clearUriParameters() {
+        var uri = window.location.toString();
+        if (uri.indexOf("?") > 0) {
+            var clean_uri = uri.substring(0, uri.indexOf("?"));
+            window.history.replaceState({}, document.title, clean_uri);
+        }
+    }
+
+    <c:if test="${not empty requestWasSentMessage}">
     window.onload = function () {
-        <c:if test="${not empty conferences}">
-        <c:forEach var="i" begin="0" end="${conferences.size()-1}">
-        var conference = ${conferences.get(i)};
-        console.log(conference);
-        var row = createConference(conference);
-        document.getElementById('container').appendChild(row);
-        </c:forEach>
-        </c:if>
+        clearUriParameters();
+
+        var modal = $("#viewDetails");
+        modal.modal('show');
+
+        let conferenceToShow = ${conferenceToShow};
+        let requestSectionsIds = ${requestSectionsIds};
+        let message = '${requestWasSentMessage}';
+
+        let conference = createConference(conferenceToShow, requestSectionsIds);
+
+        let modalDataContainer = document.getElementById('data-container');
+
+        let alert = createAlertWithTextAndType(message, 'alert-success');
+        alert.classList.add('mt-3');
+        alert.classList.add('w-75');
+        alert.classList.add('mx-auto');
+
+        modalDataContainer.appendChild(alert);
+        modalDataContainer.appendChild(conference);
     };
+    </c:if>
+
+    <c:if test="${not empty removeRequestMessage}">
+    window.onload = function () {
+        clearUriParameters();
+        let removeRequestMessage = '${removeRequestMessage}';
+        let alert = createAlertWithTextAndType(removeRequestMessage, 'alert-success');
+        alert.classList.add('mt-3');
+        alert.classList.add('w-75');
+        alert.classList.add('mx-auto');
+        document.getElementById('removeRequestMessagePlace').appendChild(alert);
+    };
+    </c:if>
 </script>
+
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

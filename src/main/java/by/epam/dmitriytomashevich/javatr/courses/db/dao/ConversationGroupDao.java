@@ -64,6 +64,7 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
                     throw new SQLException("Creating conversation failed, no ID obtained.");
                 }
             }
+            statement.close();
             return conversationGroupId;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -90,6 +91,7 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
                 group.setUserId(resultSet.getLong("user_id"));
             }
             resultSet.close();
+            statement.close();
             return group;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -111,6 +113,7 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
                 group.setUserId(resultSet.getLong("user_id"));
             }
             resultSet.close();
+            statement.close();
             return group;
         } catch (SQLException e) {
             throw new DAOException(e);

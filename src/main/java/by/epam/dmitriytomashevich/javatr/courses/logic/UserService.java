@@ -10,4 +10,5 @@ public interface UserService {
     User findUserByEmail(String email) throws LogicException;
     List<User> findAllByConversationId(Long id) throws LogicException;
     User findById(Long id) throws LogicException;
+    void updatePassword(String password, Long userId) throws LogicException;
 }

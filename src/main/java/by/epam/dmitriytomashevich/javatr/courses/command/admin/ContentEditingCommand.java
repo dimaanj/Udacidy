@@ -42,7 +42,6 @@ public class ContentEditingCommand implements Command {
         for (Conference c : conferenceList) {
             User author = userService.findById(c.getAuthorId());
             List<Section> sections = sectionService.findSectionsByConferenceId(c.getId());
-
             for(Section s : sections){
                 s.setContent(contentService.findById(s.getContentId()));
             }
@@ -51,7 +50,6 @@ public class ContentEditingCommand implements Command {
             c.setSections(sections);
 
             JsonConference jsonConference = new ConferenceConverter().convert(c);
-
             JsonElement conferenceJsonElement = new Gson().toJsonTree(jsonConference, JsonConference.class);
             jsonConferencesList.add(conferenceJsonElement);
         }

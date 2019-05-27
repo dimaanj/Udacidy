@@ -7,31 +7,37 @@
     <servlet>
         <servlet-name>Controller</servlet-name>
         <servlet-class>by.epam.dmitriytomashevich.javatr.courses.controller.Controller</servlet-class>
+<!--        <async-supported>true</async-supported>-->
     </servlet>
 
     <servlet-mapping>
         <servlet-name>Controller</servlet-name>
         <url-pattern>/udacidy/*</url-pattern>
+
     </servlet-mapping>
 
     <filter>
         <filter-name>StaticImageFilter</filter-name>
         <filter-class>by.epam.dmitriytomashevich.javatr.courses.filter.StaticImageFilter</filter-class>
+<!--        <async-supported>true</async-supported>-->
     </filter>
 
     <filter-mapping>
         <filter-name>StaticImageFilter</filter-name>
         <url-pattern>/udacidy/*</url-pattern>
+
     </filter-mapping>
 
     <filter>
         <filter-name>AuthorizationFilter</filter-name>
         <filter-class>by.epam.dmitriytomashevich.javatr.courses.filter.CommandFilter</filter-class>
+<!--        <async-supported>true</async-supported>-->
     </filter>
 
     <filter-mapping>
         <filter-name>AuthorizationFilter</filter-name>
         <url-pattern>/udacidy/*</url-pattern>
+
     </filter-mapping>
 
     <error-page>

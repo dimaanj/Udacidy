@@ -121,6 +121,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
                     throw new SQLException("Creating conversation failed, no ID obtained.");
                 }
             }
+            statement.close();
             return messageId;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -143,6 +144,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
                 messages.add(message);
             }
             resultSet.close();
+            statement.close();
             return messages;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -159,6 +161,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
                 message = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return message;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -177,6 +180,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
                 messages.add(message);
             }
             resultSet.close();
+            statement.close();
             return messages;
         } catch (SQLException | DAOException e) {
             throw new DAOException(e);
@@ -196,6 +200,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
                 messages.add(message);
             }
             resultSet.close();
+            statement.close();
             return messages;
         } catch (SQLException | DAOException e) {
             throw new DAOException(e);
@@ -214,6 +219,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
                 messages.add(message);
             }
             resultSet.close();
+            statement.close();
             return messages;
         } catch (SQLException | DAOException e) {
             throw new DAOException(e);
@@ -230,6 +236,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
                 message = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return message;
         } catch (SQLException | DAOException e) {
             throw new DAOException(e);
@@ -242,6 +249,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
             statement.setString(1, imagePath);
             statement.setLong(2, messageId);
             statement.execute();
+            statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }
@@ -257,6 +265,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
                 amount = resultSet.getLong("messages_amount");
             }
             resultSet.close();
+            statement.close();
             return amount;
         } catch (SQLException e) {
             throw new DAOException(e);

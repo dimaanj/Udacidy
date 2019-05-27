@@ -1,6 +1,7 @@
 package by.epam.dmitriytomashevich.javatr.courses.filter;
 
 
+import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.constant.CommandNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
@@ -35,10 +36,12 @@ public class CommandFilter implements Filter {
         userCommands.add(CommandNames.VIEW_MORE);
         userCommands.add(CommandNames.UPLOAD_MESSAGES);
         userCommands.add(CommandNames.VIEW_MORE_CONFERENCES);
-        userCommands.add(CommandNames.SEND_REQUEST);
         userCommands.add(CommandNames.LOAD_MESSAGES);
         userCommands.add(CommandNames.REMOVE_REQUEST_COMMAND);
         userCommands.add(CommandNames.CONFERENCES);
+        userCommands.add(CommandNames.GET_CONFERENCES);
+        userCommands.add(CommandNames.CHANGE_PASSWORD);
+        userCommands.add(CommandNames.GET_CONFERENCE_CONTENT);
 
 
         adminCommands.add(CommandNames.LOG_OUT);

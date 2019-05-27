@@ -45,6 +45,10 @@ public class UserDao implements AbstractDao<Long, User> {
     private static final String INSERT_USER_ROLE = "INSERT INTO udacidy.user_role (id, role)\n" +
             "VALUES(LAST_INSERT_ID(), ?)";
 
+    private static final String UPDATE_PASSWORD = "UPDATE udacidy.user u\n" +
+            "    SET u.password = ?\n" +
+            "WHERE u.id = ?";
+
     public UserDao(Connection connection){
         this.connection = connection;
     }
@@ -65,6 +69,7 @@ public class UserDao implements AbstractDao<Long, User> {
                 user = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return user;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -73,14 +78,13 @@ public class UserDao implements AbstractDao<Long, User> {
 
     @Override
     public void deleteById(Long id) {
-
     }
 
     @Override
     public Long create(User entity) throws DAOException {
         Long userId = null;
         try {
-            connection.setAutoCommit(false);
+
             PreparedStatement statement = connection.prepareStatement(INSERT_USER);
             statement.setString(1, entity.getFirstName());
             statement.setString(2, entity.getLastName());
@@ -90,6 +94,7 @@ public class UserDao implements AbstractDao<Long, User> {
 
             statement = connection.prepareStatement(INSERT_USER_ROLE, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, entity.getRole().getValue().toUpperCase());
+
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating conversation failed, no rows affected.");
@@ -103,7 +108,8 @@ public class UserDao implements AbstractDao<Long, User> {
                     throw new SQLException("Creating conversation failed, no ID obtained.");
                 }
             }
-            connection.commit();
+
+            statement.close();
             return userId;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -125,6 +131,7 @@ public class UserDao implements AbstractDao<Long, User> {
                 user = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return user;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -142,6 +149,7 @@ public class UserDao implements AbstractDao<Long, User> {
                 users.add(user);
             }
             resultSet.close();
+            statement.close();
             return users;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -159,7 +167,20 @@ public class UserDao implements AbstractDao<Long, User> {
                 users.add(user);
             }
             resultSet.close();
+            statement.close();
             return users;
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    public void updatePassword(String password, Long userId) throws DAOException {
+        try {
+            PreparedStatement statement = connection.prepareStatement(UPDATE_PASSWORD);
+            statement.setString(1, password);
+            statement.setLong(2, userId);
+            statement.execute();
+            statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }

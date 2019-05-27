@@ -1,5 +1,6 @@
 package by.epam.dmitriytomashevich.javatr.courses.db.dao;
 
+import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
 import by.epam.dmitriytomashevich.javatr.courses.domain.RequestData;
@@ -7,6 +8,7 @@ import by.epam.dmitriytomashevich.javatr.courses.db.builder.EntityBuilder;
 import by.epam.dmitriytomashevich.javatr.courses.db.builder.RequestDataBuilder;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RequestDataDao implements AbstractDao<Long, RequestData> {
@@ -16,6 +18,11 @@ public class RequestDataDao implements AbstractDao<Long, RequestData> {
     private static final String INSERT = "INSERT INTO udacidy.request_data\n" +
             "    (section_id, request_id)\n" +
             "VALUES (?, ?);";
+
+    private static final String FIND_ALL_BY_REQUEST_ID = "SELECT rd.id, rd.request_id, rd.section_id\n" +
+            "FROM request_data rd\n" +
+            "         JOIN request r on rd.request_id = r.id\n" +
+            "WHERE r.id = ?";
 
     public RequestDataDao(Connection connection){
         this.connection = connection;
@@ -59,6 +66,7 @@ public class RequestDataDao implements AbstractDao<Long, RequestData> {
                 }
             }
             connection.commit();
+            statement.close();
             return requestFormId;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -68,5 +76,25 @@ public class RequestDataDao implements AbstractDao<Long, RequestData> {
     @Override
     public void update(RequestData entity) throws DAOException {
 
+    }
+
+    public List<RequestData> findAllByRequestId(Long requestId) throws DAOException {
+        List<RequestData> requests = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement(FIND_ALL_BY_REQUEST_ID);
+            statement.setLong(1, requestId);
+
+            ResultSet resultSet = statement.executeQuery();
+            requests = new ArrayList<>();
+            while (resultSet.next()) {
+                RequestData request = builder.build(resultSet);
+                requests.add(request);
+            }
+            resultSet.close();
+            statement.close();
+            return requests;
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
     }
 }

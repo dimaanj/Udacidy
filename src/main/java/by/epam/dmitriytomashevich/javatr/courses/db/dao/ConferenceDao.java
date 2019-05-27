@@ -47,12 +47,13 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
             "WHERE id = ?;";
 
     private static final String FIND_ALL_CONFERENCES_AS_USER_REQUESTS = "SELECT DISTINCT c.id, c.content_id, c.author_id\n" +
-            "    FROM user u\n" +
-            "        JOIN request r on u.id = r.user_id\n" +
-            "        JOIN request_data rd on r.id = rd.request_id\n" +
-            "        JOIN section s on rd.section_id = s.id\n" +
-            "        JOIN conference c on s.conference_id = c.id\n" +
-            "    WHERE u.id = ?";
+            "               FROM request r\n" +
+            "                    JOIN request_data rd on r.id = rd.request_id\n" +
+            "                    JOIN section s on rd.section_id = s.id\n" +
+            "                    JOIN conference c on s.conference_id = c.id\n" +
+            "                WHERE r.user_id = ?";
+
+
 
     public ConferenceDao(Connection connection){
         this.connection = connection;
@@ -75,6 +76,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
                 conference = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return conference;
         } catch (SQLException | DAOException e) {
             throw new DAOException(e);
@@ -87,6 +89,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, id);
             statement.execute();
+            statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }
@@ -114,6 +117,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
                     throw new SQLException("Creating conversation failed, no ID obtained.");
                 }
             }
+            statement.close();
             return conferenceId;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -137,6 +141,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
                 conferences.add(conference);
             }
             resultSet.close();
+            statement.close();
             return conferences;
         } catch (SQLException | DAOException e) {
             throw new DAOException(e);
@@ -152,6 +157,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
                 conference = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return conference;
         } catch (SQLException | DAOException e) {
             throw new DAOException(e);
@@ -170,6 +176,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
                 conferences.add(conference);
             }
             resultSet.close();
+            statement.close();
             return conferences;
         } catch (SQLException | DAOException e) {
             throw new DAOException(e);
@@ -188,6 +195,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
             statement.execute();
 
             connection.commit();
+            statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }
@@ -205,6 +213,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
                 conferences.add(conference);
             }
             resultSet.close();
+            statement.close();
             return conferences;
         } catch (SQLException | DAOException e) {
             throw new DAOException(e);

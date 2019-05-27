@@ -2,6 +2,7 @@ function createConference(jsonConference) {
     var conferenceId = jsonConference.id;
     var conferenceContent = jsonConference.content;
     var conferenceSections = jsonConference.jsonSections;
+    var requestStatus = jsonConference.requestStatus;
 
     var row = document.createElement('div');
     row.classList.add('row');
@@ -19,7 +20,7 @@ function createConference(jsonConference) {
     bodyData.setAttribute('id', 'bodyData');
     bodyData.innerHTML = conferenceContent;
     var images = bodyData.getElementsByTagName('img');
-    for(var k=0; k<images.length; k++){
+    for (var k = 0; k < images.length; k++) {
         images[k].setAttribute('id', 'responsive-image');
     }
 
@@ -30,20 +31,51 @@ function createConference(jsonConference) {
     flexR.classList.add('flex-row');
     flexR.classList.add('bd-highlight');
     flexR.classList.add('mb-3');
-    flexR.setAttribute('id', 'flex-row'+conferenceId);
+    flexR.setAttribute('id', 'flex-row' + conferenceId);
 
     var flexItem = document.createElement('div');
     flexItem.classList.add('p-2');
     flexItem.classList.add('bd-highlight');
 
-    if(!jsonConference.isRequestAlreadySent){
+    if(requestStatus !== null && requestStatus !== undefined) {
+        // var removeButton = removeRequestButtonBuilder();
+        // flexItem.appendChild(removeButton);
+        // flexR.appendChild(flexItem);
+        //
+        // var flexItem2 = document.createElement('div');
+        // flexItem2.classList.add('p-3');
+        // flexItem2.classList.add('bd-highlight');
+        // flexItem2.setAttribute('id', 'requestStatus' + conferenceId);
+        // var h6 = document.createElement('h6');
+        // h6.classList.add('card-title');
+        //
+        // if (requestStatus === 'SHIPPED') {
+        //     h6.classList.add('text-primary');
+        //     h6.appendChild(document.createTextNode("shipped"));
+        // } else if (requestStatus === 'ACCEPTED') {
+        //     h6.classList.add('text-success');
+        //     h6.appendChild(document.createTextNode("accepted"));
+        // } else {
+        //     h6.classList.add('text-secondary');
+        //     h6.appendChild(document.createTextNode("ejected"));
+        // }
+        // flexItem2.appendChild(h6);
+        // flexR.appendChild(flexItem2);
+
+        let span = document.createElement('span');
+
+        let linkToProfile = document.createElement('a');
+        linkToProfile.setAttribute('href', '/udacidy/profile');
+        linkToProfile.appendChild(document.createTextNode('Go profile'));
+        span.appendChild(linkToProfile);
+        span.appendChild(document.createTextNode(' to view request details.'));
+        col.appendChild(span);
+    }else {
         var chooseSectionsButton = selectSectionsButtonBuilder(conferenceId);
         flexItem.appendChild(chooseSectionsButton);
-    }else{
-
+        flexR.appendChild(flexItem);
     }
 
-    flexR.appendChild(flexItem);
     col.appendChild(flexR);
     var collapse = chooseSectionsCollapseElementBuilder(conferenceSections);
     col.appendChild(collapse);
@@ -56,224 +88,11 @@ var body = $("body");
 
 body.on('click', "li[name='section']", function (event) {
     event.preventDefault();
-    if(this.classList.contains('tox-checklist--checked')){
+    if (this.classList.contains('tox-checklist--checked')) {
         this.classList.remove('tox-checklist--checked');
-    }else {
+    } else {
         this.classList.add('tox-checklist--checked');
     }
-});
-
-body.on('click', "button[name='submitRequestButton']", function (event) {
-    event.preventDefault();
-    console.log('1');
-
-    var thisButton = this;
-
-    var sectionsUl = this.parentElement.parentElement.firstElementChild;
-    var sections = sectionsUl.firstElementChild.children;
-
-    var isCorrectForm = false;
-
-    for(var i=0; i<sections.length; i++){
-        console.log(sections[i]);
-        if(sections[i].classList.contains('tox-checklist--checked')){
-            isCorrectForm = true;
-            console.log('true');
-            break;
-        }
-    }
-    if(!isCorrectForm){
-        console.log('incorrectForm');
-        var previoseAlert = document.getElementById('singleAlert');
-        if(previoseAlert !== null){
-            previoseAlert.remove();
-        }
-        var alert = createAlertWithTextAndType('You should choose ' +
-            'at least one section of the conference to submit request!', 'alert-danger');
-        alert.setAttribute('id', 'singleAlert');
-        alert.classList.add('mt-3');
-        thisButton.parentElement.appendChild(alert);
-    }else {
-        console.log('will be submited');
-        var sectionsLength = 0;
-        for(var z=0; z<sections.length; z++){
-            if(sections[z].classList.contains('tox-checklist--checked')) {
-                sectionsLength++;
-            }
-        }
-        var sectionsIds = new Array(sectionsLength);
-        var k = 0;
-        for(var j=0; j< sections.length; j++){
-            if(sections[j].classList.contains('tox-checklist--checked')) {
-                sectionsIds[k] = sections[j].getAttribute('id');
-                k++;
-            }
-        }
-
-        const formData = new FormData();
-        formData.append('command', 'sendRequest');
-        formData.append('sectionsIds', JSON.stringify(sectionsIds));
-
-        var url = '/udacidy/';
-        var fetchOptions = {
-            method: 'POST',
-            body: formData,
-        };
-        var responsePromise = fetch(url, fetchOptions);
-        responsePromise
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (jsonObj) {
-                console.log(jsonObj);
-                var alert;
-                if (jsonObj.isSectionExists) {
-
-                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-success');
-                    alert.firstElementChild.append(' Go to profile page to look through all your requests.');
-
-                    var col = thisButton.parentNode.parentNode.parentNode.parentNode;
-
-                    var dFlex = col.children[1];
-                    dFlex.firstElementChild.innerHTML = "";
-
-                    $("#collapseSections"+col.parentElement.getAttribute('id')).remove();
-                    col.appendChild(alert);
-
-                    window.location.replace('/udacidy/conferences');
-
-                } else {
-                    var row = thisButton.parentNode.parentNode.parentNode.parentNode;
-
-                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
-                    alert.classList.add('mx-auto');
-                    alert.classList.add('col-sm-8');
-                    alert.classList.add('shadow-lg');
-                    alert.classList.add('rounded-lg');
-                    alert.classList.add('mt-3');
-                    alert.setAttribute('id', row.getAttribute('id'));
-
-                    row.parentNode.replaceChild(alert, row);
-                    document.getElementById(alert.getAttribute('id')).scrollIntoView();
-                }
-            });
-    }
-});
-
-body.on('click', "button[name='removeRequest']", function () {
-    var rowElement = this.parentElement.parentElement.parentElement.parentElement;
-    var confirmationButton = document.getElementById('confirmationButton');
-    confirmationButton.setAttribute('name', rowElement.getAttribute('id'));
-});
-
-var chooseSectionsCollapseElementBuilder = function (conferenceSections) {
-    var collapse = document.createElement('div');
-    collapse.classList.add('collapse');
-    collapse.setAttribute('id', 'collapseSections' + conferenceSections[0].conferenceId);
-    var cardCollapse = document.createElement('div');
-    cardCollapse.classList.add('card');
-
-    var cardBodyCollapse = document.createElement('div');
-    cardBodyCollapse.classList.add('card-body');
-    var ul = document.createElement('ul');
-    ul.classList.add('tox-checklist');
-    for(var i=0; i<conferenceSections.length; i++){
-        var li = document.createElement('li');
-        li.setAttribute('name', 'section');
-        li.setAttribute('id', conferenceSections[i].id);
-        li.appendChild(document.createTextNode(conferenceSections[i].content));
-        ul.appendChild(li);
-    }
-    cardBodyCollapse.appendChild(ul);
-
-    var cardFooter = document.createElement('div');
-    cardFooter.classList.add('card-footer');
-    cardFooter.classList.add('border-white');
-    var submitRequestButton = document.createElement('button');
-    submitRequestButton.classList.add('btn');
-    submitRequestButton.classList.add('btn-primary');
-    submitRequestButton.setAttribute('name', 'submitRequestButton');
-    submitRequestButton.appendChild(document.createTextNode('Submit request'));
-    cardFooter.appendChild(submitRequestButton);
-
-    cardCollapse.appendChild(cardBodyCollapse);
-    cardCollapse.appendChild(cardFooter);
-
-    collapse.appendChild(cardCollapse);
-    return collapse;
-};
-
-var removeRequestButtonBuilder = function () {
-    var removeRequestButton = document.createElement('button');
-    removeRequestButton.classList.add('btn');
-    removeRequestButton.classList.add('btn-dark');
-    removeRequestButton.setAttribute('name', 'removeRequest');
-    removeRequestButton.appendChild(document.createTextNode('Remove request'));
-    removeRequestButton.setAttribute('data-toggle', 'modal');
-    removeRequestButton.setAttribute('data-target', '#confirmationModal');
-    return removeRequestButton;
-};
-
-var selectSectionsButtonBuilder = function (conferenceId) {
-    var chooseSectionsButton = document.createElement('button');
-    chooseSectionsButton.classList.add('btn');
-    chooseSectionsButton.classList.add('btn-primary');
-    chooseSectionsButton.setAttribute('name', 'chooseSectionsButton');
-    chooseSectionsButton.setAttribute('type', 'button');
-    chooseSectionsButton.setAttribute('data-toggle', 'collapse');
-    chooseSectionsButton.setAttribute('data-target', '#collapseSections' + conferenceId);
-    chooseSectionsButton.setAttribute('aria-expanded', 'false');
-    chooseSectionsButton.setAttribute('aria-controls', 'collapseSections' + conferenceId);
-    chooseSectionsButton.appendChild(document.createTextNode('Choose sections'));
-    return chooseSectionsButton;
-};
-
-body.on('click', '#confirmationButton', function (event) {
-    event.preventDefault();
-    $('#confirmationModal').modal('hide');
-
-    var thisButton = this;
-    var rowElement = document.getElementById(thisButton.getAttribute('name'));
-    var conferenceId = rowElement.getAttribute('id');
-
-    var formData = new FormData();
-    formData.append('command', 'removeRequest');
-    formData.append('conferenceId', conferenceId);
-
-    var url = '/udacidy/';
-    var fetchOptions = {
-        method: 'POST',
-        body: formData,
-    };
-    var responsePromise = fetch(url, fetchOptions);
-    responsePromise
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (jsonObj) {
-            var alert;
-            if(jsonObj.didSectionsExists) {
-                alert = createAlertWithTextAndType(jsonObj.message, 'alert-info');
-                console.log(conferenceId);
-                document.getElementById('flex-row' + conferenceId).remove();
-
-                var col = rowElement.firstElementChild;
-                col.appendChild(alert);
-                window.location.replace('/udacidy/conferences');
-            }else {
-                alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
-                alert.classList.add('mx-auto');
-                alert.classList.add('col-sm-8');
-                alert.classList.add('shadow-lg');
-                alert.classList.add('rounded-lg');
-                alert.classList.add('mt-3');
-                alert.setAttribute('id', rowElement.getAttribute('id'));
-
-                rowElement.parentNode.replaceChild(alert, rowElement);
-                document.getElementById(alert.getAttribute('id')).scrollIntoView();
-            }
-            thisButton.removeAttribute('name');
-        });
 });
 
 body.on('click', "button[id='view-more-button']", function (event) {
@@ -284,10 +103,14 @@ body.on('click', "button[id='view-more-button']", function (event) {
     formData.append('command', 'viewMoreConferences');
     formData.append('lastConferenceId', lastConferenceElementId);
 
-    var url = '/udacidy/';
+    var url = '/udacidy/?t='+new Date().getTime();
     var fetchOptions = {
-        method: 'POST',
-        body: formData,
+        method: 'GET',
+        cache: 'no-store',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
     };
     var responsePromise = fetch(url, fetchOptions);
     responsePromise
@@ -339,3 +162,64 @@ function createAlertWithTextAndType(text, type) {
     alert.appendChild(button);
     return alert;
 }
+
+body.on('click', "button[name='submitRequestButton']", function (event) {
+   event.preventDefault();
+   console.log('1');
+
+    let thisButton = this;
+    let col = thisButton.parentNode.parentNode.parentNode.parentNode;
+    let sectionsUl = this.parentElement.parentElement.firstElementChild;
+    let sections = sectionsUl.firstElementChild.children;
+
+    let isCorrectForm = false;
+
+    for (var i = 0; i < sections.length; i++) {
+        console.log(sections[i]);
+        if (sections[i].classList.contains('tox-checklist--checked')) {
+            isCorrectForm = true;
+            console.log('true');
+            break;
+        }
+    }
+    if (!isCorrectForm) {
+        console.log('incorrectForm');
+        let previoseAlert = document.getElementById('singleAlert');
+        if (previoseAlert !== null) {
+            previoseAlert.remove();
+        }
+        let alert = createAlertWithTextAndType('You should choose ' +
+            'at least one section of the conference to submit request!', 'alert-danger');
+        alert.setAttribute('id', 'singleAlert');
+        alert.classList.add('mt-3');
+        thisButton.parentElement.appendChild(alert);
+    } else {
+        console.log('will be submited');
+        let sectionsLength = 0;
+        for (let z = 0; z < sections.length; z++) {
+            if (sections[z].classList.contains('tox-checklist--checked')) {
+                sectionsLength++;
+            }
+        }
+        let sectionsIds = new Array(sectionsLength);
+        let k = 0;
+        for (let j = 0; j < sections.length; j++) {
+            if (sections[j].classList.contains('tox-checklist--checked')) {
+                sectionsIds[k] = sections[j].getAttribute('id');
+                k++;
+            }
+        }
+
+        let inputParam = document.createElement('input');
+        inputParam.setAttribute('type', 'hidden');
+        inputParam.setAttribute('name', 'sectionsIds');
+        inputParam.setAttribute('value', JSON.stringify(sectionsIds));
+
+        let sendRequestForm = document.getElementById('sendRequestForm');
+        sendRequestForm.appendChild(inputParam);
+
+        sendRequestForm.submit();
+    }
+
+});
+

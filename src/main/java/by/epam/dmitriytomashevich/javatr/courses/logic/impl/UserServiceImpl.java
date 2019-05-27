@@ -12,6 +12,15 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
+    @Override
+    public void updatePassword(String password, Long userId) throws LogicException {
+        try {
+            userDao.updatePassword(password, userId);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
+
     public UserServiceImpl(DaoFactory daoFactory){
         userDao = daoFactory.createUserDao();
     }

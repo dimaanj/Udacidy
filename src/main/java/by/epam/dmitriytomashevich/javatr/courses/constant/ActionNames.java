@@ -16,21 +16,23 @@ public class ActionNames {
     public static final String PROFILE = "/WEB-INF/user-page.jsp";
     public static final String CONTENT_EDITING = "/WEB-INF/contentEditing.jsp";
     public static final String CONFERENCES = "/WEB-INF/conferences.jsp";
+    public static final String CONFERENCE = "/WEB-INF/conferenceDetailsPage.jsp";
 
     /**
      * Request URI
      */
-    public static final String GREETING_ACTION = "/udacidy/";
-    public static final String LOGIN_ACTION = "/udacidy/login";
-    public static final String REGISTRATION_ACTION = "/udacidy/registration";
-    public static final String PAGE_NOT_FOUND_ACTION = "/udacidy/404";
-    public static final String HELP_ACTION = "/udacidy/help";   //mapping for users
-    public static final String ADMIN_CONVERSATION_ACTION = "/udacidy/conversation?conversationId="; //mapping for admins
-    public static final String ERROR_ACTION = "/udacidy/error";
-    public static final String ADMIN_ACTION = "/udacidy/admin";
-    public static final String MAIN_ACTION = "/udacidy/main";
-    public static final String CONTENT_EDITING_ACTION = "/udacidy/contentediting";
-    public static final String CONFERENCES_ACTION = "/udacidy/conferences";
+    public static final String GREETING_ACTION = "/";
+    public static final String LOGIN_ACTION = "/login";
+    public static final String REGISTRATION_ACTION = "/registration";
+    public static final String PAGE_NOT_FOUND_ACTION = "/404";
+    public static final String HELP_ACTION = "/help";   //mapping for users
+    public static final String ADMIN_CONVERSATION_ACTION = "/conversation?conversationId="; //mapping for admins
+    public static final String ERROR_ACTION = "/error";
+    public static final String ADMIN_ACTION = "/admin";
+    public static final String MAIN_ACTION = "/main";
+    public static final String CONTENT_EDITING_ACTION = "/contentediting";
+    public static final String CONFERENCES_ACTION = "/conferences";
+    public static final String PROFILE_ACTION = "/profile";
 
 
 }

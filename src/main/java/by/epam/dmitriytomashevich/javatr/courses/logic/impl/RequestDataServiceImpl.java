@@ -7,6 +7,8 @@ import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestDataService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
+import java.util.List;
+
 public class RequestDataServiceImpl implements RequestDataService {
     private final RequestDataDao requestDataDao;
 
@@ -18,6 +20,15 @@ public class RequestDataServiceImpl implements RequestDataService {
     public Long create(RequestData requestForm) throws LogicException {
         try {
             return requestDataDao.create(requestForm);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
+
+    @Override
+    public List<RequestData> findAllByRequestId(Long requestId) throws LogicException {
+        try {
+            return requestDataDao.findAllByRequestId(requestId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }

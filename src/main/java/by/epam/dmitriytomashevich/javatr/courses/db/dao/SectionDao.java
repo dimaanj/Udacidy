@@ -55,6 +55,7 @@ public class SectionDao implements AbstractDao<Long, Section> {
                 section = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return section;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -67,6 +68,7 @@ public class SectionDao implements AbstractDao<Long, Section> {
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, id);
             statement.execute();
+            statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }
@@ -92,6 +94,7 @@ public class SectionDao implements AbstractDao<Long, Section> {
                     throw new SQLException("Creating conversation failed, no ID obtained.");
                 }
             }
+            statement.close();
             return sectionId;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -116,6 +119,7 @@ public class SectionDao implements AbstractDao<Long, Section> {
                 sections.add(section);
             }
             resultSet.close();
+            statement.close();
             return sections;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -124,7 +128,7 @@ public class SectionDao implements AbstractDao<Long, Section> {
 
     public void deleteSectionWithTheirContent(Long sectionId, Long contentId) throws DAOException {
         try {
-            connection.setAutoCommit(false);
+//            connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, sectionId);
             statement.execute();
@@ -133,7 +137,8 @@ public class SectionDao implements AbstractDao<Long, Section> {
             statement.setLong(1, contentId);
             statement.execute();
 
-            connection.commit();
+//            connection.commit();
+            statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }

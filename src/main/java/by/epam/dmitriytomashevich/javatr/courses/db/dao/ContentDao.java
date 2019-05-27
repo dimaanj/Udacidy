@@ -59,6 +59,7 @@ public class ContentDao implements AbstractDao<Long, Content> {
                content = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return content;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -71,6 +72,7 @@ public class ContentDao implements AbstractDao<Long, Content> {
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, id);
             statement.execute();
+            statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }
@@ -96,6 +98,7 @@ public class ContentDao implements AbstractDao<Long, Content> {
                     throw new SQLException("Creating conversation failed, no ID obtained.");
                 }
             }
+            statement.close();
             return contentId;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -109,6 +112,7 @@ public class ContentDao implements AbstractDao<Long, Content> {
             statement.setString(1, entity.getContent());
             statement.setLong(2, entity.getId());
             statement.execute();
+            statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }
@@ -124,6 +128,7 @@ public class ContentDao implements AbstractDao<Long, Content> {
                 content = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return content;
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -140,6 +145,7 @@ public class ContentDao implements AbstractDao<Long, Content> {
                 content = builder.build(resultSet);
             }
             resultSet.close();
+            statement.close();
             return content;
         } catch (SQLException e) {
             throw new DAOException(e);

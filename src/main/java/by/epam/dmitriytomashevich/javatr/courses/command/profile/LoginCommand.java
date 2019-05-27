@@ -8,7 +8,7 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.util.UserServiceHandler;
+import by.epam.dmitriytomashevich.javatr.courses.util.logic_helper.UserServiceHandler;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
@@ -31,7 +31,7 @@ public class LoginCommand implements Command {
 
             User user = userService.findUserByEmail(email);
             UserServiceHandler handler = new UserServiceHandler();
-            user = handler.checkLogin(email, password, user);
+            user = handler.checkLogin(password, user);
 
             if (user != null) {
                 HttpSession session = content.getSession();
@@ -39,6 +39,7 @@ public class LoginCommand implements Command {
                 if(user.isAdmin()){
                     page = ActionNames.CONTENT_EDITING_ACTION;
                 }else {
+                    content.getResponse().setHeader("cache-control", "no-store");
                     page = ActionNames.CONFERENCES_ACTION;
                 }
             } else {
