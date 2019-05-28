@@ -41,7 +41,7 @@ public class RemoveConferenceCommand implements Command {
             for (Section s : sectionList) {
                 List<Request> requests = requestService.findBySectionId(s.getId());
                 for(Request r : requests){
-                    requestService.deleteRequestWithRequestData(r.getId());
+                    requestService.delete(r.getId());
                 }
                 sectionService.deleteSectionWithTheirContent(s.getId(), s.getContentId());
             }

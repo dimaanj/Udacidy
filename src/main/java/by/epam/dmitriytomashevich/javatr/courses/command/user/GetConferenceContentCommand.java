@@ -17,8 +17,10 @@ import com.google.gson.JsonElement;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GetConferenceContentCommand implements Command {
@@ -27,7 +29,6 @@ public class GetConferenceContentCommand implements Command {
     private final RequestService requestService;
     private final SectionService sectionService;
     private final UserService userService;
-    private final RequestDataService requestDataService;
 
     public GetConferenceContentCommand(ServiceFactory serviceFactory){
         conferenceService = serviceFactory.createConferenceService();
@@ -35,7 +36,6 @@ public class GetConferenceContentCommand implements Command {
         requestService = serviceFactory.createRequestService();
         sectionService = serviceFactory.createSectionService();
         userService = serviceFactory.createUserService();
-        requestDataService = serviceFactory.createRequestDataService();
     }
 
     @Override
@@ -44,39 +44,39 @@ public class GetConferenceContentCommand implements Command {
         User client = (User) content.getSession(false).getAttribute(Parameter.USER);
 
         Conference conference = conferenceService.getById(conferenceId);
-        Request request = requestService.findByUserIdAndConferenceId(client.getId(), conferenceId);
-
         List<Section> sectionList = sectionService.findSectionsByConferenceId(conferenceId);
-        for(Section s:sectionList){
+        for(Section s : sectionList){
             s.setContent(contentService.findById(s.getContentId()));
         }
-        User author = userService.findById(conference.getAuthorId());
-        Content conferenceContent = contentService.findById(conference.getContentId());
 
-        conference.setRequestStatus(request.getRequestStatus());
-        conference.setContent(conferenceContent);
+        List<Request> requests = requestService.findAllByUserIdAndConferenceId(client.getId(), conferenceId);
+        List<Long> sectionsRequestIds = new ArrayList<>();
+        if(requests != null && !requests.isEmpty()){
+            conference.setRequestSent(true);
+            conference.setRequestStatus(requestService.findById(requests.get(0).getId()).getRequestStatus());
+
+            sectionsRequestIds = requests.stream()
+                    .map(Request::getSectionId)
+                    .collect(Collectors.toList());
+        }
+        conference.setContent(contentService.findById(conference.getContentId()));
         conference.setSections(sectionList);
-        conference.setAuthor(author);
+        conference.setAuthor(userService.findById(conference.getAuthorId()));
 
-        List<Long> sectionsRequestIds =
-                requestDataService.findAllByRequestId(request.getId())
-                        .stream()
-                        .map(RequestData::getSectionId)
-                        .collect(Collectors.toList());
-        JsonArray jsonArray = new JsonArray();
-        for(Long id:sectionsRequestIds){
-            jsonArray.add(id);
+        JsonArray jsonSectionRequestIds = new JsonArray();
+        for(Long id : sectionsRequestIds){
+            jsonSectionRequestIds.add(id);
         }
 
         JsonConference jsonConference = new ConferenceConverter().convert(conference);
-        JsonElement jsonElement = new Gson().toJsonTree(jsonConference, JsonConference.class);
+        JsonElement jsonConferenceElement = new Gson().toJsonTree(jsonConference, JsonConference.class);
 
         try {
             content.getResponse().setContentType("application/json;charset=UTF-8");
             final JsonNodeFactory factory = JsonNodeFactory.instance;
             final ObjectNode node = factory.objectNode();
-            node.putPOJO("conference", jsonElement);
-            node.putPOJO("requestSectionsIds", jsonArray);
+            node.putPOJO("conference", jsonConferenceElement);
+            node.putPOJO("requestSectionsIds", jsonSectionRequestIds);
             PrintWriter writer = content.getResponse().getWriter();
             writer.print(node);
         } catch (IOException e) {

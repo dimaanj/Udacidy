@@ -30,10 +30,6 @@ public class ServiceFactory {
         return new MessageServiceImpl(daoFactory);
     }
 
-    public RequestDataService createRequestDataService(){
-        return new RequestDataServiceImpl(daoFactory);
-    }
-
     public RequestService createRequestService(){
         return new RequestServiceImpl(daoFactory);
     }

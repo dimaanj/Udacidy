@@ -6,4 +6,5 @@ import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 public interface ConversationGroupService {
     Long add(ConversationGroup conversationGroup) throws LogicException;
     ConversationGroup defineConversationGroup(Long userId, Long conversationId);
+    void deleteByConversationId(Long conversationId) throws LogicException;
 }

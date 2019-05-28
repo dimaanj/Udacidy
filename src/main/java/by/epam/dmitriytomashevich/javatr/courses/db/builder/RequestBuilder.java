@@ -17,6 +17,8 @@ public class RequestBuilder implements EntityBuilder<Request> {
             request.setUserId(resultSet.getLong("user_id"));
             request.setCreationDateTime(resultSet.getTimestamp("creation_date_time").toLocalDateTime());
             request.setRequestStatus(RequestStatus.valueOf(resultSet.getString("status")));
+            request.setConferenceId(resultSet.getLong("conference_id"));
+            request.setSectionId(resultSet.getLong("section_id"));
             return request;
         } catch (SQLException e) {
             throw new DAOException(e);

@@ -11,6 +11,7 @@ import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import by.epam.dmitriytomashevich.javatr.courses.util.logic_helper.UserServiceHandler;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class LoginCommand implements Command {
@@ -39,6 +40,7 @@ public class LoginCommand implements Command {
                 if(user.isAdmin()){
                     page = ActionNames.CONTENT_EDITING_ACTION;
                 }else {
+
                     content.getResponse().setHeader("cache-control", "no-store");
                     page = ActionNames.CONFERENCES_ACTION;
                 }
@@ -51,3 +53,5 @@ public class LoginCommand implements Command {
         return Optional.of(page);
     }
 }
+
+

@@ -74,6 +74,24 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     @Override
+    public List<Conversation> findAllConversationByType(Conversation.ConversationType type) throws LogicException {
+        try {
+            return conversationDao.findAllConversationsByType(type);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
+
+    @Override
+    public void deleteById(Long id) throws LogicException {
+        try {
+            conversationDao.deleteById(id);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
+
+    @Override
     public Conversation createConversation(Conversation conversation) throws LogicException {
         try {
             //Conversation group = new Conversation();

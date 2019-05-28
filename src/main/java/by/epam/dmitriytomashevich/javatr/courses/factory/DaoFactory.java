@@ -35,10 +35,6 @@ public class DaoFactory {
         return new RequestDao(connection);
     }
 
-    public RequestDataDao createRequestDataDao(){
-        return new RequestDataDao(connection);
-    }
-
     public SectionDao createSectionDao(){
         return new SectionDao(connection);
     }

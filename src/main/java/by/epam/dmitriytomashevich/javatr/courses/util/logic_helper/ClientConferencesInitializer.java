@@ -14,11 +14,11 @@ public class ClientConferencesInitializer {
     private final ContentService contentService;
     private final RequestService requestService;
 
-    private List<Conference> conferences;
+    private final Conference conference;
 
     public ClientConferencesInitializer(Builder builder) {
         this.client = builder.client;
-        this.conferences = builder.conferences;
+        this.conference = builder.conference;
         this.userService = builder.userService;
         this.sectionService = builder.sectionService;
         this.contentService = builder.contentService;
@@ -26,31 +26,25 @@ public class ClientConferencesInitializer {
     }
 
     public void init() throws LogicException {
-        for (Conference c : conferences) {
-            User author = userService.findById(c.getAuthorId());
-            List<Section> sections = sectionService.findSectionsByConferenceId(c.getId());
+        conference.setAuthor(userService.findById(conference.getAuthorId()));
+        conference.setContent(contentService.findById(conference.getContentId()));
 
-            for(Section s : sections){
-                s.setContent(contentService.findById(s.getContentId()));
-            }
-            c.setContent(contentService.findById(c.getContentId()));
-            c.setAuthor(author);
-            c.setSections(sections);
-            c.setRequestSent(isRequestAlreadySentRequest(client.getId(), c.getId()));
-            if(c.isRequestSent()) {
-                Request request = requestService.findByUserIdAndConferenceId(client.getId(), c.getId());
-                c.setRequestStatus(request.getRequestStatus());
-            }
+        List<Section> sections = sectionService.findSectionsByConferenceId(conference.getId());
+        for (Section s : sections) {
+            s.setContent(contentService.findById(s.getContentId()));
         }
-    }
+        conference.setSections(sections);
 
-    private boolean isRequestAlreadySentRequest(Long userId, Long conferenceId) throws LogicException {
-        return requestService.findByUserIdAndConferenceId(userId, conferenceId) != null;
+        List<Request> requests = requestService.findAllByUserIdAndConferenceId(client.getId(), conference.getId());
+        if(requests != null && !requests.isEmpty()){
+            conference.setRequestSent(true);
+            conference.setRequestStatus(requestService.findById(requests.get(0).getId()).getRequestStatus());
+        }
     }
 
     public static class Builder {
         private final User client;
-        private final List<Conference> conferences;
+        private final Conference conference;
 
         private UserService userService;
         private SectionService sectionService;
@@ -60,9 +54,9 @@ public class ClientConferencesInitializer {
         /**
          * Constructor
          */
-        public Builder(User client, List<Conference> conferences) {
+        public Builder(User client, Conference conference) {
            this.client = client;
-           this.conferences = conferences;
+           this.conference = conference;
         }
 
         public Builder withUserService(UserService userService) {

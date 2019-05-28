@@ -150,6 +150,7 @@ ${pageContext.response.setHeader("Expires", "0")}
             <div class="modal-footer">
                 <form method="post" id="removeRequestForm" action="${pageContext.request.contextPath}/udacidy/profile">
                     <input type="hidden" name="command" value="removeRequest"/>
+                    <input name="token" type="hidden" value="${sessionScope.csrfToken}" />
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                     <button type="submit" class="btn btn-primary" id="confirmationButton">Yes</button>
                 </form>

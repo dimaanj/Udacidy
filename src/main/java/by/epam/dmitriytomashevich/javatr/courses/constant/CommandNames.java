@@ -19,14 +19,14 @@ public class CommandNames {
     public static final String EDIT_CONFERENCE_CONTENT = "editConferenceContent";
     public static final String DELETE_CONFERENCE = "deleteConference";
     public static final String PREVIEW_COURSE_CONTENT ="previewCourseContent";
-    public static final String MAIN = "/udacidy/main";
     public static final String PAGE_NOT_FOUND = "/udacidy/404";
     public static final String ADMIN_CONVERSATION_COMMAND = "/udacidy/conversation";
     public static final String CONTENT_EDITING = "/udacidy/contentediting";
     public static final String CONFERENCES = "/udacidy/conferences";
-    public static final String GET_CONFERENCES = "getconferences";
     public static final String CHANGE_PASSWORD = "changePassword";
     public static final String GET_CONFERENCE_CONTENT = "getConferenceContent";
+    public static final String GET_CONFERENCES = "getconferences";
+    public static final String REMOVE_QUESTION_CONVERSATION = "removeQuestionConversation";
     
     public static final String SEND_CLIENT_REQUEST = "sendClientRequest";
 }

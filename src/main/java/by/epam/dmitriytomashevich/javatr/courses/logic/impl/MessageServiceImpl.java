@@ -98,4 +98,13 @@ public class MessageServiceImpl implements MessageService {
             throw new LogicException(e);
         }
     }
+
+    @Override
+    public void removeAllByConversationId(long conversationId) throws LogicException {
+        try {
+            messageDao.removeAllByConversationId(conversationId);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
 }

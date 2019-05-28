@@ -1,6 +1,6 @@
 window.onload = function () {
     loadMessages();
-    setInterval(updateMessages, 1000);
+    setInterval(updateMessages, 700);
     window.scrollTo(0, document.body.scrollHeight);
 };
 
@@ -160,11 +160,7 @@ form.addEventListener('submit', function (event) {
                 return response.json();
             })
             .then(function (obj) {
-                console.log(obj);
-                var message = jsonMessageToDom(obj);
-                $('#main-tag').append(message);
-
-                document.getElementById("send-message-form").reset();
+                 console.log(obj);
                 window.scrollTo(0, document.body.scrollHeight);
             })
             .catch(function(error) {

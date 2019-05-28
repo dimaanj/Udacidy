@@ -12,7 +12,8 @@ public interface ConversationService {
     Conversation createConversation(Conversation conversation) throws LogicException;
     Conversation getByMessageId(Long messageId) throws LogicException;
     boolean isUserInConversation(User user, Long conversationId) throws LogicException;
-
+    List<Conversation> findAllConversationByType(Conversation.ConversationType type) throws LogicException;
+    void deleteById(Long id) throws LogicException;
 
     /**
      * This methods works only for user. Not for admins.

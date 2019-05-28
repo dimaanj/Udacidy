@@ -9,7 +9,9 @@ public interface RequestService {
     Long create(Request request) throws LogicException;
     Request findBySectionIdAndUserId(Long sectionId, Long userId) throws LogicException;
     List<Request> findBySectionId(Long sectionId) throws LogicException;
-    void deleteRequestWithRequestData(Long requestId) throws LogicException;
-    Request findByUserIdAndConferenceId(Long userId, Long conferenceId) throws LogicException;
-
+    void delete(Long requestId) throws LogicException;
+    List<Request> findAllByUserIdAndConferenceId(Long userId, Long conferenceId) throws LogicException;
+    List<Request> findAllByUserId(Long userId) throws LogicException;
+    Request findById(Long requestId) throws LogicException;
+    void deleteFullRequestByConferenceIdAndUserId(Long conferenceId, Long userId) throws LogicException;
 }

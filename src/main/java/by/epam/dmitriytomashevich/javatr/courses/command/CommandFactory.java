@@ -7,7 +7,6 @@ import by.epam.dmitriytomashevich.javatr.courses.command.conversation.UpdateMess
 import by.epam.dmitriytomashevich.javatr.courses.command.conversation.ViewMoreCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.error.PageNotFoundCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.GreetingCommand;
-import by.epam.dmitriytomashevich.javatr.courses.command.main.MainCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.ViewMoreConferencesCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.profile.LoginCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.profile.LogoutCommand;
@@ -43,18 +42,19 @@ public class CommandFactory {
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.EDIT_CONFERENCE_CONTENT, new EditConferenceContentCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.DELETE_CONFERENCE, new RemoveConferenceCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.PREVIEW_COURSE_CONTENT, new PreviewCourseContent()));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.MAIN, new MainCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.PAGE_NOT_FOUND, new PageNotFoundCommand()));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CONTENT_EDITING, new ContentEditingCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CONFERENCES, new ConferencesCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.SEND_CLIENT_REQUEST, new SendClientRequestCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_CONFERENCES, new GetConferencesCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CHANGE_PASSWORD, new ChangePasswordCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_CONFERENCE_CONTENT, new GetConferenceContentCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_CONFERENCES, new ConferencesCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REMOVE_QUESTION_CONVERSATION, new RemoveQuestionConversationCommand(serviceFactory)));
     }
 
     /**
      * package-private
+     *
      * @param commandStringKey
      * @return
      */

@@ -24,6 +24,12 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
             "FROM conversation c JOIN conversation_type ct\n" +
             "            ON c.id = ct.id";
 
+    private static final String SELECT_ALL_CONVERSATIONS_BY_TYPE = "SELECT c.id, c.date_creation, ct.type\n" +
+            "FROM conversation c\n" +
+            "         JOIN conversation_type ct\n" +
+            "              ON c.id = ct.id\n" +
+            "WHERE ct.type = ?";
+
     private static final String SELECT_BY_ID = "SELECT c.id, c.date_creation, ct.type\n" +
             "FROM conversation c\n" +
             "         JOIN conversation_type ct\n" +
@@ -57,6 +63,9 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
             "         JOIN conversation_type ct\n" +
             "              ON c.id = ct.id\n" +
             "    WHERE m.id = ?";
+
+    private static final String DELETE_BY_ID = "DELETE FROM conversation\n" +
+            "    WHERE id = ?";
 
     public ConversationDao(Connection connection){
         this.connection = connection;
@@ -100,8 +109,15 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
     }
 
     @Override
-    public void deleteById(Long id) {
-
+    public void deleteById(Long id) throws DAOException {
+        try {
+            PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID);
+            statement.setLong(1, id);
+            statement.execute();
+            statement.close();
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
     }
 
     @Override
@@ -184,12 +200,31 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
             statement.setLong(1, userId);
             statement.setString(2, type.getValue());
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 conversation = builder.build(resultSet);
             }
             resultSet.close();
             statement.close();
             return conversation;
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    public List<Conversation> findAllConversationsByType(Conversation.ConversationType type) throws DAOException {
+        List<Conversation> conversations = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_CONVERSATIONS_BY_TYPE);
+            statement.setString(1, type.getValue());
+            ResultSet resultSet = statement.executeQuery();
+            conversations = new ArrayList<>();
+            while (resultSet.next()) {
+                Conversation conversation = builder.build(resultSet);
+                conversations.add(conversation);
+            }
+            resultSet.close();
+            statement.close();
+            return conversations;
         } catch (SQLException e) {
             throw new DAOException(e);
         }

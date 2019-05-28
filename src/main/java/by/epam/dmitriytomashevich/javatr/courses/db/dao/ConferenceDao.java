@@ -47,11 +47,10 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
             "WHERE id = ?;";
 
     private static final String FIND_ALL_CONFERENCES_AS_USER_REQUESTS = "SELECT DISTINCT c.id, c.content_id, c.author_id\n" +
-            "               FROM request r\n" +
-            "                    JOIN request_data rd on r.id = rd.request_id\n" +
-            "                    JOIN section s on rd.section_id = s.id\n" +
-            "                    JOIN conference c on s.conference_id = c.id\n" +
-            "                WHERE r.user_id = ?";
+            "    FROM conference c\n" +
+            "        JOIN section s on c.id = s.conference_id\n" +
+            "        JOIN request r on s.id = r.section_id\n" +
+            "WHERE r.user_id = ?";
 
 
 

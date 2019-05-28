@@ -15,4 +15,5 @@ public interface MessageService {
     Message getEarliestMessageByConversationId(Long conversationId) throws LogicException;
     void updateMessageImage(String imagePath, Long messageId) throws LogicException;
     Long countMessagesByConversationId(Long conversationId) throws LogicException;
+    void removeAllByConversationId(long conversationId) throws LogicException;
 }

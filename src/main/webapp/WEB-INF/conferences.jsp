@@ -17,6 +17,7 @@
     <link rel="stylesheet" type="text/css" href="../css/responsiveImage.css">
 </head>
 <body>
+<input id="token" type="hidden" value="${sessionScope.csrfToken}" />
 
 ${pageContext.response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate")}
 ${pageContext.response.setHeader("Pragma", "no-cache")}

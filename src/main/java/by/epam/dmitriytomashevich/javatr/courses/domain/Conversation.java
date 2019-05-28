@@ -8,6 +8,8 @@ public class Conversation {
     private LocalDate createDate;
     private ConversationType type;
 
+    private Message lastMessage;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -19,12 +21,21 @@ public class Conversation {
         Conversation that = (Conversation) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(createDate, that.createDate) &&
-                Objects.equals(type, that.type);
+                type == that.type &&
+                Objects.equals(lastMessage, that.lastMessage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createDate, type);
+        return Objects.hash(id, createDate, type, lastMessage);
+    }
+
+    public Message getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(Message lastMessage) {
+        this.lastMessage = lastMessage;
     }
 
     public Long getId() {

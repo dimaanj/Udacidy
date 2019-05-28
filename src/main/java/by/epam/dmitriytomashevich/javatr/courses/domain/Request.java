@@ -8,6 +8,8 @@ public class Request {
     private Long userId;
     private LocalDateTime creationDateTime;
     private RequestStatus requestStatus;
+    private Long conferenceId;
+    private Long sectionId;
 
     @Override
     public boolean equals(Object o) {
@@ -17,16 +19,36 @@ public class Request {
         return Objects.equals(id, request.id) &&
                 Objects.equals(userId, request.userId) &&
                 Objects.equals(creationDateTime, request.creationDateTime) &&
-                requestStatus == request.requestStatus;
+                requestStatus == request.requestStatus &&
+                Objects.equals(conferenceId, request.conferenceId) &&
+                Objects.equals(sectionId, request.sectionId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, creationDateTime, requestStatus);
+        return Objects.hash(
+                id, userId, creationDateTime,
+                requestStatus, conferenceId, sectionId);
     }
 
     public RequestStatus getRequestStatus() {
         return requestStatus;
+    }
+
+    public Long getConferenceId() {
+        return conferenceId;
+    }
+
+    public void setConferenceId(Long conferenceId) {
+        this.conferenceId = conferenceId;
+    }
+
+    public Long getSectionId() {
+        return sectionId;
+    }
+
+    public void setSectionId(Long sectionId) {
+        this.sectionId = sectionId;
     }
 
     public void setRequestStatus(RequestStatus requestStatus) {

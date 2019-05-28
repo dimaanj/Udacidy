@@ -30,4 +30,13 @@ public class ConversationGroupServiceImpl implements ConversationGroupService {
         conversationGroup.setConversationId(conversationId);
         return conversationGroup;
     }
+
+    @Override
+    public void deleteByConversationId(Long conversationId) throws LogicException {
+        try {
+            conversationGroupDao.deleteByConversationId(conversationId);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
 }

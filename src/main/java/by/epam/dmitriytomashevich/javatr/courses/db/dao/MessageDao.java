@@ -73,6 +73,9 @@ public class MessageDao implements AbstractDao<Long, Message> {
             "FROM udacidy.message\n" +
             "    WHERE conversation_id = ?;";
 
+    private static final String DELETE_ALL_BY_CONFERENCE_ID = "DELETE FROM message\n" +
+            "    WHERE conversation_id = ?";
+
     public MessageDao(Connection connection){
         this.connection = connection;
     }
@@ -267,6 +270,17 @@ public class MessageDao implements AbstractDao<Long, Message> {
             resultSet.close();
             statement.close();
             return amount;
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    public void removeAllByConversationId(Long conversationId) throws DAOException {
+        try {
+            PreparedStatement statement = connection.prepareStatement(DELETE_ALL_BY_CONFERENCE_ID);
+            statement.setLong(1, conversationId);
+            statement.execute();
+            statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }

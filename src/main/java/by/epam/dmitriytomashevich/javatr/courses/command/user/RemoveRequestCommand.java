@@ -4,7 +4,6 @@ import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
-import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
@@ -15,7 +14,7 @@ import java.util.Optional;
 public class RemoveRequestCommand implements Command {
     private final RequestService requestService;
 
-    public RemoveRequestCommand(ServiceFactory serviceFactory){
+    public RemoveRequestCommand(ServiceFactory serviceFactory) {
         requestService = serviceFactory.createRequestService();
     }
 
@@ -23,13 +22,10 @@ public class RemoveRequestCommand implements Command {
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         User user = (User) content.getSession(false).getAttribute(Parameter.USER);
         Long conferenceId = Long.valueOf(content.getParameter("conferenceId"));
-        deleteRequest(conferenceId, user);
+        requestService.deleteFullRequestByConferenceIdAndUserId(conferenceId, user.getId());
+
         String removeRequestMessage = "Your request was successfully removed!";
         return Optional.of(ActionNames.PROFILE_ACTION + "?removeRequestMessage=" + removeRequestMessage);
-    }
 
-    private void deleteRequest(Long conferenceId, User user) throws LogicException {
-        Request request = requestService.findByUserIdAndConferenceId(user.getId(), conferenceId);
-        requestService.deleteRequestWithRequestData(request.getId());
     }
 }

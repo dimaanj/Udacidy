@@ -79,6 +79,7 @@ public class ConnectionPool {
         usedConnections.forEach(this::releaseConnection);
         for (Connection c : connectionPool) {
             c.close();
+            System.out.println("connection "+ c + "was closed");
         }
         connectionPool.clear();
         usedConnections.clear();

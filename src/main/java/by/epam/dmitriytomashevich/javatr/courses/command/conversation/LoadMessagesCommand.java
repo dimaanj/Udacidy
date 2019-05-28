@@ -47,9 +47,8 @@ public class LoadMessagesCommand implements Command {
         for (Message m : messages) {
             User creator = userService.findById(m.getCreatorId());
             m.setCreator(creator);
-            JsonMessage jsonMessage =new MessageConverter().convert(m);
-            Gson gson = new Gson();
-            JsonElement element = gson.toJsonTree(jsonMessage, JsonMessage.class);
+            JsonMessage jsonMessage = new MessageConverter().convert(m);
+            JsonElement element = new Gson().toJsonTree(jsonMessage, JsonMessage.class);
             jsonMessagesList.add(element);
         }
         boolean hideViewMoreButton = false;

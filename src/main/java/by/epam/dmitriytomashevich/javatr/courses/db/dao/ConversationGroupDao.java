@@ -23,6 +23,9 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
             "         JOIN user_role ur on u.id = ur.id\n" +
             "WHERE c.user_id = ? and c.conversation_id = ?";
 
+    private static final String DELETE_BY_CONVERSATION_ID = "DELETE FROM conversation_group\n" +
+            "    WHERE conversation_id = ?";
+
     public ConversationGroupDao(Connection connection){
         this.connection = connection;
     }
@@ -115,6 +118,17 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
             resultSet.close();
             statement.close();
             return group;
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    public void deleteByConversationId(Long conversationId) throws DAOException {
+        try {
+            PreparedStatement statement = connection.prepareStatement(DELETE_BY_CONVERSATION_ID);
+            statement.setLong(1, conversationId);
+            statement.execute();
+            statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }

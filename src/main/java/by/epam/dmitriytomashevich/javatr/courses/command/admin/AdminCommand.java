@@ -7,11 +7,14 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Message;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.domain.UserRole;
+import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonConversation;
+import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.util.converter.MessageConverter;
 
 import java.util.*;
 
@@ -28,11 +31,17 @@ public class AdminCommand implements Command {
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
-        List<Conversation> conversationList = conversationService.getAllConversations();
+        List<Conversation> conversationList = conversationService
+                .findAllConversationByType(Conversation.ConversationType.QUESTION_CONVERSATION);
+
         List<Map.Entry<User, Conversation>> map = new ArrayList<>();
-        for (Conversation c : conversationList) {
-            Message m = messageService.getLastOnTimeByConversationId(c.getId());
-            if (m != null) {
+        for(Conversation c: conversationList) {
+            Message lastMessage = messageService.getLastOnTimeByConversationId(c.getId());
+            if (lastMessage != null) {
+                User creator = userService.findById(lastMessage.getCreatorId());
+                lastMessage.setCreator(creator);
+                c.setLastMessage(lastMessage);
+
                 List<User> conversationMembers = userService.findAllByConversationId(c.getId());
                 for (User u : conversationMembers) {
                     if (u.getRole().equals(UserRole.USER)) {
@@ -43,7 +52,6 @@ public class AdminCommand implements Command {
             }
         }
         content.setRequestAttribute("askingUsersWithTheirsConversations", map);
-
         return Optional.of(ActionNames.ADMIN);
     }
 }
