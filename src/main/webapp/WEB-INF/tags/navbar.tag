@@ -43,10 +43,7 @@
                 </c:when>
                 <c:when test="${not empty sessionScope.user and not sessionScope.user.isAdmin()}">
                     <h6 class="mt-1">
-<%--                        <a class="p-2 text-dark" href="${pageContext.request.contextPath}/udacidy/help">--%>
-<%--                            Help--%>
-<%--                        </a>--%>
-                        <button class="btn btn-link" form="helpUserCommand">
+                        <button class="btn btn-link text-dark" form="helpUserCommand">
                             Help
                         </button>
                     </h6>

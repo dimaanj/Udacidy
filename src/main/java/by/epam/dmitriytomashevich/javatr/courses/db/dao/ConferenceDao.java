@@ -52,7 +52,9 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
             "        JOIN request r on s.id = r.section_id\n" +
             "WHERE r.user_id = ?";
 
-
+    private static final String FIND_ALL_AS_USER_REQUESTS = "SELECT DISTINCT c.id, c.content_id, c.author_id\n" +
+            "FROM conference c\n" +
+            "         JOIN request r on c.id = r.conference_id";
 
     public ConferenceDao(Connection connection){
         this.connection = connection;
@@ -204,6 +206,23 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
             PreparedStatement statement = connection.prepareStatement(FIND_ALL_CONFERENCES_AS_USER_REQUESTS);
             statement.setLong(1, userId);
 
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Conference conference = builder.build(resultSet);
+                conferences.add(conference);
+            }
+            resultSet.close();
+            statement.close();
+            return conferences;
+        } catch (SQLException | DAOException e) {
+            throw new DAOException(e);
+        }
+    }
+
+    public List<Conference> findAllConferencesAsUserRequests() throws DAOException {
+        List<Conference> conferences = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(FIND_ALL_AS_USER_REQUESTS);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Conference conference = builder.build(resultSet);

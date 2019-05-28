@@ -107,4 +107,13 @@ public class MessageServiceImpl implements MessageService {
             throw new LogicException(e);
         }
     }
+
+    @Override
+    public List<Message> findAllByConversationId(Long conversationId) throws LogicException {
+        try {
+            return messageDao.findAllByConversationId(conversationId);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
 }

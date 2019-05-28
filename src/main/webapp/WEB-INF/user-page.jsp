@@ -16,59 +16,35 @@
 </head>
 <body>
 
-${pageContext.response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate")}
-${pageContext.response.setHeader("Pragma", "no-cache")}
-${pageContext.response.setHeader("Expires", "0")}
-
 <tag:navbar/>
 <main role="main" class="container-fluid">
     <div id="removeRequestMessagePlace"></div>
-    <div class="row mt-4 justify-content-md-center">
-        <div class="col-sm-7 shadow-lg rounded-lg">
-            <div class="card-body" id="profileBody">
-                <h5 class="card-title">
-                    <c:out value="${sessionScope.user.getFirstName()}"/> <c:out
-                        value="${sessionScope.user.getLastName()}"/>
-                </h5>
-                <h6>Email address: ${sessionScope.user.getEmail()}</h6>
-                <h6 class="card-subtitle mb-2 text-muted">
-                    Status: client
-                </h6>
-                <button class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal">Change password
-                </button>
-            </div>
-        </div>
+
+    <div class="card-body w-75 mx-auto rounded-lg shadow-lg mt-3" id="profileBody">
+        <h5 class="card-title">
+            <c:out value="${sessionScope.user.getFirstName()}"/> <c:out
+                value="${sessionScope.user.getLastName()}"/>
+        </h5>
+        <h6>Email address: ${sessionScope.user.getEmail()}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">
+            Status: client
+        </h6>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal">Change password
+        </button>
     </div>
 
     <c:if test="${not empty conferences}">
-        <div class="row mt-4 justify-content-md-center">
-            <div class="col-sm-7 shadow-lg rounded-lg">
-                <div class="my-3 p-3">
-                    <h6 class="border-bottom border-gray pb-2 mb-0">My Requests</h6>
-                    <c:forEach items="${conferences}" var="conference">
-                        <div class="media text-muted pt-3">
-                            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                                <div class="d-flex justify-content-between align-items-center w-100">
-                                    <strong class="text-gray-dark">Conference id <c:out
-                                            value="${conference.getId()}"/></strong>
-                                    <div class="d-flex flex-row-reverse bd-highlight">
-                                        <div class="p-2 bd-highlight">
-                                            <button name="removeRequestButton"
-                                                    id="removeRequestButton${conference.getId()}"
-                                                    type="button" class="mt-1 btn btn-dark btn-sm" data-toggle="modal"
-                                                    data-target="#confirmationModal">Remove request
-                                            </button>
-
-                                        </div>
-                                        <div class="p-2 bd-highlight">
-                                            <button name="viewDetailsButton" id="viewDetailsButton${conference.getId()}"
-                                                    type="button" class="btn btn-link" data-toggle="modal"
-                                                    data-target="#viewDetails">View details
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="d-block">author @ <c:out value="${conference.getAuthor().getFirstName()}"/>
+        <div class="my-4 p-3 bg-white rounded-lg shadow-lg mx-auto w-75">
+            <h5 class="border-bottom border-gray pb-2 mb-0">My Requests</h5>
+            <c:forEach items="${conferences}" var="conference">
+                <div class="pt-3" id="requestItem${conference.getId()}">
+                    <div class="border-bottom border-gray">
+                        <div class="d-flex bd-highlight mb-3">
+                            <div class="mr-auto p-2 bd-highlight">
+                                <strong class="text-gray-dark">Conference id <c:out
+                                        value="${conference.getId()}"/></strong>
+                                <span class="d-block text-muted">author @ <c:out
+                                        value="${conference.getAuthor().getFirstName()}"/>
                                     <c:out value="${conference.getAuthor().getLastName()}"/>,
                                 </span>
                                 <c:choose>
@@ -89,10 +65,23 @@ ${pageContext.response.setHeader("Expires", "0")}
                                     </c:otherwise>
                                 </c:choose>
                             </div>
+                            <div class="p-2 bd-highlight">
+                                <button name="viewDetailsButton" id="viewDetailsButton${conference.getId()}"
+                                        type="button" class="btn btn-outline-primary" data-toggle="modal"
+                                        data-target="#viewDetails">View details
+                                </button>
+                            </div>
+                            <div class="p-2 bd-highlight">
+                                <button name="removeRequestButton"
+                                        id="removeRequestButton${conference.getId()}"
+                                        type="button" class="btn btn-outline-dark" data-toggle="modal"
+                                        data-target="#confirmationModal">Remove request
+                                </button>
+                            </div>
                         </div>
-                    </c:forEach>
+                    </div>
                 </div>
-            </div>
+            </c:forEach>
         </div>
     </c:if>
 </main>
@@ -132,7 +121,6 @@ ${pageContext.response.setHeader("Expires", "0")}
     </div>
 </div>
 
-
 <%--Confirmation remove request modal--%>
 <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -148,12 +136,8 @@ ${pageContext.response.setHeader("Expires", "0")}
                 Are you really want to remove this request?
             </div>
             <div class="modal-footer">
-                <form method="post" id="removeRequestForm" action="${pageContext.request.contextPath}/udacidy/profile">
-                    <input type="hidden" name="command" value="removeRequest"/>
-                    <input name="token" type="hidden" value="${sessionScope.csrfToken}" />
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-primary" id="confirmationButton">Yes</button>
-                </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="submit" class="btn btn-primary" id="confirmationButton">Yes</button>
             </div>
         </div>
     </div>
@@ -170,7 +154,6 @@ ${pageContext.response.setHeader("Expires", "0")}
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-
             <div class="modal-body" id="data-container">
             </div>
         </div>
@@ -179,9 +162,7 @@ ${pageContext.response.setHeader("Expires", "0")}
 
 <tag:footer/>
 
-
 <script src="../js/userPage.js"></script>
-
 <script>
     function clearUriParameters() {
         var uri = window.location.toString();

@@ -17,21 +17,16 @@
     <link rel="stylesheet" type="text/css" href="../css/responsiveImage.css">
 </head>
 <body>
-<input id="token" type="hidden" value="${sessionScope.csrfToken}" />
-
-${pageContext.response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate")}
-${pageContext.response.setHeader("Pragma", "no-cache")}
-${pageContext.response.setHeader("Expires", "0")}
 
 <tag:navbar/>
 <main role="main" class="container-fluid" id="main-tag">
     <c:if test="${not empty conferences}">
         <c:forEach items="${conferences}" var="conference">
-            <div class="row mt-4 justify-content-md-center" id="${conference.getId()}">
-                <div class="col-sm-7 shadow-lg rounded-lg p-5">
-                    <div id="bodyData${conference.getId()}">
-                            ${conference.getContent().getContent()}
-                    </div>
+            <div class="mx-auto w-75 rounded-lg shadow-lg p-5 mt-4 rounded" id="${conference.getId()}">
+                <div id="bodyData${conference.getId()}">
+                        ${conference.getContent().getContent()}
+                </div>
+                <div class="card-footer border-white">
                     <div class="d-flex flex-row bd-highlight mt-3" id="flex-row${conference.getId()}">
                         <div class="p-2 bd-highlight">
                             <c:choose>
@@ -113,7 +108,6 @@ ${pageContext.response.setHeader("Expires", "0")}
         </div>
     </div>
 </div>
-
 
 
 <tag:footer/>

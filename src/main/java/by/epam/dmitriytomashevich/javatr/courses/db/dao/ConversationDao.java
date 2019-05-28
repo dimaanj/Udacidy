@@ -64,6 +64,9 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
             "              ON c.id = ct.id\n" +
             "    WHERE m.id = ?";
 
+    private static final String DELETE_CONVERSATION_TYPE_BY_ID = "DELETE FROM conversation_type\n" +
+            "    WHERE id = ?";
+
     private static final String DELETE_BY_ID = "DELETE FROM conversation\n" +
             "    WHERE id = ?";
 
@@ -111,7 +114,11 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
     @Override
     public void deleteById(Long id) throws DAOException {
         try {
-            PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID);
+            PreparedStatement statement = connection.prepareStatement(DELETE_CONVERSATION_TYPE_BY_ID);
+            statement.setLong(1, id);
+            statement.execute();
+
+            statement = connection.prepareStatement(DELETE_BY_ID);
             statement.setLong(1, id);
             statement.execute();
             statement.close();

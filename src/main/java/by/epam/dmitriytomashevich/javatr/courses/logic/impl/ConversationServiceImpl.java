@@ -36,26 +36,6 @@ public class ConversationServiceImpl implements ConversationService {
         }
     }
 
-//    @Override
-//    public Conversation getSingleQuestionConversationForUser(User user) throws LogicException {
-//        try {
-//            return conversationDao.findUserConversationByType(user.getId(),
-//                    Conversation.ConversationType.QUESTION_CONVERSATION);
-//        } catch (DAOException e) {
-//            throw new LogicException(e);
-//        }
-//    }
-
-//    @Override
-//    public boolean isQuestionConversationCreatedForUser(User user) throws LogicException {
-//        try {
-//            return conversationDao.findUserConversationByType(user.getId(),
-//                    Conversation.ConversationType.QUESTION_CONVERSATION) != null;
-//        } catch (DAOException e) {
-//            throw new LogicException(e);
-//        }
-//    }
-
     @Override
     public boolean isUserInConversation(User user, Long conversationId) throws LogicException {
         try {

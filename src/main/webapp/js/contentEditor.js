@@ -24,19 +24,27 @@ var dfreeBodyConfig = {
 function createConference(jsonConference) {
     var conferenceId = jsonConference.id;
     var conferenceContent = jsonConference.content;
-    var conferenceSections = jsonConference.jsonSections;
 
-    var row = document.createElement('div');
-    row.classList.add('row');
-    row.classList.add('mt-4');
-    row.classList.add('justify-content-md-center');
-    row.id = conferenceId;
+    // var row = document.createElement('div');
+    // row.classList.add('row');
+    // row.classList.add('mt-4');
+    // row.classList.add('justify-content-md-center');
+    // row.id = conferenceId;
+    //
+    // var col = document.createElement('div');
+    // col.classList.add('col-sm-7');
+    // col.classList.add('shadow-lg');
+    // col.classList.add('rounded-lg');
+    // col.classList.add('p-5');
 
-    var col = document.createElement('div');
-    col.classList.add('col-sm-7');
-    col.classList.add('shadow-lg');
-    col.classList.add('rounded-lg');
-    col.classList.add('p-5');
+    let div = document.createElement('div');
+    div.classList.add('mx-auto');
+    div.classList.add('w-75');
+    div.classList.add('shadow-lg');
+    div.classList.add('p-5');
+    div.classList.add('mt-4');
+    div.classList.add('rounded-lg');
+    div.id = conferenceId;
 
     var bodyData = document.createElement('div');
     bodyData.setAttribute('id', 'bodyData');
@@ -46,7 +54,7 @@ function createConference(jsonConference) {
         images[k].setAttribute('id', 'responsive-image');
     }
 
-    col.appendChild(bodyData);
+    div.appendChild(bodyData);
 
     var flexRow = document.createElement('div');
     flexRow.classList.add('d-flex');
@@ -79,10 +87,10 @@ function createConference(jsonConference) {
 
     flexRow.appendChild(flexItem1);
     flexRow.appendChild(flexItem2);
-    col.appendChild(flexRow);
+    div.appendChild(flexRow);
 
-    row.appendChild(col);
-    return row;
+    // row.appendChild(col);
+    return div;
 }
 
 var body = $("body");
@@ -121,7 +129,7 @@ body.on('click', "button[name='edit']", function (event) {
 });
 
 body.on('click', "button[name='deleteButton']", function (event) {
-    var rowElement = this.parentElement.parentElement.parentElement.parentElement;
+    var rowElement = this.parentElement.parentElement.parentElement;
     document.getElementById('confirmationButton').setAttribute('name', rowElement.getAttribute('id'));
 });
 
@@ -148,9 +156,10 @@ body.on('click', "button[name='saveChanges']", function (event) {
     var deleteButton = saveChangesButton.parentElement.parentElement.children[1].firstElementChild;
     deleteButton.removeAttribute('disabled');
 
+    let conferenceId = dFreeBody.parentElement.getAttribute('id');
     const formData = new FormData();
     formData.append('command', 'editConferenceContent');
-    formData.append('conferenceId', dFreeBody.parentElement.parentElement.getAttribute('id'));
+    formData.append('conferenceId', conferenceId);
     formData.append('content', dFreeBody.innerHTML);
 
     var url = '/udacidy/';
@@ -198,7 +207,7 @@ body.on('click', "button[name='saveChanges']", function (event) {
                 saveChangesButton.parentElement.remove();
 
             } else {
-                var row = saveChangesButton.parentElement.parentElement.parentElement.parentElement;
+                var dfBody = document.getElementById(conferenceId);
                 var dangerAlert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
 
                 dangerAlert.classList.add('mx-auto');
@@ -207,7 +216,7 @@ body.on('click', "button[name='saveChanges']", function (event) {
                 dangerAlert.classList.add('rounded-lg');
                 dangerAlert.classList.add('mt-3');
 
-                row.parentNode.replaceChild(dangerAlert, row);
+                dfBody.parentNode.replaceChild(dangerAlert, dfBody);
                 dangerAlert.scrollIntoView();
             }
             tinymce.remove();

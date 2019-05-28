@@ -1,7 +1,6 @@
 package by.epam.dmitriytomashevich.javatr.courses.filter;
 
 
-import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.constant.CommandNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
@@ -37,7 +36,7 @@ public class CommandFilter implements Filter {
         userCommands.add(CommandNames.UPLOAD_MESSAGES);
         userCommands.add(CommandNames.VIEW_MORE_CONFERENCES);
         userCommands.add(CommandNames.LOAD_MESSAGES);
-        userCommands.add(CommandNames.REMOVE_REQUEST_COMMAND);
+        userCommands.add(CommandNames.REMOVE_REQUEST);
         userCommands.add(CommandNames.CONFERENCES);
         userCommands.add(CommandNames.GET_CONFERENCES);
         userCommands.add(CommandNames.CHANGE_PASSWORD);
@@ -47,7 +46,7 @@ public class CommandFilter implements Filter {
 
         adminCommands.add(CommandNames.LOG_OUT);
         adminCommands.add(CommandNames.PAGE_NOT_FOUND);
-        adminCommands.add(CommandNames.ADMIN_CONVERSATION_COMMAND);
+        adminCommands.add(CommandNames.ADMIN_CONVERSATION);
         adminCommands.add(CommandNames.AJAX_SEND_MESSAGE);
         adminCommands.add(CommandNames.VIEW_MORE);
         adminCommands.add(CommandNames.UPLOAD_MESSAGES);

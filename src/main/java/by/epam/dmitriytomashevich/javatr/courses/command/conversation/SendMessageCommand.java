@@ -43,25 +43,15 @@ public class SendMessageCommand implements Command {
         Conversation conversation = conversationService.getById(conversationId);
         String text = content.getParameter("message");
 
-        Optional<StringBuilder> fileName = uploadToServer(content.getRequest());
+        Optional<String> fileName = uploadToServer(content.getRequest());
         String imageServerPath = null;
         if (fileName.isPresent()) {
             imageServerPath = ".." + File.separator + "images" + File.separator + "tmp" + File.separator + fileName.get();
         }
         Message message = createMessage(user, text, conversation, imageServerPath);
         Long messageId = messageService.add(message);
+        uploadToCloud(content, fileName, messageId);
 
-        fileName.ifPresent(stringBuilder -> new Thread(() -> {
-            String cloudImageUrl = addToCloud(
-                    (content.getRequest().getServletContext().getRealPath("")
-                            + File.separator + "images" + File.separator + "tmp" + File.separator + stringBuilder)
-            );
-            try {
-                messageService.updateMessageImage(cloudImageUrl, messageId);
-            } catch (LogicException e) {
-                e.printStackTrace();
-            }
-        }).start());
 
         message.setId(messageId);
         JsonMessage jsonMessage = new MessageConverter().convert(message);
@@ -77,7 +67,7 @@ public class SendMessageCommand implements Command {
         return Optional.empty();
     }
 
-    private Optional<StringBuilder> uploadToServer(HttpServletRequest request) throws LogicException {
+    private Optional<String> uploadToServer(HttpServletRequest request) throws LogicException {
         String uploadPath = request.getServletContext().getRealPath("") + File.separator + "images" + File.separator + "tmp";
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
@@ -85,11 +75,10 @@ public class SendMessageCommand implements Command {
         }
         try {
             String fileName = (LocalDateTime.now().toString() + ".png").replaceAll(":", "-");
-            StringBuilder finalName = new StringBuilder(fileName);
             for (Part part : request.getParts()) {
                 if (part.getName().equals("file") && part.getSubmittedFileName() != null) {
                     part.write(uploadPath + File.separator + fileName);
-                    return Optional.of(finalName);
+                    return Optional.of(fileName);
                 }
             }
             return Optional.empty();
@@ -98,18 +87,25 @@ public class SendMessageCommand implements Command {
         }
     }
 
-    private String addToCloud(String fullPath) {
-        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", "dtpngtrki",
-                "api_key", "684288839384791",
-                "api_secret", "tq27mZs8v4Hd4Uon-t5O4BJ10gQ"));
-        Map uploadRezult = null;
-        try {
-            uploadRezult = cloudinary.uploader().upload(fullPath, ObjectUtils.emptyMap());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return uploadRezult.get("secure_url").toString();
+    private void uploadToCloud(SessionRequestContent content, Optional<String> optionalFileName, Long messageId){
+        optionalFileName.ifPresent(fileName -> new Thread(() -> {
+            String fullPath =
+                    content.getRequest().getServletContext().getRealPath("")
+                            + File.separator + "images" + File.separator + "tmp" + File.separator + fileName;
+
+            Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                    "cloud_name", "dtpngtrki",
+                    "api_key", "684288839384791",
+                    "api_secret", "tq27mZs8v4Hd4Uon-t5O4BJ10gQ"));
+
+            try {
+                Map uploadRezult = cloudinary.uploader().upload(fullPath, ObjectUtils.emptyMap());
+                String cloudImageUrl = uploadRezult.get("secure_url").toString();
+                messageService.updateMessageImage(cloudImageUrl, messageId);
+            } catch (IOException | LogicException e) {
+                e.printStackTrace();
+            }
+        }).start());
     }
 
     private Message createMessage(User user, String text, Conversation conversation, String imageUrl) {

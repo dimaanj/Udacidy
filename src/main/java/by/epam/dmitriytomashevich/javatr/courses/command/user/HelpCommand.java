@@ -42,8 +42,10 @@ public class HelpCommand implements Command {
                 conversation.setCreateDate(LocalDate.now());
                 conversation.setType(Conversation.ConversationType.QUESTION_CONVERSATION);
                 conversation = conversationService.createConversation(conversation);
-                ConversationGroup conversationGroup =
-                        conversationGroupService.defineConversationGroup(current.getId(), conversation.getId());
+
+                ConversationGroup conversationGroup = new ConversationGroup();
+                conversationGroup.setUserId(current.getId());
+                conversationGroup.setConversationId(conversation.getId());
                 conversationGroupService.add(conversationGroup);
             }
             return Optional.of(ActionNames.HELP_ACTION);

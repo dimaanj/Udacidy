@@ -76,6 +76,12 @@ public class MessageDao implements AbstractDao<Long, Message> {
     private static final String DELETE_ALL_BY_CONFERENCE_ID = "DELETE FROM message\n" +
             "    WHERE conversation_id = ?";
 
+    private static final String FIND_ALL_BY_CONVERSATION_ID = "SELECT m.id, m.text, m.creator_id, m.creation_date_time, m.conversation_id, m.image_path\n" +
+            "FROM conversation c\n" +
+            "         JOIN message m on c.id = m.conversation_id\n" +
+            "WHERE conversation_id = ?\n" +
+            "ORDER BY m.creation_date_time";
+
     public MessageDao(Connection connection){
         this.connection = connection;
     }
@@ -284,5 +290,25 @@ public class MessageDao implements AbstractDao<Long, Message> {
         } catch (SQLException e) {
             throw new DAOException(e);
         }
+    }
+
+    public List<Message> findAllByConversationId(Long conversationId) throws DAOException {
+        List<Message> messages = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement(FIND_ALL_BY_CONVERSATION_ID);
+            statement.setLong(1, conversationId);
+            ResultSet resultSet = statement.executeQuery();
+            messages = new ArrayList<>();
+            while (resultSet.next()) {
+                Message message = builder.build(resultSet);
+                messages.add(message);
+            }
+            resultSet.close();
+            statement.close();
+            return messages;
+        } catch (SQLException | DAOException e) {
+            throw new DAOException(e);
+        }
+
     }
 }

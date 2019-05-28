@@ -16,4 +16,5 @@ public interface MessageService {
     void updateMessageImage(String imagePath, Long messageId) throws LogicException;
     Long countMessagesByConversationId(Long conversationId) throws LogicException;
     void removeAllByConversationId(long conversationId) throws LogicException;
+    List<Message> findAllByConversationId(Long conversationId) throws LogicException;
 }

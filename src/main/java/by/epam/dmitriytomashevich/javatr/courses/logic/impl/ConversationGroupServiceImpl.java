@@ -11,6 +11,10 @@ import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 public class ConversationGroupServiceImpl implements ConversationGroupService {
     private final ConversationGroupDao conversationGroupDao;
 
+    public ConversationGroupServiceImpl(DaoFactory daoFactory){
+        conversationGroupDao = daoFactory.createConversationGroupDao();
+    }
+
     @Override
     public ConversationGroup findById(Long id) throws LogicException {
         try {
@@ -20,10 +24,6 @@ public class ConversationGroupServiceImpl implements ConversationGroupService {
         }
     }
 
-    public ConversationGroupServiceImpl(DaoFactory daoFactory){
-        conversationGroupDao = daoFactory.createConversationGroupDao();
-    }
-
     @Override
     public Long add(ConversationGroup conversationGroup) throws LogicException {
         try {
@@ -31,14 +31,6 @@ public class ConversationGroupServiceImpl implements ConversationGroupService {
         } catch (DAOException e) {
             throw new LogicException(e);
         }
-    }
-
-    @Override
-    public ConversationGroup defineConversationGroup(Long userId, Long conversationId) {
-        ConversationGroup conversationGroup = new ConversationGroup();
-        conversationGroup.setUserId(userId);
-        conversationGroup.setConversationId(conversationId);
-        return conversationGroup;
     }
 
     @Override

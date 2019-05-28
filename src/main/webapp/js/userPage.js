@@ -35,10 +35,10 @@ function createConference(jsonConference, requestSectionsIds) {
 
     let ul = document.createElement('ul');
     ul.classList.add('list-group');
-    for(let i=0; i<conferenceSections.length; i++){
+    for (let i = 0; i < conferenceSections.length; i++) {
         let li = document.createElement('li');
         li.classList.add('list-group-item');
-        if(requestSectionsIds.includes(conferenceSections[i].id)){
+        if (requestSectionsIds.includes(conferenceSections[i].id)) {
             li.classList.add('active');
             console.log('include section id = ' + conferenceSections[i].id);
         }
@@ -165,7 +165,7 @@ body.on('click', "button[name='viewDetailsButton']", function (event) {
     var thisButton = this;
     thisButton.setAttribute('disabled', 'true');
 
-    let conferenceId= thisButton.getAttribute('id').replace('viewDetailsButton', '');
+    let conferenceId = thisButton.getAttribute('id').replace('viewDetailsButton', '');
     const formData = new FormData();
     formData.append('command', 'getConferenceContent');
     formData.append('conferenceId', conferenceId);
@@ -195,21 +195,50 @@ body.on('click', "button[name='viewDetailsButton']", function (event) {
 body.on('click', "button[name='removeRequestButton']", function (event) {
     event.preventDefault();
     console.log('1');
-    let removeRequestForm = document.getElementById('removeRequestForm');
-
-    let previousConfIdParam = document.getElementsByName('conferenceId');
-    if(!isEmpty(previousConfIdParam)){
-        previousConfIdParam.remove();
-    }
-
     let conferenceId = this.getAttribute('id').replace('removeRequestButton', '');
+    let confirmationButton = document.getElementById('confirmationButton');
+    confirmationButton.setAttribute('conferenceId', conferenceId);
+});
 
-    let inputParam = document.createElement('input');
-    inputParam.setAttribute('type', 'hidden');
-    inputParam.setAttribute('name', 'conferenceId');
-    inputParam.setAttribute('value', conferenceId);
+body.on('click', '#confirmationButton', function (event) {
+    event.preventDefault();
 
-    removeRequestForm.appendChild(inputParam);
+    let thisButton = this;
+    thisButton.setAttribute('disabled', 'true');
+    let conferenceId = thisButton.getAttribute('conferenceId');
+    console.log(conferenceId);
+    console.log(conferenceId.value);
+
+    const formData = new FormData();
+    formData.append('command', 'removeRequest');
+    formData.append('conferenceId', conferenceId);
+
+    var url = '/udacidy/';
+    var fetchOptions = {
+        method: 'POST',
+        cache: 'no-store',
+        body: formData,
+    };
+    var responsePromise = fetch(url, fetchOptions);
+    responsePromise
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (jsonObj) {
+            console.log(jsonObj);
+            let requestItem = document.getElementById('requestItem' + conferenceId);
+            requestItem.innerHTML = "";
+            let alert;
+            if (jsonObj.isPositiveResult) {
+                alert = createAlertWithTextAndType(jsonObj.message, 'alert-success');
+            } else {
+                alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
+            }
+            requestItem.appendChild(alert);
+
+            $("#confirmationModal").modal('hide');
+        });
+    thisButton.removeAttribute('disabled');
 });
 
 

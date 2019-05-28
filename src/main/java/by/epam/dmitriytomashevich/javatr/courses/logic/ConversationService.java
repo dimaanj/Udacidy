@@ -14,14 +14,4 @@ public interface ConversationService {
     boolean isUserInConversation(User user, Long conversationId) throws LogicException;
     List<Conversation> findAllByType(Conversation.ConversationType type) throws LogicException;
     void deleteById(Long id) throws LogicException;
-
-    /**
-     * This methods works only for user. Not for admins.
-     * Because user have only one question conversation.
-     * @param user
-     * @return
-     * @throws LogicException
-     */
-//    Conversation getSingleQuestionConversationForUser(User user) throws LogicException;
-//    boolean isQuestionConversationCreatedForUser(User user) throws LogicException;
 }

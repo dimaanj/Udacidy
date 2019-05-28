@@ -11,6 +11,8 @@ body.on('click', "#confirmationRemoveConferenceButton", function (event) {
     event.preventDefault();
 
     let thisButton = this;
+    thisButton.setAttribute('disabled', 'true');
+
     let conversationIdHiddenParam = document.getElementById('conversationIdHiddenParam');
     let conversationId = conversationIdHiddenParam.getAttribute('value');
 
@@ -31,15 +33,19 @@ body.on('click', "#confirmationRemoveConferenceButton", function (event) {
         })
         .then(function (obj) {
             console.log(obj);
-            let row = thisButton.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+            let element = document.getElementById('userQuestionItem' + conversationId);
             let alert = createAlertWithTextAndType(obj.message, 'alert-success');
             alert.classList.add('mt-3');
-            alert.classList.add('row');
-            row.replaceChild(alert, row);
+            alert.classList.add('mx-auto');
+            element.innerHTML = "";
+            element.appendChild(alert);
+
+            $('#confirmationModal').modal('hide');
         })
         .catch(function (error) {
             console.log('There has been a problem with your fetch operation: ', error.message);
         });
+    thisButton.removeAttribute('disabled');
 });
 
 
@@ -70,3 +76,70 @@ function createAlertWithTextAndType(text, type) {
     alert.appendChild(button);
     return alert;
 }
+
+function initRequestData(thisButton, command){
+    let confirmationActionButton = document.getElementById('confirmationActionButton');
+
+    let conferenceId = thisButton.getAttribute('conferenceId');
+    let userId = thisButton.getAttribute('userId');
+
+    confirmationActionButton.setAttribute('conferenceId', conferenceId);
+    confirmationActionButton.setAttribute('userId', userId);
+    confirmationActionButton.setAttribute('command', command);
+}
+
+body.on('click', "button[name='acceptRequest']", function (event) {
+    event.preventDefault();
+    let thisButton = this;
+    initRequestData(thisButton, 'acceptUserRequest');
+});
+body.on('click', "button[name='rejectRequest']", function (event) {
+    event.preventDefault();
+    let thisButton = this;
+    initRequestData(thisButton, 'rejectUserRequest');
+});
+
+
+body.on('click', "#confirmationActionButton", function (event) {
+    event.preventDefault();
+    let thisButton = this;
+    thisButton.setAttribute('disabled', 'true');
+
+    const formData = new FormData();
+    formData.append('command', thisButton.getAttribute('command'));
+    formData.append('conferenceId', thisButton.getAttribute('conferenceId'));
+    formData.append('userId', thisButton.getAttribute('userId'));
+
+    var url = '/udacidy/';
+    var fetchOptions = {
+        method: 'POST',
+        body: formData,
+    };
+    var responsePromise = fetch(url, fetchOptions);
+    responsePromise
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (obj) {
+            console.log(obj);
+
+            // let element = document.getElementById('userQuestionItem' + conversationId);
+            // let alert = createAlertWithTextAndType(obj.message, 'alert-success');
+            // alert.classList.add('mt-3');
+            // alert.classList.add('mx-auto');
+            // element.innerHTML = "";
+            // element.appendChild(alert);
+
+            $('#confirmationModal').modal('hide');
+        })
+        .catch(function (error) {
+            console.log('There has been a problem with your fetch operation: ', error.message);
+        });
+    thisButton.removeAttribute('disabled');
+});
+
+function changeViewIfRequestAccepted(){
+
+}
+
+

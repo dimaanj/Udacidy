@@ -14,4 +14,5 @@ public interface ConferenceService {
     List<Conference> findSomeOlderStartsWithConversationId(Long id) throws LogicException;
     void deleteConferenceWithTheirContent(Long conferenceId, Long contentId) throws LogicException;
     List<Conference> findAllConferencesAsUserRequestsByUserId(Long userId) throws LogicException;
+    List<Conference> findAllConferencesAsUserRequests() throws LogicException;
 }

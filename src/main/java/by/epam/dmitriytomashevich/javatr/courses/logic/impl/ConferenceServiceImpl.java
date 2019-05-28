@@ -87,4 +87,13 @@ public class ConferenceServiceImpl implements ConferenceService {
             throw new LogicException(e);
         }
     }
+
+    @Override
+    public List<Conference> findAllConferencesAsUserRequests() throws LogicException {
+        try {
+            return conferenceDao.findAllConferencesAsUserRequests();
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
 }

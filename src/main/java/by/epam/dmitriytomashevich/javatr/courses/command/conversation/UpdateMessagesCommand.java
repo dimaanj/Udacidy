@@ -6,11 +6,11 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Message;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
-import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import by.epam.dmitriytomashevich.javatr.courses.util.converter.MessageConverter;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -26,7 +26,7 @@ public class UpdateMessagesCommand implements Command {
     private final ConversationService conversationService;
     private final UserService userService;
 
-    public UpdateMessagesCommand(ServiceFactory serviceFactory){
+    public UpdateMessagesCommand(ServiceFactory serviceFactory) {
         messageService = serviceFactory.createMessageService();
         conversationService = serviceFactory.createConversationService();
         userService = serviceFactory.createUserService();
@@ -36,23 +36,30 @@ public class UpdateMessagesCommand implements Command {
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         String lastMessageIdAsString = content.getParameter("lastMessageId");
         JsonArray jsonMessagesList = new JsonArray();
-        if(lastMessageIdAsString != null && !lastMessageIdAsString.equals("undefined")) {
+
+        List<Message> messages = null;
+        if (lastMessageIdAsString != null && !lastMessageIdAsString.equals("undefined")) {
             Long lastMessageId = Long.parseLong(lastMessageIdAsString);
             Conversation conversation = conversationService.getByMessageId(lastMessageId);
+            if (conversation != null) {
+                messages = messageService.findAllAfterMessageId(lastMessageId, conversation.getId());
+            }
+        } else {
+            Long conversationId = Long.valueOf(content.getParameter("conversationId"));
+            messages = messageService.findAllByConversationId(conversationId);
+        }
 
-            List<Message> messages = messageService.findAllAfterMessageId(lastMessageId, conversation.getId());
-
-            if (messages != null) {
-                for (Message m : messages) {
-                    User creator = userService.findById(m.getCreatorId());
-                    m.setCreator(creator);
-                    JsonMessage jsonMessage = new MessageConverter().convert(m);
-                    Gson gson = new Gson();
-                    JsonElement element = gson.toJsonTree(jsonMessage, JsonMessage.class);
-                    jsonMessagesList.add(element);
-                }
+        if (messages != null) {
+            for (Message m : messages) {
+                User creator = userService.findById(m.getCreatorId());
+                m.setCreator(creator);
+                JsonMessage jsonMessage = new MessageConverter().convert(m);
+                Gson gson = new Gson();
+                JsonElement element = gson.toJsonTree(jsonMessage, JsonMessage.class);
+                jsonMessagesList.add(element);
             }
         }
+
         try {
             content.getResponse().setContentType("application/json;charset=UTF-8");
             PrintWriter writer = content.getResponse().getWriter();

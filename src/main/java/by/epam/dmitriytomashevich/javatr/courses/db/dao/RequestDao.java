@@ -19,16 +19,9 @@ public class RequestDao implements AbstractDao<Long, Request> {
             "    (user_id, creation_date_time, status, conference_id, section_id)\n" +
             "VALUES (?, ?, ?, ?, ?);";
 
-//    private static final String FIND_BY_SECTION_ID_AND_USER_ID = "SELECT id, user_id, creation_date_time, status, conference_id, section_id\n" +
-//            "    FROM request \n" +
-//            "    WHERE section_id = ? and user_id = ?";
-
     private static final String FIND_BY_SECTION_ID = "SELECT id, user_id, creation_date_time, status, conference_id, section_id\n" +
             "FROM request\n" +
             "WHERE section_id = ?";
-
-//    private static final String DELETE = "DELETE FROM udacidy.request\n" +
-//            "    WHERE id = ?";
 
     private static final String DELETE_BY_CONFERENCE_ID_AND_USER_ID = "DELETE FROM udacidy.request\n" +
             "    WHERE conference_id = ? AND user_id = ?";
@@ -45,13 +38,35 @@ public class RequestDao implements AbstractDao<Long, Request> {
             "FROM request\n" +
             "WHERE id = ?";
 
+    private static final String FIND_ALL = "SELECT id, user_id, creation_date_time, status, conference_id, section_id\n" +
+            "    FROM request";
+
+    private static final String DELETE = "DELETE\n" +
+            "FROM request\n" +
+            "WHERE id = ?\n" +
+            "\n";
+
     public RequestDao(Connection connection){
         this.connection = connection;
     }
 
     @Override
     public List<Request> findAll() throws DAOException {
-        return null;
+        List<Request> requests = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement(FIND_ALL);
+            ResultSet resultSet = statement.executeQuery();
+            requests = new ArrayList<>();
+            while (resultSet.next()) {
+                Request request = builder.build(resultSet);
+                requests.add(request);
+            }
+            resultSet.close();
+            statement.close();
+            return requests;
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
     }
 
     @Override
@@ -74,14 +89,14 @@ public class RequestDao implements AbstractDao<Long, Request> {
 
     @Override
     public void deleteById(Long id) throws DAOException {
-//        try {
-//            PreparedStatement statement = connection.prepareStatement(DELETE);
-//            statement.setLong(1, id);
-//            statement.execute();
-//            statement.close();
-//        } catch (SQLException e) {
-//            throw new DAOException(e);
-//        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(DELETE);
+            statement.setLong(1, id);
+            statement.execute();
+            statement.close();
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
     }
 
     @Override
@@ -123,25 +138,6 @@ public class RequestDao implements AbstractDao<Long, Request> {
     @Override
     public void update(Request entity) throws DAOException {
 
-    }
-
-    public Request findBySectionIdAndUserId(Long sectionId, Long userId) throws DAOException {
-        Request request = null;
-//        try {
-//            PreparedStatement statement = connection.prepareStatement(FIND_BY_SECTION_ID_AND_USER_ID);
-//            statement.setLong(1, sectionId);
-//            statement.setLong(2, userId);
-//
-//            ResultSet resultSet = statement.executeQuery();
-//            if (resultSet.next()) {
-//                request = builder.build(resultSet);
-//            }
-//            resultSet.close();
-//            statement.close();
-            return request;
-//        } catch (SQLException e) {
-//            throw new DAOException(e);
-//        }
     }
 
     public List<Request> findBySectionId(Long sectionId) throws DAOException {

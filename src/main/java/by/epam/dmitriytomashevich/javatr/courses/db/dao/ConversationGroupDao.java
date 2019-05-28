@@ -1,11 +1,10 @@
 package by.epam.dmitriytomashevich.javatr.courses.db.dao;
 
-import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
 import by.epam.dmitriytomashevich.javatr.courses.db.builder.ConversationGroupBuilder;
 import by.epam.dmitriytomashevich.javatr.courses.db.builder.EntityBuilder;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
-import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.ConversationGroup;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 
 import java.sql.*;
 import java.util.List;
@@ -16,16 +15,6 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
 
     private static final String INSERT_CONVERSATION_GROUP = "INSERT INTO udacidy.conversation_group (conversation_id, user_id) " +
             "VALUES (?, ?)";
-
-    private static final String SELECT_BY_CONVERSATION_ID = "SELECT c.id, c.conversation_id, c.user_id\n" +
-            "FROM conversation_group c\n" +
-            "WHERE c.conversation_id = ?";
-
-    private static final String SELECT_BY_USER_ID_AND_CONVERSATION_ID = "SELECT c.id, c.conversation_id, c.user_id\n" +
-            "FROM conversation_group c\n" +
-            "         JOIN user u on c.user_id = u.id\n" +
-            "         JOIN user_role ur on u.id = ur.id\n" +
-            "WHERE c.user_id = ? and c.conversation_id = ?";
 
     private static final String DELETE_BY_CONVERSATION_ID = "DELETE FROM conversation_group\n" +
             "    WHERE conversation_id = ?";
@@ -74,7 +63,6 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
 
     @Override
     public Long create(ConversationGroup entity) throws DAOException {
-//        Connection connection = ConnectionPool.getInstance().getConnection();
         Long conversationGroupId = null;
         try {
             PreparedStatement statement = connection.prepareStatement(INSERT_CONVERSATION_GROUP, Statement.RETURN_GENERATED_KEYS);
@@ -99,8 +87,6 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
             return conversationGroupId;
         } catch (SQLException e) {
             throw new DAOException(e);
-//        } finally {
-//            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
@@ -108,44 +94,6 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
     public void update(ConversationGroup entity) {
 
     }
-
-
-//    public ConversationGroup findByConversationId(Long conversationId) throws DAOException {
-//        ConversationGroup group = null;
-//        try {
-//            PreparedStatement statement = connection.prepareStatement(SELECT_BY_CONVERSATION_ID);
-//
-//            statement.setLong(1, conversationId);
-//            ResultSet resultSet = statement.executeQuery();
-//            if (resultSet.next()) {
-//                group = builder.build(resultSet);
-//            }
-//            resultSet.close();
-//            statement.close();
-//            return group;
-//        } catch (SQLException e) {
-//            throw new DAOException(e);
-//        }
-//    }
-
-//    public ConversationGroup findByUserIdAndByConversationId(Long userId, Long conversationId) throws DAOException {
-//        ConversationGroup group = null;
-//        try {
-//            PreparedStatement statement = connection.prepareStatement(SELECT_BY_USER_ID_AND_CONVERSATION_ID);
-//            statement.setLong(1, userId);
-//            statement.setLong(2, conversationId);
-//
-//            ResultSet resultSet = statement.executeQuery();
-//            if (resultSet.next()) {
-//                group = builder.build(resultSet);
-//            }
-//            resultSet.close();
-//            statement.close();
-//            return group;
-//        } catch (SQLException e) {
-//            throw new DAOException(e);
-//        }
-//    }
 
     public void deleteByConversationId(Long conversationId) throws DAOException {
         try {
@@ -159,7 +107,6 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
     }
 
     public ConversationGroup findByUserIdAndConversationType(Long userId, Conversation.ConversationType type) throws DAOException {
-//        Connection connection = ConnectionPool.getInstance().getConnection();
         ConversationGroup group = null;
         try {
             PreparedStatement statement = connection.prepareStatement(FIND_BY_USER_ID_AND_CONVERSATION_TYPE);
@@ -175,8 +122,6 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
             return group;
         } catch (SQLException e) {
             throw new DAOException(e);
-//        } finally {
-//            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 

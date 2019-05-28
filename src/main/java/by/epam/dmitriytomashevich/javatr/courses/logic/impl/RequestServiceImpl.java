@@ -25,14 +25,7 @@ public class RequestServiceImpl implements RequestService {
         }
     }
 
-    @Override
-    public Request findBySectionIdAndUserId(Long sectionId, Long userId) throws LogicException {
-        try {
-            return requestDao.findBySectionIdAndUserId(sectionId, userId);
-        } catch (DAOException e) {
-            throw new LogicException(e);
-        }
-    }
+
 
     @Override
     public List<Request> findBySectionId(Long sectionId) throws LogicException {
@@ -62,15 +55,6 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<Request> findAllByUserId(Long userId) throws LogicException {
-        try {
-            return requestDao.findAllByUserId(userId);
-        } catch (DAOException e) {
-            throw new LogicException(e);
-        }
-    }
-
-    @Override
     public Request findById(Long requestId) throws LogicException {
         try {
             return requestDao.findById(requestId);
@@ -83,6 +67,15 @@ public class RequestServiceImpl implements RequestService {
     public void deleteFullRequestByConferenceIdAndUserId(Long conferenceId, Long userId) throws LogicException {
         try {
             requestDao.deleteFullRequestByConferenceId(conferenceId, userId);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
+
+    @Override
+    public List<Request> findAll() throws LogicException {
+        try {
+            return requestDao.findAll();
         } catch (DAOException e) {
             throw new LogicException(e);
         }

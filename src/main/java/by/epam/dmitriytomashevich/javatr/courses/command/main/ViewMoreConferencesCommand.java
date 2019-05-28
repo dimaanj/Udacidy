@@ -61,8 +61,7 @@ public class ViewMoreConferencesCommand implements Command {
 
             JsonConference conference = new ConferenceConverter().convert(c);
             if(!user.isAdmin()){
-                conference.setRequestAlreadySent(
-                        isRequestAlreadySentRequest(user, sections));
+                conference.setRequestAlreadySent(isRequestAlreadySentRequest(user, c));
             }
 
             JsonElement element = new Gson().toJsonTree(conference, JsonConference.class);
@@ -92,12 +91,7 @@ public class ViewMoreConferencesCommand implements Command {
         return Optional.empty();
     }
 
-    private boolean isRequestAlreadySentRequest(User user, List<Section> sections) throws LogicException {
-        for(Section s : sections){
-            if (requestService.findBySectionIdAndUserId(s.getId(), user.getId()) != null){
-                return true;
-            }
-        }
-        return false;
+    private boolean isRequestAlreadySentRequest(User user, Conference c) throws LogicException {
+        return requestService.findAllByUserIdAndConferenceId(user.getId(), c.getId()) != null;
     }
 }

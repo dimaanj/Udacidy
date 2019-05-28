@@ -20,14 +20,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ProfileCommand implements Command {
+public class UserProfileCommand implements Command {
     private final ConferenceService conferenceService;
     private final SectionService sectionService;
     private final ContentService contentService;
     private final UserService userService;
     private final RequestService requestService;
 
-    public ProfileCommand(ServiceFactory serviceFactory) {
+    public UserProfileCommand(ServiceFactory serviceFactory) {
         conferenceService = serviceFactory.createConferenceService();
         sectionService = serviceFactory.createSectionService();
         contentService = serviceFactory.createContentService();

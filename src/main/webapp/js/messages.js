@@ -50,7 +50,9 @@ function updateMessages() {
     var row = $('.row');
     var lastMessageElementId = row.last().attr('id');
     var url = '/udacidy/updateMessages?' +
-        'lastMessageId=' + lastMessageElementId;
+        'lastMessageId=' + lastMessageElementId +
+        '&conversationId=' + document.getElementById('conversationId')
+            .getAttribute('value');
     getMessagesRequestForm(url);
 
 }
@@ -131,6 +133,7 @@ function jsonMessageToDom(obj) {
 
 var form = document.getElementById('send-message-form');
 form.addEventListener('submit', function (event) {
+    let thisForm = this;
     var message = document.getElementById("message");
     var conversationId = document.getElementById("conversationId");
     var fileInput = document.getElementById("inputGroupFile04");
@@ -155,11 +158,7 @@ form.addEventListener('submit', function (event) {
             })
             .then(function (obj) {
                 console.log(obj);
-                // if(obj.isFirstMessage) {
-                //     var messageElement = jsonMessageToDom(jsonData.message);
-                //     document.getElementById('main-tag').appendChild(messageElement);
-                //     window.scrollTo(0, document.body.scrollHeight);
-                // }
+                thisForm.reset();
             })
             .catch(function (error) {
                 console.log('There has been a problem with your fetch operation: ', error.message);

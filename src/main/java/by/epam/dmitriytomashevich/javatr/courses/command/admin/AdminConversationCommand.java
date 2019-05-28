@@ -29,24 +29,29 @@ public class AdminConversationCommand implements Command {
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
 
-        Long conversationId = Long.parseLong(content.getParameter("conversationId"));
-        if (content.getActionType().equals(SessionRequestContent.ActionType.REDIRECT)) {
-            User admin = (User) content.getSession().getAttribute(Parameter.USER);
-            if (!conversationService.isUserInConversation(admin, conversationId)) {
-                ConversationGroup group = new ConversationGroup();
-                group.setConversationId(conversationId);
-                group.setUserId(admin.getId());
-                conversationGroupService.add(group);
+        String conversationIdAsString = content.getParameter("conversationId");
+        if(conversationIdAsString != null) {
+            Long conversationId = Long.parseLong(content.getParameter("conversationId"));
+            if (content.getActionType().equals(SessionRequestContent.ActionType.REDIRECT)) {
+                User admin = (User) content.getSession().getAttribute(Parameter.USER);
+                if (!conversationService.isUserInConversation(admin, conversationId)) {
+                    ConversationGroup group = new ConversationGroup();
+                    group.setConversationId(conversationId);
+                    group.setUserId(admin.getId());
+                    conversationGroupService.add(group);
+                }
+                return Optional.of(ActionNames.ADMIN_CONVERSATION_ACTION + conversationId);
+            } else {
+                Conversation conversation = conversationService.getById(conversationId);
+                content.setRequestAttribute("conversationId", conversation.getId());
+                Long messagesAmount = messageService.countMessagesByConversationId(conversationId);
+                if (messagesAmount > Parameter.MESSAGES_UPDATE_AMOUNT) {
+                    content.setRequestAttribute("showViewMoreButton", true);
+                }
+                return Optional.of(ActionNames.MESSAGES);
             }
-            return Optional.of(ActionNames.ADMIN_CONVERSATION_ACTION + conversationId);
-        } else {
-            Conversation conversation = conversationService.getById(conversationId);
-            content.setRequestAttribute("conversationId", conversation.getId());
-            Long messagesAmount = messageService.countMessagesByConversationId(conversationId);
-            if(messagesAmount > Parameter.MESSAGES_UPDATE_AMOUNT){
-                content.setRequestAttribute("showViewMoreButton", true);
-            }
-            return Optional.of(ActionNames.MESSAGES);
+        }else {
+            return Optional.of(ActionNames.PAGE_404);
         }
     }
 }
