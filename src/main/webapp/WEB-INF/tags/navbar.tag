@@ -43,9 +43,12 @@
                 </c:when>
                 <c:when test="${not empty sessionScope.user and not sessionScope.user.isAdmin()}">
                     <h6 class="mt-1">
-                        <a class="p-2 text-dark" href="${pageContext.request.contextPath}/udacidy/help">
+<%--                        <a class="p-2 text-dark" href="${pageContext.request.contextPath}/udacidy/help">--%>
+<%--                            Help--%>
+<%--                        </a>--%>
+                        <button class="btn btn-link" form="helpUserCommand">
                             Help
-                        </a>
+                        </button>
                     </h6>
                 </c:when>
             </c:choose>
@@ -79,6 +82,10 @@
         </c:choose>
     </div>
 </nav>
+
+<form method="post" id="helpUserCommand">
+    <input type="hidden" name="command" value="helpUser"/>
+</form>
 
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">

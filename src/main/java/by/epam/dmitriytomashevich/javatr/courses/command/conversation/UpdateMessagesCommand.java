@@ -34,22 +34,25 @@ public class UpdateMessagesCommand implements Command {
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
-        Long lastMessageId = Long.parseLong(content.getParameter("lastMessageId"));
-        Conversation conversation = conversationService.getByMessageId(lastMessageId);
-
-        List<Message> messages = messageService.findAllAfterMessageId(lastMessageId, conversation.getId());
+        String lastMessageIdAsString = content.getParameter("lastMessageId");
         JsonArray jsonMessagesList = new JsonArray();
-        if(messages != null) {
-            for (Message m : messages) {
-                User creator = userService.findById(m.getCreatorId());
-                m.setCreator(creator);
-                JsonMessage jsonMessage = new MessageConverter().convert(m);
-                Gson gson = new Gson();
-                JsonElement element = gson.toJsonTree(jsonMessage, JsonMessage.class);
-                jsonMessagesList.add(element);
+        if(lastMessageIdAsString != null && !lastMessageIdAsString.equals("undefined")) {
+            Long lastMessageId = Long.parseLong(lastMessageIdAsString);
+            Conversation conversation = conversationService.getByMessageId(lastMessageId);
+
+            List<Message> messages = messageService.findAllAfterMessageId(lastMessageId, conversation.getId());
+
+            if (messages != null) {
+                for (Message m : messages) {
+                    User creator = userService.findById(m.getCreatorId());
+                    m.setCreator(creator);
+                    JsonMessage jsonMessage = new MessageConverter().convert(m);
+                    Gson gson = new Gson();
+                    JsonElement element = gson.toJsonTree(jsonMessage, JsonMessage.class);
+                    jsonMessagesList.add(element);
+                }
             }
         }
-
         try {
             content.getResponse().setContentType("application/json;charset=UTF-8");
             PrintWriter writer = content.getResponse().getWriter();

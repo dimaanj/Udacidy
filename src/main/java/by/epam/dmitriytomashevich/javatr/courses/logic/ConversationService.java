@@ -12,7 +12,7 @@ public interface ConversationService {
     Conversation createConversation(Conversation conversation) throws LogicException;
     Conversation getByMessageId(Long messageId) throws LogicException;
     boolean isUserInConversation(User user, Long conversationId) throws LogicException;
-    List<Conversation> findAllConversationByType(Conversation.ConversationType type) throws LogicException;
+    List<Conversation> findAllByType(Conversation.ConversationType type) throws LogicException;
     void deleteById(Long id) throws LogicException;
 
     /**
@@ -22,6 +22,6 @@ public interface ConversationService {
      * @return
      * @throws LogicException
      */
-    Conversation getSingleQuestionConversationForUser(User user) throws LogicException;
-    boolean isQuestionConversationCreatedForUser(User user) throws LogicException;
+//    Conversation getSingleQuestionConversationForUser(User user) throws LogicException;
+//    boolean isQuestionConversationCreatedForUser(User user) throws LogicException;
 }

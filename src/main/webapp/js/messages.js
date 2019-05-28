@@ -4,13 +4,6 @@ window.onload = function () {
     window.scrollTo(0, document.body.scrollHeight);
 };
 
-function waitFirstResponse () {
-    var row = $('.row');
-    if(row !== null){
-        updateMessages();
-    }
-}
-
 function getMessagesRequestForm(url) {
     var fetchOptions = {
         method: 'GET',
@@ -30,18 +23,18 @@ function getMessagesRequestForm(url) {
                 var messageElement = jsonMessageToDom(jsonData[i]);
                 document.getElementById('main-tag').appendChild(messageElement);
             }
-            if(!isEmpty(jsonData)){
+            if (!isEmpty(jsonData)) {
                 window.scrollTo(0, document.body.scrollHeight);
             }
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.log('There has been a problem with your fetch operation: ', error.message);
         });
 }
 
 function isEmpty(obj) {
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key))
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key))
             return false;
     }
     return true;
@@ -59,6 +52,7 @@ function updateMessages() {
     var url = '/udacidy/updateMessages?' +
         'lastMessageId=' + lastMessageElementId;
     getMessagesRequestForm(url);
+
 }
 
 function jsonMessageToDom(obj) {
@@ -160,10 +154,14 @@ form.addEventListener('submit', function (event) {
                 return response.json();
             })
             .then(function (obj) {
-                 console.log(obj);
-                window.scrollTo(0, document.body.scrollHeight);
+                console.log(obj);
+                // if(obj.isFirstMessage) {
+                //     var messageElement = jsonMessageToDom(jsonData.message);
+                //     document.getElementById('main-tag').appendChild(messageElement);
+                //     window.scrollTo(0, document.body.scrollHeight);
+                // }
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log('There has been a problem with your fetch operation: ', error.message);
             });
         event.preventDefault();

@@ -88,7 +88,6 @@ public class RequestDao implements AbstractDao<Long, Request> {
     public Long create(Request entity) throws DAOException {
         Long requestFormId = null;
         try {
-            connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
             statement.setLong(1, entity.getUserId());
             Date dateTime = Date
@@ -114,7 +113,6 @@ public class RequestDao implements AbstractDao<Long, Request> {
                     throw new SQLException("Creating conversation failed, no ID obtained.");
                 }
             }
-            connection.commit();
             statement.close();
             return requestFormId;
         } catch (SQLException e) {

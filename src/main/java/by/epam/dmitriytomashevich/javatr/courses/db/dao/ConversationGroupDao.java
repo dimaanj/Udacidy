@@ -1,7 +1,10 @@
 package by.epam.dmitriytomashevich.javatr.courses.db.dao;
 
-import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
+import by.epam.dmitriytomashevich.javatr.courses.db.builder.ConversationGroupBuilder;
+import by.epam.dmitriytomashevich.javatr.courses.db.builder.EntityBuilder;
+import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.ConversationGroup;
 
 import java.sql.*;
@@ -9,6 +12,7 @@ import java.util.List;
 
 public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup> {
     private final Connection connection;
+    private final EntityBuilder<ConversationGroup> builder = new ConversationGroupBuilder();
 
     private static final String INSERT_CONVERSATION_GROUP = "INSERT INTO udacidy.conversation_group (conversation_id, user_id) " +
             "VALUES (?, ?)";
@@ -26,6 +30,16 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
     private static final String DELETE_BY_CONVERSATION_ID = "DELETE FROM conversation_group\n" +
             "    WHERE conversation_id = ?";
 
+    private static final String FIND_BY_USER_ID_AND_CONVERSATION_TYPE = "SELECT cg.id, cg.conversation_id, cg.user_id\n" +
+            "            FROM conversation_group cg\n" +
+            "                JOIN conversation c on cg.conversation_id = c.id\n" +
+            "                JOIN conversation_type t on c.id = t.id\n" +
+            "            WHERE cg.user_id = ? AND t.type = ?";
+
+    private static final String FIND_BY_ID = "SELECT cg.id, cg.conversation_id, cg.user_id\n" +
+            "FROM conversation_group cg\n" +
+            "WHERE cg.id = ?";
+
     public ConversationGroupDao(Connection connection){
         this.connection = connection;
     }
@@ -37,7 +51,20 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
 
     @Override
     public ConversationGroup findById(Long id) throws DAOException {
-        return null;
+        ConversationGroup group = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement(FIND_BY_ID);
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                group = builder.build(resultSet);
+            }
+            resultSet.close();
+            statement.close();
+            return group;
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
     }
 
     @Override
@@ -47,6 +74,7 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
 
     @Override
     public Long create(ConversationGroup entity) throws DAOException {
+//        Connection connection = ConnectionPool.getInstance().getConnection();
         Long conversationGroupId = null;
         try {
             PreparedStatement statement = connection.prepareStatement(INSERT_CONVERSATION_GROUP, Statement.RETURN_GENERATED_KEYS);
@@ -71,6 +99,8 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
             return conversationGroupId;
         } catch (SQLException e) {
             throw new DAOException(e);
+//        } finally {
+//            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
@@ -80,48 +110,42 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
     }
 
 
-    public ConversationGroup findByConversationId(Long id) throws DAOException {
-        ConversationGroup group = null;
-        try {
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_CONVERSATION_ID);
+//    public ConversationGroup findByConversationId(Long conversationId) throws DAOException {
+//        ConversationGroup group = null;
+//        try {
+//            PreparedStatement statement = connection.prepareStatement(SELECT_BY_CONVERSATION_ID);
+//
+//            statement.setLong(1, conversationId);
+//            ResultSet resultSet = statement.executeQuery();
+//            if (resultSet.next()) {
+//                group = builder.build(resultSet);
+//            }
+//            resultSet.close();
+//            statement.close();
+//            return group;
+//        } catch (SQLException e) {
+//            throw new DAOException(e);
+//        }
+//    }
 
-            statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                group = new ConversationGroup();
-                group.setId(resultSet.getLong("id"));
-                group.setConversationId(resultSet.getLong("conversation_id"));
-                group.setUserId(resultSet.getLong("user_id"));
-            }
-            resultSet.close();
-            statement.close();
-            return group;
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }
-    }
-
-    public ConversationGroup findByUserIdAndByConversationId(Long userId, Long conversationId) throws DAOException {
-        ConversationGroup group = null;
-        try {
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_USER_ID_AND_CONVERSATION_ID);
-            statement.setLong(1, userId);
-            statement.setLong(2, conversationId);
-
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                group = new ConversationGroup();
-                group.setId(resultSet.getLong("id"));
-                group.setConversationId(resultSet.getLong("conversation_id"));
-                group.setUserId(resultSet.getLong("user_id"));
-            }
-            resultSet.close();
-            statement.close();
-            return group;
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }
-    }
+//    public ConversationGroup findByUserIdAndByConversationId(Long userId, Long conversationId) throws DAOException {
+//        ConversationGroup group = null;
+//        try {
+//            PreparedStatement statement = connection.prepareStatement(SELECT_BY_USER_ID_AND_CONVERSATION_ID);
+//            statement.setLong(1, userId);
+//            statement.setLong(2, conversationId);
+//
+//            ResultSet resultSet = statement.executeQuery();
+//            if (resultSet.next()) {
+//                group = builder.build(resultSet);
+//            }
+//            resultSet.close();
+//            statement.close();
+//            return group;
+//        } catch (SQLException e) {
+//            throw new DAOException(e);
+//        }
+//    }
 
     public void deleteByConversationId(Long conversationId) throws DAOException {
         try {
@@ -131,6 +155,28 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
             statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);
+        }
+    }
+
+    public ConversationGroup findByUserIdAndConversationType(Long userId, Conversation.ConversationType type) throws DAOException {
+//        Connection connection = ConnectionPool.getInstance().getConnection();
+        ConversationGroup group = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement(FIND_BY_USER_ID_AND_CONVERSATION_TYPE);
+            statement.setLong(1, userId);
+            statement.setString(2, type.getValue());
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                group = builder.build(resultSet);
+            }
+            resultSet.close();
+            statement.close();
+            return group;
+        } catch (SQLException e) {
+            throw new DAOException(e);
+//        } finally {
+//            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 

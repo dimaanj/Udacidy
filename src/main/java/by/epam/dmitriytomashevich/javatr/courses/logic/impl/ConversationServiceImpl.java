@@ -36,25 +36,25 @@ public class ConversationServiceImpl implements ConversationService {
         }
     }
 
-    @Override
-    public Conversation getSingleQuestionConversationForUser(User user) throws LogicException {
-        try {
-            return conversationDao.findUserConversationByType(user.getId(),
-                    Conversation.ConversationType.QUESTION_CONVERSATION);
-        } catch (DAOException e) {
-            throw new LogicException(e);
-        }
-    }
+//    @Override
+//    public Conversation getSingleQuestionConversationForUser(User user) throws LogicException {
+//        try {
+//            return conversationDao.findUserConversationByType(user.getId(),
+//                    Conversation.ConversationType.QUESTION_CONVERSATION);
+//        } catch (DAOException e) {
+//            throw new LogicException(e);
+//        }
+//    }
 
-    @Override
-    public boolean isQuestionConversationCreatedForUser(User user) throws LogicException {
-        try {
-            return conversationDao.findUserConversationByType(user.getId(),
-                    Conversation.ConversationType.QUESTION_CONVERSATION) != null;
-        } catch (DAOException e) {
-            throw new LogicException(e);
-        }
-    }
+//    @Override
+//    public boolean isQuestionConversationCreatedForUser(User user) throws LogicException {
+//        try {
+//            return conversationDao.findUserConversationByType(user.getId(),
+//                    Conversation.ConversationType.QUESTION_CONVERSATION) != null;
+//        } catch (DAOException e) {
+//            throw new LogicException(e);
+//        }
+//    }
 
     @Override
     public boolean isUserInConversation(User user, Long conversationId) throws LogicException {
@@ -74,7 +74,7 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     @Override
-    public List<Conversation> findAllConversationByType(Conversation.ConversationType type) throws LogicException {
+    public List<Conversation> findAllByType(Conversation.ConversationType type) throws LogicException {
         try {
             return conversationDao.findAllConversationsByType(type);
         } catch (DAOException e) {

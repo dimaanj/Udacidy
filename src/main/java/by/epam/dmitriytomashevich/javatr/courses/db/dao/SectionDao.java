@@ -128,7 +128,6 @@ public class SectionDao implements AbstractDao<Long, Section> {
 
     public void deleteSectionWithTheirContent(Long sectionId, Long contentId) throws DAOException {
         try {
-//            connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, sectionId);
             statement.execute();
@@ -137,7 +136,6 @@ public class SectionDao implements AbstractDao<Long, Section> {
             statement.setLong(1, contentId);
             statement.execute();
 
-//            connection.commit();
             statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);

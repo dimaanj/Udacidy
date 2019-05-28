@@ -184,7 +184,6 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
 
     public void deleteConferenceWithTheirContent(Long conferenceId, Long contentId) throws DAOException {
         try {
-            connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, conferenceId);
             statement.execute();
@@ -193,7 +192,6 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
             statement.setLong(1, contentId);
             statement.execute();
 
-            connection.commit();
             statement.close();
         } catch (SQLException e) {
             throw new DAOException(e);

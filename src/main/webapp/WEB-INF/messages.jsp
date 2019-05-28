@@ -21,16 +21,24 @@
 
 <tag:navbar/>
 <c:if test="${not empty firstUserEnter}">
-    <h3 class="display-4 font-weight-normal text-center" id="firstUserEnter">Here you can ask our admins...</h3>
+    <h4 class="display-4 font-weight-normal text-center" id="firstUserEnter">Here you can ask our admins...</h4>
 </c:if>
 <main role="main" class="container-fluid" id="main-tag">
     <input type="hidden" id="userId" name="userId" value="${sessionScope.user.getId()}">
     <input type="hidden" id="conversationId" name="conversationId" value="${conversationId}">
-    <c:if test="${not empty showViewMoreButton}">
-        <button class="btn btn-primary btn-lg btn-block w-50 mx-auto shadow" type="submit" id="view-more-button">
-            View more
-        </button>
-    </c:if>
+
+    <c:choose>
+        <c:when test="${not empty showViewMoreButton}">
+            <button class="btn btn-primary btn-lg btn-block w-50 mx-auto shadow" type="submit" id="view-more-button">
+                View more
+            </button>
+        </c:when>
+        <c:otherwise>
+            <button class="btn btn-primary btn-lg btn-block w-50 mx-auto shadow" type="submit" id="view-more-button" hidden>
+                View more
+            </button>
+        </c:otherwise>
+    </c:choose>
 </main>
 
 <footer class="footer" id="footer">

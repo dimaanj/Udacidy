@@ -31,25 +31,31 @@ public class HelpCommand implements Command {
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         User current = (User) content.getSession().getAttribute(Parameter.USER);
-        Conversation conversation;
-        if (!conversationService.isQuestionConversationCreatedForUser(current)) {
-            conversation = new Conversation();
-            conversation.setCreateDate(LocalDate.now());
-            conversation.setType(Conversation.ConversationType.QUESTION_CONVERSATION);
-            conversation = conversationService.createConversation(conversation);
-            ConversationGroup conversationGroup =
-                    conversationGroupService.defineConversationGroup(current.getId(), conversation.getId());
-            conversationGroupService.add(conversationGroup);
-        } else {
-            conversation = conversationService.getSingleQuestionConversationForUser(current);
+        ConversationGroup group = conversationGroupService
+                .findByUserIdAndConversationType(
+                        current.getId(),
+                        Conversation.ConversationType.QUESTION_CONVERSATION
+                );
+        if(content.getActionType().equals(SessionRequestContent.ActionType.REDIRECT)) {
+            if (group == null) {
+                Conversation conversation = new Conversation();
+                conversation.setCreateDate(LocalDate.now());
+                conversation.setType(Conversation.ConversationType.QUESTION_CONVERSATION);
+                conversation = conversationService.createConversation(conversation);
+                ConversationGroup conversationGroup =
+                        conversationGroupService.defineConversationGroup(current.getId(), conversation.getId());
+                conversationGroupService.add(conversationGroup);
+            }
+            return Optional.of(ActionNames.HELP_ACTION);
+        }else {
+            content.setRequestAttribute("conversationId", group.getConversationId());
+            Long messagesAmount = messageService.countMessagesByConversationId(group.getConversationId());
+            if (messagesAmount > Parameter.MESSAGES_UPDATE_AMOUNT) {
+                content.setRequestAttribute("showViewMoreButton", true);
+            } else if (messagesAmount == 0) {
+                content.setRequestAttribute("firstUserEnter", true);
+            }
+            return Optional.of(ActionNames.MESSAGES);
         }
-        content.setRequestAttribute("conversationId", conversation.getId());
-        Long messagesAmount = messageService.countMessagesByConversationId(conversation.getId());
-        if(messagesAmount > Parameter.MESSAGES_UPDATE_AMOUNT){
-            content.setRequestAttribute("showViewMoreButton", true);
-        } else if(messagesAmount == 0){
-            content.setRequestAttribute("firstUserEnter", true);
-        }
-        return Optional.of(ActionNames.MESSAGES);
     }
 }

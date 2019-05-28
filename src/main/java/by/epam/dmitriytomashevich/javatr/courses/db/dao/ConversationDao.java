@@ -46,15 +46,15 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
             "        ON cg.user_id = u.id\n" +
             "WHERE u.id = ?";
 
-    private static final String SELECT_BY_USER_ID_AND_CONVERSATION_TYPE = "SELECT c.id, c.date_creation, ct.type\n" +
-            "FROM conversation c\n" +
-            "         JOIN conversation_type ct\n" +
-            "              ON c.id = ct.id\n" +
-            "    JOIN conversation_group cg \n" +
-            "        ON c.id = cg.conversation_id\n" +
-            "    JOIN user u \n" +
-            "        ON cg.user_id = u.id\n" +
-            "WHERE u.id = ? AND ct.type = ?";
+//    private static final String SELECT_BY_USER_ID_AND_CONVERSATION_TYPE = "SELECT c.id, c.date_creation, ct.type\n" +
+//            "FROM conversation c\n" +
+//            "         JOIN conversation_type ct\n" +
+//            "              ON c.id = ct.id\n" +
+//            "    JOIN conversation_group cg \n" +
+//            "        ON c.id = cg.conversation_id\n" +
+//            "    JOIN user u \n" +
+//            "        ON cg.user_id = u.id\n" +
+//            "WHERE u.id = ? AND ct.type = ?";
 
     private static final String SELECT_BY_MESSAGE_ID = "SELECT c.id, c.date_creation, ct.type\n" +
             "FROM message m\n" +
@@ -124,7 +124,6 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
     public Long create(Conversation entity) throws DAOException {
         Long conversationId = null;
         try {
-            connection.setAutoCommit(false);
             PreparedStatement statement =
                     connection.prepareStatement(INSERT_CONVERSATION_GROUP, Statement.RETURN_GENERATED_KEYS);
             statement.setDate(1, Date.valueOf(entity.getCreateDate()));
@@ -143,8 +142,8 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
 
             statement = connection.prepareStatement(INSERT_CONVERSATION_TYPE);
             statement.setString(1, entity.getType().getValue());
+
             statement.execute();
-            connection.commit();
             statement.close();
             return conversationId;
         } catch (SQLException e) {
@@ -193,23 +192,23 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
         }
     }
 
-    public Conversation findUserConversationByType(Long userId, Conversation.ConversationType type) throws DAOException {
-        Conversation conversation = null;
-        try {
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_USER_ID_AND_CONVERSATION_TYPE);
-            statement.setLong(1, userId);
-            statement.setString(2, type.getValue());
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                conversation = builder.build(resultSet);
-            }
-            resultSet.close();
-            statement.close();
-            return conversation;
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }
-    }
+//    public Conversation findUserConversationByType(Long userId, Conversation.ConversationType type) throws DAOException {
+//        Conversation conversation = null;
+//        try {
+//            PreparedStatement statement = connection.prepareStatement(SELECT_BY_USER_ID_AND_CONVERSATION_TYPE);
+//            statement.setLong(1, userId);
+//            statement.setString(2, type.getValue());
+//            ResultSet resultSet = statement.executeQuery();
+//            while (resultSet.next()) {
+//                conversation = builder.build(resultSet);
+//            }
+//            resultSet.close();
+//            statement.close();
+//            return conversation;
+//        } catch (SQLException e) {
+//            throw new DAOException(e);
+//        }
+//    }
 
     public List<Conversation> findAllConversationsByType(Conversation.ConversationType type) throws DAOException {
         List<Conversation> conversations = null;

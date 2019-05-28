@@ -1,12 +1,18 @@
-
 var body = $("body");
 
 body.on('click', "button[name='removeConversation']", function (event) {
-   event.preventDefault();
+    let removeConversationId = this.getAttribute('id');
+    let conversationId = removeConversationId.replace('removeConversation', '');
+    let conversationIdHiddenParam = document.getElementById('conversationIdHiddenParam');
+    conversationIdHiddenParam.setAttribute('value', conversationId);
+});
 
-   let thisButton = this;
+body.on('click', "#confirmationRemoveConferenceButton", function (event) {
+    event.preventDefault();
 
-   let conversationId = this.getAttribute('id');
+    let thisButton = this;
+    let conversationIdHiddenParam = document.getElementById('conversationIdHiddenParam');
+    let conversationId = conversationIdHiddenParam.getAttribute('value');
 
     const formData = new FormData();
     formData.append('command', 'removeQuestionConversation');
@@ -25,23 +31,16 @@ body.on('click', "button[name='removeConversation']", function (event) {
         })
         .then(function (obj) {
             console.log(obj);
-            let row = thisButton.parentElement.parentElement.
-                parentElement.parentElement.
-                parentElement.parentElement.
-                parentElement.parentElement;
+            let row = thisButton.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
             let alert = createAlertWithTextAndType(obj.message, 'alert-success');
             alert.classList.add('mt-3');
             alert.classList.add('row');
             row.replaceChild(alert, row);
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.log('There has been a problem with your fetch operation: ', error.message);
         });
 });
-
-
-
-
 
 
 function createAlertWithTextAndType(text, type) {

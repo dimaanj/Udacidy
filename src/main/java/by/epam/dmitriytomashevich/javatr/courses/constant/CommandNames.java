@@ -27,6 +27,7 @@ public class CommandNames {
     public static final String GET_CONFERENCE_CONTENT = "getConferenceContent";
     public static final String GET_CONFERENCES = "getconferences";
     public static final String REMOVE_QUESTION_CONVERSATION = "removeQuestionConversation";
+    public static final String HELP_USER = "helpUser";
     
     public static final String SEND_CLIENT_REQUEST = "sendClientRequest";
 }

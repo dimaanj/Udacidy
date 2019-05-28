@@ -50,6 +50,7 @@ public class CommandFactory {
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_CONFERENCE_CONTENT, new GetConferenceContentCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_CONFERENCES, new ConferencesCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REMOVE_QUESTION_CONVERSATION, new RemoveQuestionConversationCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.HELP_USER, new HelpCommand(serviceFactory)));
     }
 
     /**
