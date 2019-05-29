@@ -18,7 +18,7 @@ public class CommandNames {
     public static final String CREATE_CONFERENCE = "createConference";
     public static final String EDIT_CONFERENCE_CONTENT = "editConferenceContent";
     public static final String DELETE_CONFERENCE = "deleteConference";
-    public static final String PREVIEW_COURSE_CONTENT ="previewCourseContent";
+    public static final String PREVIEW_COURSE_CONTENT = "previewCourseContent";
     public static final String PAGE_NOT_FOUND = "/udacidy/404";
     public static final String ADMIN_CONVERSATION = "/udacidy/conversation";
     public static final String CONTENT_EDITING = "/udacidy/contentediting";
@@ -29,6 +29,7 @@ public class CommandNames {
     public static final String REMOVE_QUESTION_CONVERSATION = "removeQuestionConversation";
     public static final String HELP_USER = "helpUser";
     public static final String ACCEPT_USER_REQUEST = "acceptUserRequest";
+
 
     public static final String SEND_CLIENT_REQUEST = "sendClientRequest";
 }

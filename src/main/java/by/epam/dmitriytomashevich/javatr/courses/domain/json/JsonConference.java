@@ -1,7 +1,5 @@
 package by.epam.dmitriytomashevich.javatr.courses.domain.json;
 
-import by.epam.dmitriytomashevich.javatr.courses.domain.RequestStatus;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -9,12 +7,11 @@ public class JsonConference {
     private Long id;
     private Long contentId;
     private Long authorId;
+
     private String content;
     private String authorFirstName;
     private String authorLastName;
     private List<JsonSection> jsonSections;
-    private boolean isRequestAlreadySent;
-    private RequestStatus requestStatus;
 
     @Override
     public boolean equals(Object o) {
@@ -31,14 +28,12 @@ public class JsonConference {
                 Objects.equals(content, that.content) &&
                 Objects.equals(authorFirstName, that.authorFirstName) &&
                 Objects.equals(authorLastName, that.authorLastName) &&
-                Objects.equals(isRequestAlreadySent, that.isRequestAlreadySent) &&
-                Objects.equals(requestStatus, that.requestStatus) &&
                 Objects.equals(jsonSections, that.jsonSections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestStatus, id, contentId, authorId, content, authorFirstName, authorLastName, jsonSections, isRequestAlreadySent);
+        return Objects.hash(id, contentId, authorId, content, authorFirstName, authorLastName, jsonSections);
     }
 
     public Long getId() {
@@ -97,27 +92,11 @@ public class JsonConference {
         this.jsonSections = jsonSection;
     }
 
-    public boolean isRequestAlreadySent() {
-        return isRequestAlreadySent;
-    }
-
-    public void setRequestAlreadySent(boolean requestAlreadySent) {
-        isRequestAlreadySent = requestAlreadySent;
-    }
-
     public List<JsonSection> getJsonSections() {
         return jsonSections;
     }
 
     public void setJsonSections(List<JsonSection> jsonSections) {
         this.jsonSections = jsonSections;
-    }
-
-    public RequestStatus getRequestStatus() {
-        return requestStatus;
-    }
-
-    public void setRequestStatus(RequestStatus requestStatus) {
-        this.requestStatus = requestStatus;
     }
 }

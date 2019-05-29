@@ -29,6 +29,7 @@ public class GetConferenceContentCommand implements Command {
     private final RequestService requestService;
     private final SectionService sectionService;
     private final UserService userService;
+    private final RequestFormService requestFormService;
 
     public GetConferenceContentCommand(ServiceFactory serviceFactory){
         conferenceService = serviceFactory.createConferenceService();
@@ -36,6 +37,7 @@ public class GetConferenceContentCommand implements Command {
         requestService = serviceFactory.createRequestService();
         sectionService = serviceFactory.createSectionService();
         userService = serviceFactory.createUserService();
+        requestFormService = serviceFactory.createRequestFormService();
     }
 
     @Override
@@ -49,16 +51,11 @@ public class GetConferenceContentCommand implements Command {
             s.setContent(contentService.findById(s.getContentId()));
         }
 
-        List<Request> requests = requestService.findAllByUserIdAndConferenceId(client.getId(), conferenceId);
-        List<Long> sectionsRequestIds = new ArrayList<>();
-        if(requests != null && !requests.isEmpty()){
-            conference.setRequestSent(true);
-            conference.setRequestStatus(requestService.findById(requests.get(0).getId()).getRequestStatus());
+        Request request = requestService.findByUserIdAndConferenceId(client.getId(), conferenceId);
+        List<Long> sectionsRequestIds = requestFormService.findByRequestId(request.getId())
+                .stream().map(RequestForm::getSectionId)
+                .collect(Collectors.toList());
 
-            sectionsRequestIds = requests.stream()
-                    .map(Request::getSectionId)
-                    .collect(Collectors.toList());
-        }
         conference.setContent(contentService.findById(conference.getContentId()));
         conference.setSections(sectionList);
         conference.setAuthor(userService.findById(conference.getAuthorId()));

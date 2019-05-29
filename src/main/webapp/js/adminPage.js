@@ -40,7 +40,7 @@ body.on('click', "#confirmationRemoveConferenceButton", function (event) {
             element.innerHTML = "";
             element.appendChild(alert);
 
-            $('#confirmationModal').modal('hide');
+            $('#confirmationActionModal').modal('hide');
         })
         .catch(function (error) {
             console.log('There has been a problem with your fetch operation: ', error.message);
@@ -105,10 +105,13 @@ body.on('click', "#confirmationActionButton", function (event) {
     let thisButton = this;
     thisButton.setAttribute('disabled', 'true');
 
+    let conferenceId = thisButton.getAttribute('conferenceId');
+    let userId = thisButton.getAttribute('userId');
+
     const formData = new FormData();
     formData.append('command', thisButton.getAttribute('command'));
-    formData.append('conferenceId', thisButton.getAttribute('conferenceId'));
-    formData.append('userId', thisButton.getAttribute('userId'));
+    formData.append('conferenceId', conferenceId);
+    formData.append('userId', userId);
 
     var url = '/udacidy/';
     var fetchOptions = {
@@ -122,6 +125,9 @@ body.on('click', "#confirmationActionButton", function (event) {
         })
         .then(function (obj) {
             console.log(obj);
+
+            let alert = createAlertWithTextAndType(obj.message, 'alert-success');
+            document.getElementById('userRequestItem' + conferenceId).appendChild(alert);
 
             // let element = document.getElementById('userQuestionItem' + conversationId);
             // let alert = createAlertWithTextAndType(obj.message, 'alert-success');

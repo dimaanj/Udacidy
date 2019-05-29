@@ -42,6 +42,9 @@ public class ServiceFactory {
         return new UserServiceImpl(daoFactory);
     }
 
+    public RequestFormService createRequestFormService(){
+        return new RequestFormServiceImpl(daoFactory);
+    }
 
 
 }

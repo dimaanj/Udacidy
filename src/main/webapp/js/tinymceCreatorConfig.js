@@ -2,7 +2,7 @@ var mainArea = {
     selector: '#mytextarea',
     height: 700,
     plugins: [
-        "advlist autolink lists link image charmap print preview anchor",
+        "advlist autolink lists link image charmap print preview anchor media mediaembed template",
         "searchreplace visualblocks code fullscreen",
         "insertdatetime media table paste imagetools wordcount checklist"
     ],
@@ -15,7 +15,7 @@ var mainArea = {
         plugins: ['autosave', 'lists', 'autolink'],
         toolbar: ['undo', 'bold', 'italic', 'styleselect']
     },
-    toolbar: ' insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | checklist',
+    toolbar: ' insertfile undo redo | styleselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media pageembed | checklist',
 };
 
 tinymce.init(mainArea);

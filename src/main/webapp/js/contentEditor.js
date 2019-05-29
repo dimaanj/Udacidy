@@ -25,21 +25,9 @@ function createConference(jsonConference) {
     var conferenceId = jsonConference.id;
     var conferenceContent = jsonConference.content;
 
-    // var row = document.createElement('div');
-    // row.classList.add('row');
-    // row.classList.add('mt-4');
-    // row.classList.add('justify-content-md-center');
-    // row.id = conferenceId;
-    //
-    // var col = document.createElement('div');
-    // col.classList.add('col-sm-7');
-    // col.classList.add('shadow-lg');
-    // col.classList.add('rounded-lg');
-    // col.classList.add('p-5');
-
     let div = document.createElement('div');
     div.classList.add('mx-auto');
-    div.classList.add('w-75');
+    div.classList.add('w-75')
     div.classList.add('shadow-lg');
     div.classList.add('p-5');
     div.classList.add('mt-4');
@@ -89,7 +77,6 @@ function createConference(jsonConference) {
     flexRow.appendChild(flexItem2);
     div.appendChild(flexRow);
 
-    // row.appendChild(col);
     return div;
 }
 

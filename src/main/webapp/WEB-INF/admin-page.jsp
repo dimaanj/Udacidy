@@ -19,106 +19,109 @@
 <tag:navbar/>
 
 <main role="main" class="container-fluid">
+    <div class="container">
+        <c:if test="${not empty usersWithRequests}">
+            <div class="my-3 p-3 bg-white rounded-lg shadow mx-auto">
+                <h5 class="border-bottom border-gray pb-2 mb-0">Queries</h5>
+                <c:forEach items="${usersWithRequests}" var="entry">
+                    <div class="pt-3" id="userRequestItem${entry.value.getConference().getId()}">
+                        <div class="border-bottom border-gray">
+                            <div class="d-flex bd-highlight mb-3">
+                                <div class="mr-auto p-2 bd-highlight">
+                                    <strong class="text-dark">
+                                        <c:out value="${entry.key.getFirstName()}"/>
+                                        <c:out value="${entry.key.getLastName()}"/>
+                                        <h6 class="text-muted">
+                                            Conference id: <c:out value="${entry.value.getConference().getId()}"/>
+                                        </h6>
+                                    </strong>
+                                </div>
+                                <div class="p-2 bd-highlight">
+                                    <button name="viewBody"
+                                            class="btn btn-outline-info"
+                                            id="viewBodyRequest${entry.value.getConference().getId()}"
+                                            conferenceId="${entry.value.getConference().getId()}"
+                                            userId="${entry.key.getId()}"
+                                            type="button"
+                                            data-toggle="modal"
+                                            data-target="#confirmationActionModal">
+                                        View body
+                                    </button>
+                                </div>
 
-    <c:if test="${not empty usersWithConferencesRequests}">
-        <div class="my-3 p-3 bg-white rounded-lg shadow mx-auto w-75">
-            <h5 class="border-bottom border-gray pb-2 mb-0">Queries</h5>
-            <c:forEach items="${usersWithConferencesRequests}" var="entry">
-                <div class="pt-3" id="userRequestItem${entry.value.getId()}">
-                    <div class="border-bottom border-gray">
-                        <div class="d-flex bd-highlight mb-3">
-                            <div class="mr-auto p-2 bd-highlight">
-                                <strong class="text-dark">
-                                    <c:out value="${entry.key.getFirstName()}"/>
-                                    <c:out value="${entry.key.getLastName()}"/>
-                                    <h6 class="text-muted">
-                                        Conference id: <c:out value="${entry.value.getId()}"/>
-                                    </h6>
-                                </strong>
-                            </div>
-                            <div class="p-2 bd-highlight">
-                                <button name="viewBody"
-                                        class="btn btn-outline-info"
-                                        id="viewBodyRequest${entry.value.getId()}"
-                                        conferenceId="${entry.value.getId()}"
-                                        userId="${entry.key.getId()}"
-                                        type="button"
-                                        data-toggle="modal"
-                                        data-target="#confirmationActionModal">
-                                    View body
-                                </button>
-                            </div>
-                            <div class="p-2 bd-highlight">
-                                <button name="acceptRequest"
-                                        class="btn btn-outline-dark"
-                                        id="acceptRequest${entry.value.getId()}"
-                                        conferenceId="${entry.value.getId()}"
-                                        userId="${entry.key.getId()}"
-                                        type="button"
-                                        data-toggle="modal"
-                                        data-target="#confirmationActionModal">
-                                    Accept
-                                </button>
-                            </div>
-                            <div class="p-2 bd-highlight">
-                                <button name="rejectRequest"
-                                        class="btn btn-outline-dark"
-                                        id="rejectRequest${entry.value.getId()}"
-                                        conferenceId="${entry.value.getId()}"
-                                        userId="${entry.key.getId()}"
-                                        type="button"
-                                        data-toggle="modal"
-                                        data-target="#confirmationActionModal">
-                                    Reject
-                                </button>
+                                <div class="p-2 bd-highlight">
+                                    <button name="acceptRequest"
+                                            class="btn btn-outline-success"
+                                            id="acceptRequest${entry.value.getConference().getId()}"
+                                            conferenceId="${entry.value.getConference().getId()}"
+                                            userId="${entry.key.getId()}"
+                                            type="button"
+                                            data-toggle="modal"
+                                            data-target="#confirmationActionModal">
+                                        Accept
+                                    </button>
+                                </div>
+                                <div class="p-2 bd-highlight">
+                                    <button name="rejectRequest"
+                                            class="btn btn-outline-dark"
+                                            id="rejectRequest${entry.value.getConference().getId()}"
+                                            conferenceId="${entry.value.getConference().getId()}"
+                                            userId="${entry.key.getId()}"
+                                            type="button"
+                                            data-toggle="modal"
+                                            data-target="#confirmationActionModal">
+                                        Reject
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </c:forEach>
-        </div>
-    </c:if>
+                </c:forEach>
+            </div>
+        </c:if>
 
-    <c:if test="${not empty askingUsersWithTheirsConversations}">
-        <div class="my-3 p-3 bg-white rounded-lg shadow mx-auto w-75">
-            <h5 class="border-bottom border-gray pb-2 mb-0">Questions</h5>
-            <c:forEach items="${askingUsersWithTheirsConversations}" var="entry">
-                <div class="pt-3" id="userQuestionItem${entry.value.getId()}">
-                    <div class="border-bottom border-gray">
-                        <div class="d-flex bd-highlight mb-3">
-                            <div class="mr-auto p-2 bd-highlight">
-                                <strong class="text-dark">
-                                    <c:out value="${entry.key.getFirstName()}"/>
-                                    <c:out value="${entry.key.getLastName()}"/>
-                                    <h6 class="text-muted">
-                                        Last message: "<c:out
-                                            value="${entry.value.getLastMessage().getText()}"/>",
-                                        by <c:out
-                                            value="${entry.value.getLastMessage().getCreator().getEmail()}"/>
-                                    </h6>
-                                </strong>
-                            </div>
-                            <div class="p-2 bd-highlight">
-                                <a class="btn btn-outline-success" href="${pageContext.request.contextPath}/udacidy/conversation?conversationId=${entry.value.getId()}">
-                                    Answer
-                                </a>
-                            </div>
-                            <div class="p-2 bd-highlight">
-                                <button name="removeConversation"
-                                        class="btn btn-outline-dark"
-                                        id="removeConversation${entry.value.getId()}"
-                                        type="button"
-                                        data-toggle="modal"
-                                        data-target="#confirmationModal">
-                                    Remove conversation
-                                </button>
+        <c:if test="${not empty askingUsersWithTheirsConversations}">
+            <div class="my-3 p-3 bg-white rounded-lg shadow mx-auto">
+                <h5 class="border-bottom border-gray pb-2 mb-0">Questions</h5>
+                <c:forEach items="${askingUsersWithTheirsConversations}" var="entry">
+                    <div class="pt-3" id="userQuestionItem${entry.value.getId()}">
+                        <div class="border-bottom border-gray">
+                            <div class="d-flex bd-highlight mb-3">
+                                <div class="mr-auto p-2 bd-highlight">
+                                    <strong class="text-dark">
+                                        <c:out value="${entry.key.getFirstName()}"/>
+                                        <c:out value="${entry.key.getLastName()}"/>
+                                        <h6 class="text-muted">
+                                            Last message: "<c:out
+                                                value="${entry.value.getLastMessage().getText()}"/>",
+                                            by <c:out
+                                                value="${entry.value.getLastMessage().getCreator().getEmail()}"/>
+                                        </h6>
+                                    </strong>
+                                </div>
+                                <div class="p-2 bd-highlight">
+                                    <a class="btn btn-outline-success"
+                                       href="${pageContext.request.contextPath}/udacidy/conversation?conversationId=${entry.value.getId()}">
+                                        Answer
+                                    </a>
+                                </div>
+                                <div class="p-2 bd-highlight">
+                                    <button name="removeConversation"
+                                            class="btn btn-outline-dark"
+                                            id="removeConversation${entry.value.getId()}"
+                                            type="button"
+                                            data-toggle="modal"
+                                            data-target="#confirmationModal">
+                                        Remove conversation
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </c:forEach>
-        </div>
-    </c:if>
+                </c:forEach>
+            </div>
+        </c:if>
+    </div>
 </main>
 
 <%--Confirmation remove converstaion modal--%>
@@ -166,11 +169,8 @@
     </div>
 </div>
 
-
-
 <tag:footer/>
 <script src="../js/adminPage.js"></script>
-
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

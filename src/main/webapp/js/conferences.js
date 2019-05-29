@@ -1,88 +1,11 @@
-function createConference(jsonConference) {
-    var conferenceId = jsonConference.id;
-    var conferenceContent = jsonConference.content;
-    var conferenceSections = jsonConference.jsonSections;
-    var requestStatus = jsonConference.requestStatus;
-
-    var row = document.createElement('div');
-    row.classList.add('row');
-    row.classList.add('mt-4');
-    row.classList.add('justify-content-md-center');
-    row.id = conferenceId;
-
-    var col = document.createElement('div');
-    col.classList.add('col-sm-7');
-    col.classList.add('shadow-lg');
-    col.classList.add('rounded-lg');
-    col.classList.add('p-5');
-
-    var bodyData = document.createElement('div');
-    bodyData.setAttribute('id', 'bodyData');
-    bodyData.innerHTML = conferenceContent;
-    var images = bodyData.getElementsByTagName('img');
-    for (var k = 0; k < images.length; k++) {
-        images[k].setAttribute('id', 'responsive-image');
+window.onload = function (event) {
+    event.preventDefault();
+    var images = document.getElementsByTagName('img');
+    for(var i=0; i<images.length; i++){
+        console.log(images[i]);
+        images[i].setAttribute('id', 'responsive-image');
     }
-
-    col.appendChild(bodyData);
-
-    var flexR = document.createElement('div');
-    flexR.classList.add('d-flex');
-    flexR.classList.add('flex-row');
-    flexR.classList.add('bd-highlight');
-    flexR.classList.add('mb-3');
-    flexR.setAttribute('id', 'flex-row' + conferenceId);
-
-    var flexItem = document.createElement('div');
-    flexItem.classList.add('p-2');
-    flexItem.classList.add('bd-highlight');
-
-    if(requestStatus !== null && requestStatus !== undefined) {
-        // var removeButton = removeRequestButtonBuilder();
-        // flexItem.appendChild(removeButton);
-        // flexR.appendChild(flexItem);
-        //
-        // var flexItem2 = document.createElement('div');
-        // flexItem2.classList.add('p-3');
-        // flexItem2.classList.add('bd-highlight');
-        // flexItem2.setAttribute('id', 'requestStatus' + conferenceId);
-        // var h6 = document.createElement('h6');
-        // h6.classList.add('card-title');
-        //
-        // if (requestStatus === 'SHIPPED') {
-        //     h6.classList.add('text-primary');
-        //     h6.appendChild(document.createTextNode("shipped"));
-        // } else if (requestStatus === 'ACCEPTED') {
-        //     h6.classList.add('text-success');
-        //     h6.appendChild(document.createTextNode("accepted"));
-        // } else {
-        //     h6.classList.add('text-secondary');
-        //     h6.appendChild(document.createTextNode("ejected"));
-        // }
-        // flexItem2.appendChild(h6);
-        // flexR.appendChild(flexItem2);
-
-        let span = document.createElement('span');
-
-        let linkToProfile = document.createElement('a');
-        linkToProfile.setAttribute('href', '/udacidy/profile');
-        linkToProfile.appendChild(document.createTextNode('Go profile'));
-        span.appendChild(linkToProfile);
-        span.appendChild(document.createTextNode(' to view request details.'));
-        col.appendChild(span);
-    }else {
-        var chooseSectionsButton = selectSectionsButtonBuilder(conferenceId);
-        flexItem.appendChild(chooseSectionsButton);
-        flexR.appendChild(flexItem);
-    }
-
-    col.appendChild(flexR);
-    var collapse = chooseSectionsCollapseElementBuilder(conferenceSections);
-    col.appendChild(collapse);
-
-    row.appendChild(col);
-    return row;
-}
+};
 
 var body = $("body");
 
@@ -93,46 +16,6 @@ body.on('click', "li[name='section']", function (event) {
     } else {
         this.classList.add('tox-checklist--checked');
     }
-});
-
-body.on('click', "button[id='view-more-button']", function (event) {
-    var lastRowElement = $('.row').last();
-    var lastConferenceElementId = lastRowElement.attr('id');
-
-    const formData = new FormData();
-    formData.append('command', 'viewMoreConferences');
-    formData.append('lastConferenceId', lastConferenceElementId);
-
-    var url = '/udacidy/?t='+new Date().getTime();
-    var fetchOptions = {
-        method: 'GET',
-        cache: 'no-store',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-    };
-    var responsePromise = fetch(url, fetchOptions);
-    responsePromise
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (jsonObj) {
-            console.log(jsonObj);
-
-            var conferences = jsonObj.conferences;
-            var hideViewMoreButton = jsonObj.hideViewMoreButton;
-
-            for (var i = 0; i < conferences.length; i++) {
-                var row = createConference(conferences[i]);
-                document.getElementById('data-container').append(row);
-            }
-
-            if (hideViewMoreButton === true) {
-                $("#view-more-button").hide();
-            }
-        });
-    event.preventDefault();
 });
 
 function createAlertWithTextAndType(text, type) {
@@ -168,7 +51,7 @@ body.on('click', "button[name='submitRequestButton']", function (event) {
    console.log('1');
 
     let thisButton = this;
-    let col = thisButton.parentNode.parentNode.parentNode.parentNode;
+    let conferenceItem = thisButton.parentNode.parentNode.parentNode.parentNode;
     let sectionsUl = this.parentElement.parentElement.firstElementChild;
     let sections = sectionsUl.firstElementChild.children;
 
@@ -184,9 +67,9 @@ body.on('click', "button[name='submitRequestButton']", function (event) {
     }
     if (!isCorrectForm) {
         console.log('incorrectForm');
-        let previoseAlert = document.getElementById('singleAlert');
-        if (previoseAlert !== null) {
-            previoseAlert.remove();
+        let previousAlert = document.getElementById('singleAlert');
+        if (previousAlert !== null) {
+            previousAlert.remove();
         }
         let alert = createAlertWithTextAndType('You should choose ' +
             'at least one section of the conference to submit request!', 'alert-danger');
@@ -210,16 +93,50 @@ body.on('click', "button[name='submitRequestButton']", function (event) {
             }
         }
 
-        let inputParam = document.createElement('input');
-        inputParam.setAttribute('type', 'hidden');
-        inputParam.setAttribute('name', 'sectionsIds');
-        inputParam.setAttribute('value', JSON.stringify(sectionsIds));
+        const formData = new FormData();
+        formData.append('command', 'sendClientRequest');
+        formData.append('sectionsIds', JSON.stringify(sectionsIds));
 
-        let sendRequestForm = document.getElementById('sendRequestForm');
-        sendRequestForm.appendChild(inputParam);
+        var url = '/udacidy/';
+        var fetchOptions = {
+            method: 'POST',
+            cache: 'no-store',
+            body: formData,
+        };
+        var responsePromise = fetch(url, fetchOptions);
+        responsePromise
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (jsonObj) {
 
-        sendRequestForm.submit();
+                var modal = $("#viewDetails");
+                modal.modal('show');
+
+                let conferenceId = thisButton.getAttribute('id').replace('submitRequestButton', '');
+                let collapseElement = document.getElementById('collapseSections' + conferenceId);
+                collapseElement.remove();
+
+                let alert = createAlertWithTextAndType(jsonObj.message, 'alert-success');
+                alert.classList.add('mt-3');
+                alert.classList.add('w-75');
+                alert.classList.add('mx-auto');
+
+                let span = document.createElement('span');
+                let a = document.createElement('a');
+                a.setAttribute('href', '/udacidy/profile');
+                a.appendChild(document.createTextNode('Go profile'));
+                span.appendChild(a);
+                span.appendChild(document.createTextNode('to check details of your request'));
+
+                let collapseButton = document.getElementById('chooseSectionsButton'+conferenceId);
+                collapseButton.remove();
+
+                conferenceItem.appendChild(span);
+                conferenceItem.appendChild(alert);
+            });
     }
-
 });
+
+
 

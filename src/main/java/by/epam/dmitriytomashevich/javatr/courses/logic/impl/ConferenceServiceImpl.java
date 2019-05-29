@@ -26,6 +26,11 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     @Override
+    public Conference findById(Long id) {
+        return null;
+    }
+
+    @Override
     public List<Conference> findSomeLastConferences(int amount) throws LogicException {
         try {
             return conferenceDao.findSomeLastConferences(amount);

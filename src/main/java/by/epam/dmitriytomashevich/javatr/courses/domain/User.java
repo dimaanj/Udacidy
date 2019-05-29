@@ -11,7 +11,6 @@ public class User {
     private String password;
 
     private UserRole role;
-    private Set<Message> messages;
 
     @Override
     public String toString() {
@@ -22,7 +21,6 @@ public class User {
                 ",\n password='" + password + '\'' +
                 ",\n email='" + email + '\'' +
                 ",\n role=" + role +
-                ",\n messages=" + messages +
                 "\n }";
     }
 
@@ -40,13 +38,12 @@ public class User {
                 Objects.equals(lastName, user.lastName) &&
                 Objects.equals(password, user.password) &&
                 Objects.equals(email, user.email) &&
-                role == user.role &&
-                Objects.equals(messages, user.messages);
+                role == user.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, password, email, role, messages);
+        return Objects.hash(id, firstName, lastName, password, email, role);
     }
 
     public Long getId() {
@@ -95,14 +92,6 @@ public class User {
 
     public void setUserRole(UserRole role) {
         this.role = role;
-    }
-
-    public Set<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(Set<Message> messages) {
-        this.messages = messages;
     }
 
     public boolean isAdmin(){

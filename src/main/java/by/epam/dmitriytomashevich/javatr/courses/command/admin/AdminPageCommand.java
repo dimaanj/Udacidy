@@ -35,11 +35,25 @@ public class AdminPageCommand implements Command {
         List<Map.Entry<User, Conversation>> map = new ArrayList<>();
         initUserQuestions(map, conversationList);
 
-        List<Map.Entry<User, Conference>> usersWithConferencesRequests = findUsersWithConferencesRequests();
+        List<Map.Entry<User, Request>> usersWithRequests = findUsersWithRequests();
 
-        content.setRequestAttribute("usersWithConferencesRequests", usersWithConferencesRequests);
+        content.setRequestAttribute("usersWithRequests", usersWithRequests);
         content.setRequestAttribute("askingUsersWithTheirsConversations", map);
         return Optional.of(ActionNames.ADMIN);
+    }
+
+    private List<Map.Entry<User, Request>> findUsersWithRequests() throws LogicException {
+        List<Request> requests = requestService.findAll();
+        List<Map.Entry<User, Request>> usersWithRequests = new ArrayList<>();
+        for(Request r:requests){
+            if(r.getRequestStatus().equals(RequestStatus.SHIPPED)) {
+                User u = userService.findById(r.getUserId());
+                Conference c = conferenceService.getById(r.getConferenceId());
+                r.setConference(c);
+                usersWithRequests.add(new AbstractMap.SimpleEntry<>(u, r));
+            }
+        }
+        return usersWithRequests;
     }
 
     private void initUserQuestions(List<Map.Entry<User, Conversation>> map, List<Conversation> conversationList) throws LogicException {
@@ -59,20 +73,5 @@ public class AdminPageCommand implements Command {
                 }
             }
         }
-    }
-
-    private List<Map.Entry<User, Conference>> findUsersWithConferencesRequests() throws LogicException {
-        Set<Request> singleUserRequests = new HashSet<>(requestService.findAll());
-        return singleUserRequests.stream().map(request -> {
-            User user = null;
-            Conference conference = null;
-            try {
-                user = userService.findById(request.getUserId());
-                conference = conferenceService.getById(request.getConferenceId());
-            } catch (LogicException e) {
-                e.printStackTrace();
-            }
-            return new AbstractMap.SimpleEntry<>(user, conference);
-        }).collect(Collectors.toList());
     }
 }

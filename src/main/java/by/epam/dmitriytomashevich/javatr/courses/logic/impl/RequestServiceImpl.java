@@ -1,11 +1,12 @@
 package by.epam.dmitriytomashevich.javatr.courses.logic.impl;
 
 import by.epam.dmitriytomashevich.javatr.courses.db.dao.RequestDao;
-import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
+import by.epam.dmitriytomashevich.javatr.courses.domain.RequestStatus;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
+import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestService;
-import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 import java.util.List;
 
@@ -25,12 +26,10 @@ public class RequestServiceImpl implements RequestService {
         }
     }
 
-
-
     @Override
-    public List<Request> findBySectionId(Long sectionId) throws LogicException {
+    public List<Request> findByUserId(Long userId) throws LogicException {
         try {
-            return requestDao.findBySectionId(sectionId);
+            return requestDao.findByUserId(userId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -46,27 +45,18 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<Request> findAllByUserIdAndConferenceId(Long userId, Long conferenceId) throws LogicException {
+    public Request findByUserIdAndConferenceId(Long userId, Long conferenceId) throws LogicException {
         try {
-            return requestDao.findAllRequestByUserIdAndConferenceId(userId, conferenceId);
+            return requestDao.findByUserIdAndConferenceId(userId, conferenceId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
     }
 
     @Override
-    public Request findById(Long requestId) throws LogicException {
+    public List<Request> findByConferenceId(Long conferenceId) throws LogicException {
         try {
-            return requestDao.findById(requestId);
-        } catch (DAOException e) {
-            throw new LogicException(e);
-        }
-    }
-
-    @Override
-    public void deleteFullRequestByConferenceIdAndUserId(Long conferenceId, Long userId) throws LogicException {
-        try {
-            requestDao.deleteFullRequestByConferenceId(conferenceId, userId);
+            return requestDao.findByConferenceId(conferenceId);
         } catch (DAOException e) {
             throw new LogicException(e);
         }
@@ -76,6 +66,15 @@ public class RequestServiceImpl implements RequestService {
     public List<Request> findAll() throws LogicException {
         try {
             return requestDao.findAll();
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
+
+    @Override
+    public void updateRequestStatusByUserIdAndConferenceId(Long userId, Long conferenceId, RequestStatus requestStatus) throws LogicException {
+        try {
+            requestDao.updateRequestStatusByUserIdAndConferenceId(userId, conferenceId, requestStatus);
         } catch (DAOException e) {
             throw new LogicException(e);
         }

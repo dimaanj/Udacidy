@@ -2,9 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.admin;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.domain.Content;
-import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
-import by.epam.dmitriytomashevich.javatr.courses.domain.Section;
+import by.epam.dmitriytomashevich.javatr.courses.domain.*;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.*;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
@@ -21,31 +19,38 @@ public class RemoveConferenceCommand implements Command {
     private final ConferenceService conferenceService;
     private final SectionService sectionService;
     private final RequestService requestService;
+    private final RequestFormService requestFormService;
 
     public RemoveConferenceCommand(ServiceFactory serviceFactory){
         contentService = serviceFactory.createContentService();
         conferenceService = serviceFactory.createConferenceService();
         sectionService = serviceFactory.createSectionService();
         requestService = serviceFactory.createRequestService();
+        requestFormService = serviceFactory.createRequestFormService();
     }
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         Long conferenceId = Long.valueOf(content.getParameter("conferenceId"));
-        Content conferenceContent = contentService.findByConferenceId(conferenceId);
 
         boolean didConferenceExist;
         String message = null;
         List<Section> sectionList = sectionService.findSectionsByConferenceId(conferenceId);
         if(!sectionList.isEmpty()) {
-            for (Section s : sectionList) {
-                List<Request> requests = requestService.findBySectionId(s.getId());
-                for(Request r : requests){
-                    requestService.delete(r.getId());
+            List<Request> requests = requestService.findByConferenceId(conferenceId);
+            for(Request r:requests){
+                List<RequestForm> requestForms = requestFormService.findByRequestId(r.getId());
+                for(RequestForm rf:requestForms){
+                    requestFormService.delete(rf.getId());
                 }
+                requestService.delete(r.getId());
+            }
+            for (Section s : sectionList) {
                 sectionService.deleteSectionWithTheirContent(s.getId(), s.getContentId());
             }
+            Content conferenceContent = contentService.findByConferenceId(conferenceId);
             conferenceService.deleteConferenceWithTheirContent(conferenceId, conferenceContent.getId());
+
             message = "You successfully deleted this conference with id=" + conferenceId + "!";
             didConferenceExist = true;
         }else {

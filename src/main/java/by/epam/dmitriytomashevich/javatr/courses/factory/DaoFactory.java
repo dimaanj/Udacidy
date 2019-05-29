@@ -43,4 +43,8 @@ public class DaoFactory {
         return new UserDao(connection);
     }
 
+    public RequestFormDao createRequestFormDao(){
+        return new RequestFormDao(connection);
+    }
+
 }

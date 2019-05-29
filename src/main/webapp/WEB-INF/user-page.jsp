@@ -17,10 +17,10 @@
 <body>
 
 <tag:navbar/>
-<main role="main" class="container-fluid">
+<main role="main" class="container">
     <div id="removeRequestMessagePlace"></div>
 
-    <div class="card-body w-75 mx-auto rounded-lg shadow-lg mt-3" id="profileBody">
+    <div class="card-body mx-auto rounded-lg shadow-lg mt-3" id="profileBody">
         <h5 class="card-title">
             <c:out value="${sessionScope.user.getFirstName()}"/> <c:out
                 value="${sessionScope.user.getLastName()}"/>
@@ -33,47 +33,47 @@
         </button>
     </div>
 
-    <c:if test="${not empty conferences}">
-        <div class="my-4 p-3 bg-white rounded-lg shadow-lg mx-auto w-75">
+    <c:if test="${not empty requestsWithConferences}">
+        <div class="my-4 p-3 bg-white rounded-lg shadow-lg mx-auto">
             <h5 class="border-bottom border-gray pb-2 mb-0">My Requests</h5>
-            <c:forEach items="${conferences}" var="conference">
-                <div class="pt-3" id="requestItem${conference.getId()}">
+            <c:forEach items="${requestsWithConferences}" var="entry">
+                <div class="pt-3" id="requestItem${entry.value.getId()}">
                     <div class="border-bottom border-gray">
                         <div class="d-flex bd-highlight mb-3">
                             <div class="mr-auto p-2 bd-highlight">
                                 <strong class="text-gray-dark">Conference id <c:out
-                                        value="${conference.getId()}"/></strong>
+                                        value="${entry.value.getId()}"/></strong>
                                 <span class="d-block text-muted">author @ <c:out
-                                        value="${conference.getAuthor().getFirstName()}"/>
-                                    <c:out value="${conference.getAuthor().getLastName()}"/>,
+                                        value="${entry.value.getAuthor().getFirstName()}"/>
+                                    <c:out value="${entry.value.getAuthor().getLastName()}"/>,
                                 </span>
                                 <c:choose>
-                                    <c:when test="${conference.getRequestStatus().toString() eq 'SHIPPED'}">
+                                    <c:when test="${entry.key.getRequestStatus().toString() eq 'SHIPPED'}">
                                         <span class="card-title text-primary">Request status:
-                                            <c:out value="${conference.getRequestStatus().toString().toLowerCase()}"/>
+                                            <c:out value="${entry.key.getRequestStatus().toString().toLowerCase()}"/>
                                         </span>
                                     </c:when>
-                                    <c:when test="${conference.getRequestStatus().toString() eq 'ACCEPTED'}">
+                                    <c:when test="${entry.key.getRequestStatus().toString() eq 'ACCEPTED'}">
                                         <span class="card-title text-success">Request status:
-                                            <c:out value="${conference.getRequestStatus().toString().toLowerCase()}"/>
+                                            <c:out value="${entry.key.getRequestStatus().toString().toLowerCase()}"/>
                                         </span>
                                     </c:when>
                                     <c:otherwise>
                                         <span class="card-title text-secondary">Request status:
-                                            <c:out value="${conference.getRequestStatus().toString().toLowerCase()}"/>
+                                            <c:out value="${entry.key.getRequestStatus().toString().toLowerCase()}"/>
                                         </span>
                                     </c:otherwise>
                                 </c:choose>
                             </div>
                             <div class="p-2 bd-highlight">
-                                <button name="viewDetailsButton" id="viewDetailsButton${conference.getId()}"
+                                <button name="viewDetailsButton" id="viewDetailsButton${entry.value.getId()}"
                                         type="button" class="btn btn-outline-primary" data-toggle="modal"
                                         data-target="#viewDetails">View details
                                 </button>
                             </div>
                             <div class="p-2 bd-highlight">
                                 <button name="removeRequestButton"
-                                        id="removeRequestButton${conference.getId()}"
+                                        id="removeRequestButton${entry.value.getId()}"
                                         type="button" class="btn btn-outline-dark" data-toggle="modal"
                                         data-target="#confirmationModal">Remove request
                                 </button>
@@ -163,54 +163,6 @@
 <tag:footer/>
 
 <script src="../js/userPage.js"></script>
-<script>
-    function clearUriParameters() {
-        var uri = window.location.toString();
-        if (uri.indexOf("?") > 0) {
-            var clean_uri = uri.substring(0, uri.indexOf("?"));
-            window.history.replaceState({}, document.title, clean_uri);
-        }
-    }
-
-    <c:if test="${not empty requestWasSentMessage}">
-    window.onload = function () {
-        clearUriParameters();
-
-        var modal = $("#viewDetails");
-        modal.modal('show');
-
-        let conferenceToShow = ${conferenceToShow};
-        let requestSectionsIds = ${requestSectionsIds};
-        let message = '${requestWasSentMessage}';
-
-        let conference = createConference(conferenceToShow, requestSectionsIds);
-
-        let modalDataContainer = document.getElementById('data-container');
-
-        let alert = createAlertWithTextAndType(message, 'alert-success');
-        alert.classList.add('mt-3');
-        alert.classList.add('w-75');
-        alert.classList.add('mx-auto');
-
-        modalDataContainer.appendChild(alert);
-        modalDataContainer.appendChild(conference);
-    };
-    </c:if>
-
-    <c:if test="${not empty removeRequestMessage}">
-    window.onload = function () {
-        clearUriParameters();
-        let removeRequestMessage = '${removeRequestMessage}';
-        let alert = createAlertWithTextAndType(removeRequestMessage, 'alert-success');
-        alert.classList.add('mt-3');
-        alert.classList.add('w-75');
-        alert.classList.add('mx-auto');
-        document.getElementById('removeRequestMessagePlace').appendChild(alert);
-    };
-    </c:if>
-</script>
-
-
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
