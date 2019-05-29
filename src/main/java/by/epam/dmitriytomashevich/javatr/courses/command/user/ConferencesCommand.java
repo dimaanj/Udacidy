@@ -51,6 +51,8 @@ public class ConferencesCommand implements Command {
             }
         }
 
+        Long numberOfConferences = conferenceService.countNumberOfConferences();
+        content.setRequestAttribute("conferencesNumber", numberOfConferences);
         content.setRequestAttribute("conferencesWithRequests", conferencesWithRequests);
         if (conferences.size() < Parameter.CONFERENCES_UPDATE_AMOUNT ||
                 conferenceService.getTheOldest().getId().equals(conferences.get(conferences.size() - 1).getId())) {

@@ -38,39 +38,4 @@ public class UserProfileCommand implements Command {
 
         return Optional.of(ActionNames.PROFILE);
     }
-
-//    private void doLogicWhenRequestWasSent(SessionRequestContent content, User user) throws LogicException {
-//        String requestWasSentParam = content.getParameter("requestWasSent");
-//        String conferenceIdToShowAsString = content.getParameter("conferenceIdToShow");
-//        if (requestWasSentParam != null && conferenceIdToShowAsString != null) {
-//            Long conferenceId = Long.valueOf(conferenceIdToShowAsString);
-//            Conference conference = conferenceService.getById(conferenceId);
-//            ClientConferencesInitializer initializer = new ClientConferencesInitializer.Builder(user, conference)
-//                    .withContentService(contentService)
-//                    .withRequestService(requestService)
-//                    .withSectionService(sectionService)
-//                    .withUserService(userService)
-//                    .build();
-//            initializer.init();
-//
-//            List<Request> requests = requestService.findAllByUserIdAndConferenceId(user.getId(), conferenceId);
-//            List<Long> sectionsRequestIds = new ArrayList<>();
-//            if (requests != null && !requests.isEmpty()) {
-//                sectionsRequestIds = requests.stream()
-//                        .map(Request::getSectionId)
-//                        .collect(Collectors.toList());
-//            }
-//            JsonArray jsonSectionRequestIds = new JsonArray();
-//            for (Long id : sectionsRequestIds) {
-//                jsonSectionRequestIds.add(id);
-//            }
-//
-//            JsonConference jsonConference = new ConferenceConverter().convert(conference);
-//            JsonElement jsonConferenceElement = new Gson().toJsonTree(jsonConference, JsonConference.class);
-//
-//            content.setRequestAttribute("requestWasSentMessage", "Your request was successfully sent!");
-//            content.setRequestAttribute("conferenceToShow", jsonConferenceElement);
-//            content.setRequestAttribute("requestSectionsIds", jsonSectionRequestIds);
-//        }
-//    }
 }

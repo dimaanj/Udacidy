@@ -7,6 +7,138 @@ window.onload = function (event) {
     }
 };
 
+function createConference(jsonConference, requestConferenceIds) {
+    let conferenceId = jsonConference.id;
+    let conferenceContent = jsonConference.content;
+    let conferenceSections = jsonConference.jsonSections;
+
+    let confItem = document.createElement('div');
+    confItem.classList.add('mx-auto');
+    confItem.classList.add('w-75');
+    confItem.classList.add('rounded-lg');
+    confItem.classList.add('shadow-lg');
+    confItem.classList.add('p-5');
+    confItem.classList.add('mt-4');
+    confItem.classList.add('rounded');
+
+    var bodyData = document.createElement('div');
+    bodyData.setAttribute('id', 'bodyData' + conferenceId);
+    bodyData.innerHTML = conferenceContent;
+    var images = bodyData.getElementsByTagName('img');
+    for (var k = 0; k < images.length; k++) {
+        images[k].setAttribute('id', 'responsive-image');
+    }
+
+    if(requestConferenceIds.includes(conferenceId)){
+        let span = document.createElement('span');
+        let a = document.createElement('a');
+        a.setAttribute('href', '/udacidy/profile');
+        a.appendChild(document.createTextNode('Go profile'))
+        span.appendChild(a);
+        span.appendChild(document.createTextNode(' to check details of your request'));
+        confItem.appendChild(span);
+    }else {
+        let button = document.createElement('button');
+        button.setAttribute('id', 'chooseSectionsButton' + conferenceId);
+        button.classList.add('btn');
+        button.classList.add('btn-primary');
+        button.setAttribute('name', 'chooseSectionsButton');
+        button.setAttribute('type', 'button');
+        button.setAttribute('data-toggle', 'collapse');
+        button.setAttribute('data-target', '#collapseSections' + conferenceId);
+        button.setAttribute('aria-expanded', 'false');
+        button.setAttribute('aria-controls', 'collapseSections' + conferenceId);
+        button.appendChild(document.createTextNode('Choose sections'));
+        confItem.appendChild(button);
+    }
+
+    let collapse = document.createElement('div');
+    collapse.classList.add('collapse');
+    collapse.classList.add('mt-3');
+    collapse.setAttribute('id', 'collapseSections' + conferenceId);
+    let card = document.createElement('div');
+    card.classList.add('card');
+    let cardBody = document.createElement('card-body');
+    let ul = document.createElement('ul');
+    ul.classList.add('tox-checklist');
+    ul.setAttribute('sectionsUl'+conferenceId);
+    for(let i=0;i<conferenceSections;i++){
+        let li = document.createElement('li');
+        li.setAttribute('name', 'section');
+        li.setAttribute('id', conferenceSections[i].id);
+        li.appendChild(conferenceSections[i].content);
+        ul.appendChild(li);
+    }
+    cardBody.appendChild(ul);
+
+    let cardFooter = document.createElement('div');
+    cardFooter.classList.add('card-footer');
+    cardFooter.classList.add('border-white');
+    let submitRequestButton = document.createElement('button');
+    submitRequestButton.classList.add('btn');
+    submitRequestButton.classList.add('btn-primary');
+    submitRequestButton.setAttribute('name', 'submitRequestButton');
+    submitRequestButton.setAttribute('type', 'button');
+    submitRequestButton.setAttribute('id', 'submitRequestButton' + conferenceId);
+    submitRequestButton.appendChild(document.createTextNode('Submit request'));
+    cardFooter.appendChild(submitRequestButton);
+
+    card.appendChild(cardBody);
+    card.appendChild(cardFooter);
+    collapse.appendChild(card);
+    confItem.appendChild(collapse);
+    console.log(confItem);
+    return confItem;
+}
+
+$('#pagination-demo').twbsPagination({
+    totalPages: Math.ceil($('#conferencesNumber').val() / 3),
+    visiblePages: 6,
+    next: 'Next',
+    prev: 'Prev',
+    onPageClick: function (event, page) {
+        //fetch content and render here
+
+        console.log(page);
+        changePage(page);
+
+
+        // $('#page-content').text('Page ' + page) + ' content here';
+    }
+});
+
+
+function changePage(page) {
+    const formData = new FormData();
+    formData.append('command', 'getPageContent');
+    formData.append('page', page);
+    var url = '/udacidy/';
+    var fetchOptions = {
+        method: 'POST',
+        body: formData,
+    };
+    var responsePromise = fetch(url, fetchOptions);
+    responsePromise
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (obj) {
+            console.log(obj);
+            let pageContent = document.getElementById('page-content');
+            pageContent.innerHTML = "";
+            let conferenceIds;
+            if(!isEmpty(obj.requestConferenceIds)){
+                conferenceIds = obj.requestConferenceIds;
+            }
+            for(let i=0;i<obj.conferences.length;i++){
+                pageContent.append(createConference(obj.conferences[i], conferenceIds));
+            }
+        })
+        .catch(function (error) {
+            console.log('There has been a problem with your fetch operation: ', error.message);
+        });
+}
+
 var body = $("body");
 
 body.on('click', "li[name='section']", function (event) {
@@ -137,6 +269,15 @@ body.on('click', "button[name='submitRequestButton']", function (event) {
             });
     }
 });
+
+function isEmpty(obj) {
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
 
 
 

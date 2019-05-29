@@ -29,7 +29,7 @@ public class CommandNames {
     public static final String REMOVE_QUESTION_CONVERSATION = "removeQuestionConversation";
     public static final String HELP_USER = "helpUser";
     public static final String ACCEPT_USER_REQUEST = "acceptUserRequest";
-
+    public static final String GET_PAGE_CONTENT = "getPageContent";
 
     public static final String SEND_CLIENT_REQUEST = "sendClientRequest";
 }

@@ -67,15 +67,6 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     @Override
-    public List<Conference> findSomeOlderStartsWithConversationId(Long id) throws LogicException {
-        try {
-            return conferenceDao.findSomeOlderStartsWithConferenceId(id);
-        } catch (DAOException e) {
-            throw new LogicException(e);
-        }
-    }
-
-    @Override
     public void deleteConferenceWithTheirContent(Long conferenceId, Long contentId) throws LogicException {
         try {
             conferenceDao.deleteConferenceWithTheirContent(conferenceId, contentId);
@@ -85,18 +76,18 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     @Override
-    public List<Conference> findAllConferencesAsUserRequestsByUserId(Long userId) throws LogicException {
+    public Long countNumberOfConferences() throws LogicException {
         try {
-            return conferenceDao.findAllConferencesAsUserRequestsByUserId(userId);
+            return conferenceDao.countNumber();
         } catch (DAOException e) {
             throw new LogicException(e);
         }
     }
 
     @Override
-    public List<Conference> findAllConferencesAsUserRequests() throws LogicException {
+    public List<Conference> findFromRowIndexToLimit(Long rowIndex, Long limit) throws LogicException {
         try {
-            return conferenceDao.findAllConferencesAsUserRequests();
+            return conferenceDao.findFromRowIndexToLimit(rowIndex, limit);
         } catch (DAOException e) {
             throw new LogicException(e);
         }

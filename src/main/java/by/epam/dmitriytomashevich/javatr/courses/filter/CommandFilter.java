@@ -42,7 +42,7 @@ public class CommandFilter implements Filter {
         userCommands.add(CommandNames.CHANGE_PASSWORD);
         userCommands.add(CommandNames.GET_CONFERENCE_CONTENT);
         userCommands.add(CommandNames.HELP_USER);
-
+        userCommands.add(CommandNames.GET_PAGE_CONTENT);
 
         adminCommands.add(CommandNames.LOG_OUT);
         adminCommands.add(CommandNames.PAGE_NOT_FOUND);

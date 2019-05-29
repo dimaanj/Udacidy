@@ -22,7 +22,7 @@
 
 <tag:navbar/>
 <main role="main" class="container-fluid">
-<%--    <div class="row justify-content-md-center">--%>
+
         <div class="w-75 mx-auto">
             <div id="alert-message">
             </div>
@@ -68,7 +68,6 @@
                 </button>
             </div>
         </div>
-<%--    </div>--%>
 </main>
 
 <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"

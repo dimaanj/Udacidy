@@ -12,10 +12,7 @@ public interface ConferenceService {
     Conference getById(Long id) throws LogicException;
     void delete(Long id) throws LogicException;
     Conference getTheOldest() throws LogicException;
-    List<Conference> findSomeOlderStartsWithConversationId(Long id) throws LogicException;
     void deleteConferenceWithTheirContent(Long conferenceId, Long contentId) throws LogicException;
-
-
-    List<Conference> findAllConferencesAsUserRequestsByUserId(Long userId) throws LogicException;
-    List<Conference> findAllConferencesAsUserRequests() throws LogicException;
+    Long countNumberOfConferences() throws LogicException;
+    List<Conference> findFromRowIndexToLimit(Long rowIndex, Long limit) throws LogicException;
 }

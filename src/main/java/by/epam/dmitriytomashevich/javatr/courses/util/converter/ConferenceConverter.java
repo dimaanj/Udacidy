@@ -18,7 +18,6 @@ public class ConferenceConverter implements EntityConverter<JsonConference, Conf
         jConference.setContentId(c.getContentId());
         jConference.setAuthorFirstName(c.getAuthor().getFirstName());
         jConference.setAuthorLastName(c.getAuthor().getLastName());
-
         List<Section> sections = c.getSections();
         List<JsonSection> jsonSections = new ArrayList<>();
         for(Section s : sections){

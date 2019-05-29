@@ -27,7 +27,7 @@ public class Parameter {
     public static final String PASSWORD = "password";
 
     public static final int MESSAGES_UPDATE_AMOUNT = 7;
-    public static final int CONFERENCES_UPDATE_AMOUNT = 10;
+    public static final int CONFERENCES_UPDATE_AMOUNT = 3;
 
     public static final String UPLOAD_DIRECTORY = "images";
 

@@ -37,24 +37,32 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
             "ORDER BY id\n" +
             "LIMIT 1";
 
-    private static final String FIND_SOME_OLDER_STARTS_WITH_CONFERENCE_ID = "SELECT id, content_id, author_id\n" +
-            "FROM udacidy.conference\n" +
-            "WHERE id < ?\n" +
-            "ORDER BY id DESC\n" +
-            "LIMIT 10";
-
     private static final String DELETE_CONTENT = "DELETE FROM udacidy.content\n" +
             "WHERE id = ?;";
 
-    private static final String FIND_ALL_CONFERENCES_AS_USER_REQUESTS = "SELECT DISTINCT c.id, c.content_id, c.author_id\n" +
-            "    FROM conference c\n" +
-            "        JOIN section s on c.id = s.conference_id\n" +
-            "        JOIN request r on s.id = r.section_id\n" +
-            "WHERE r.user_id = ?";
+    private static final String COUNT_CONFERENCES = "SELECT COUNT(*) number_of_conferences\n" +
+            "            FROM conference";
 
-    private static final String FIND_ALL_AS_USER_REQUESTS = "SELECT DISTINCT c.id, c.content_id, c.author_id\n" +
-            "FROM conference c\n" +
-            "         JOIN request r on c.id = r.conference_id";
+    private static final String SELECT_FROM_ROW_NUMBER_TO_LIMIT = "WITH NumberedMyTable AS\n" +
+            "         (\n" +
+            "             SELECT\n" +
+            "                 id,\n" +
+            "                 content_id,\n" +
+            "                 author_id,\n" +
+            "                 ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNumber\n" +
+            "             FROM\n" +
+            "                 conference\n" +
+            "         )\n" +
+            "SELECT\n" +
+            "    id,\n" +
+            "    content_id,\n" +
+            "    author_id\n" +
+            "FROM\n" +
+            "    NumberedMyTable\n" +
+            "WHERE\n" +
+            "    RowNumber > ?\n" +
+            "ORDER BY id DESC\n" +
+            "LIMIT ?";
 
     public ConferenceDao(Connection connection){
         this.connection = connection;
@@ -165,25 +173,6 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
         }
     }
 
-    public List<Conference> findSomeOlderStartsWithConferenceId(Long id) throws DAOException {
-        List<Conference> conferences = new ArrayList<>();
-        try {
-            PreparedStatement statement = connection.prepareStatement( FIND_SOME_OLDER_STARTS_WITH_CONFERENCE_ID);
-            statement.setLong(1, id);
-
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Conference conference = builder.build(resultSet);
-                conferences.add(conference);
-            }
-            resultSet.close();
-            statement.close();
-            return conferences;
-        } catch (SQLException | DAOException e) {
-            throw new DAOException(e);
-        }
-    }
-
     public void deleteConferenceWithTheirContent(Long conferenceId, Long contentId) throws DAOException {
         try {
             PreparedStatement statement = connection.prepareStatement(DELETE);
@@ -200,29 +189,29 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
         }
     }
 
-    public List<Conference> findAllConferencesAsUserRequestsByUserId(Long userId) throws DAOException {
-        List<Conference> conferences = new ArrayList<>();
+    public Long countNumber() throws DAOException {
+        Long number = null;
         try {
-            PreparedStatement statement = connection.prepareStatement(FIND_ALL_CONFERENCES_AS_USER_REQUESTS);
-            statement.setLong(1, userId);
-
+            PreparedStatement statement = connection.prepareStatement(COUNT_CONFERENCES);
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Conference conference = builder.build(resultSet);
-                conferences.add(conference);
+            if (resultSet.next()) {
+                number = resultSet.getLong("number_of_conferences");
             }
             resultSet.close();
             statement.close();
-            return conferences;
-        } catch (SQLException | DAOException e) {
+            return number;
+        } catch (SQLException e) {
             throw new DAOException(e);
         }
     }
 
-    public List<Conference> findAllConferencesAsUserRequests() throws DAOException {
+    public List<Conference> findFromRowIndexToLimit(Long rowIndex, Long updateAmount) throws DAOException {
         List<Conference> conferences = new ArrayList<>();
         try {
-            PreparedStatement statement = connection.prepareStatement(FIND_ALL_AS_USER_REQUESTS);
+            PreparedStatement statement = connection.prepareStatement(SELECT_FROM_ROW_NUMBER_TO_LIMIT);
+            statement.setLong(1, rowIndex);
+            statement.setLong(2, updateAmount);
+
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Conference conference = builder.build(resultSet);

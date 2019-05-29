@@ -136,7 +136,7 @@ body.on('click', "#confirmationActionButton", function (event) {
             // element.innerHTML = "";
             // element.appendChild(alert);
 
-            $('#confirmationModal').modal('hide');
+            $('#confirmationActionModal').modal('hide');
         })
         .catch(function (error) {
             console.log('There has been a problem with your fetch operation: ', error.message);
