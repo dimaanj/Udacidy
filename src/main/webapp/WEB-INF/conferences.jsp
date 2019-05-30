@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %>
 <html>
@@ -17,106 +18,24 @@
 
     <link rel="stylesheet" type="text/css" href="../css/checkList.css">
     <link rel="stylesheet" type="text/css" href="../css/responsiveImage.css">
+    <link rel="stylesheet" type="text/css" href="../css/pagination.css">
 </head>
 <body>
 
-
-<style>
-    h1{
-        margin-bottom: 1.25em;
-    }
-    #pagination-demo{
-        display: inline-block;
-        margin-bottom: 1.75em;
-    }
-    #pagination-demo li{
-        display: inline-block;
-    }
-</style>
 <tag:navbar/>
 <main role="main" class="container-fluid" id="main-tag">
-    <input type="hidden" id="conferencesNumber" value="${conferencesNumber}">
+    <input type="hidden" id="conferencesNumber" value="${conferencesNumber}"/>
     <div id="page-content">
-        <c:if test="${not empty conferencesWithRequests}">
-            <c:forEach items="${conferencesWithRequests}" var="entry">
-                <div class="mx-auto w-75 rounded-lg shadow-lg p-5 mt-4 rounded" id="${entry.key.getId()}">
-                    <div id="bodyData${entry.key.getId()}">
-                            ${entry.key.getContent().getContent()}
-                    </div>
-                    <c:choose>
-                        <c:when test="${not empty entry.value.getId()}">
-                        <span>
-                            <a href="${pageContext.request.contextPath}/udacidy/profile">Go profile</a>
-                            to check details of your request
-                        </span>
-                        </c:when>
-                        <c:otherwise>
-                            <button id="chooseSectionsButton${entry.key.getId()}"
-                                    class="btn btn-primary"
-                                    name="chooseSectionsButton"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    data-target="#collapseSections${entry.key.getId()}"
-                                    aria-expanded="false"
-                                    aria-controls="collapseSections${entry.key.getId()}">
-                                Choose sections
-                            </button>
-                        </c:otherwise>
-                    </c:choose>
-                    <div class="collapse mt-3"
-                         id="collapseSections${entry.key.getId()}">
-                        <div class="card">
-                            <div class="card-body">
-                                <c:if test="${not empty entry.key.getSections()}">
-                                    <ul class="tox-checklist" id="sectionsUl${entry.key.getId()}">
-                                        <c:forEach items="${entry.key.getSections()}" var="section">
-                                            <li name="section" id="${section.getId()}">
-                                                    ${section.getContent().getContent()}
-                                            </li>
-                                        </c:forEach>
-                                    </ul>
-                                </c:if>
-                            </div>
-                            <div class="card-footer border-white">
-                                <button class="btn btn-primary"
-                                        name="submitRequestButton"
-                                        type="button"
-                                        id="submitRequestButton${entry.key.getId()}">
-                                    Submit request
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </c:forEach>
-        </c:if>
     </div>
 
-
-    <ul id="pagination-demo" class="pagination mt-4 justify-content-center"></ul>
-
-<%--    <div class="wrapper">--%>
-<%--        <div class="container">--%>
-
-<%--            <div class="row">--%>
-<%--                <div class="col-sm-12">--%>
-<%--                    <h1>jQuery Pagination</h1>--%>
-<%--                    <p>Simple pagination using the TWBS pagination JS library. Click the buttons below to navigate to the appropriate content</p>--%>
-<%--                    --%>
-<%--                </div>--%>
-<%--            </div>--%>
-
-<%--            <div id="page-content" class="page-content">Page 1</div>--%>
-<%--        </div>--%>
-<%--    </div>--%>
-
+    <div class="text-center">
+        <ul id="pagination-demo" class="pagination mt-4">
+        </ul>
+    </div>
 </main>
-
 <tag:footer/>
 
-
 <script src="../js/conferences.js"></script>
-
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

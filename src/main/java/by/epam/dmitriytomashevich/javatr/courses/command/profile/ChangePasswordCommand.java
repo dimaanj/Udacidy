@@ -1,4 +1,4 @@
-package by.epam.dmitriytomashevich.javatr.courses.command.user;
+package by.epam.dmitriytomashevich.javatr.courses.command.profile;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
@@ -28,9 +28,10 @@ public class ChangePasswordCommand implements Command {
         String previousPassword = content.getParameter("previousPassword");
         String newPassword = content.getParameter("newPassword");
 
+        User current = userService.findById(user.getId());
         UserServiceHandler handler = new UserServiceHandler();
         boolean isPreviousPasswordCorrect =
-                handler.isPreviousPasswordCorrect(previousPassword, user);
+                handler.isPreviousPasswordCorrect(previousPassword, current);
         String message = null;
         if(isPreviousPasswordCorrect){
              newPassword = handler.encodePassword(newPassword);

@@ -40,7 +40,7 @@ public class GetPageContentCommand implements Command {
         User client = (User) content.getSession(false).getAttribute(Parameter.USER);
 
         Long page = Long.valueOf(content.getParameter("page"));
-        Long skipConferencesNumber = page*Parameter.CONFERENCES_UPDATE_AMOUNT;
+        Long skipConferencesNumber = (page-1)*Parameter.CONFERENCES_UPDATE_AMOUNT;
         Long limit = (long) Parameter.CONFERENCES_UPDATE_AMOUNT;
 
         List<Conference> conferenceList = conferenceService.findFromRowIndexToLimit(skipConferencesNumber, limit);
@@ -63,7 +63,6 @@ public class GetPageContentCommand implements Command {
                 requestConferenceIds.add(request.getConferenceId());
             }
         }
-
         try {
             content.getResponse().setContentType("application/json;charset=UTF-8");
             final JsonNodeFactory factory = JsonNodeFactory.instance;

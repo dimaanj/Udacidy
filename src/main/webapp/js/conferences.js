@@ -5,6 +5,24 @@ window.onload = function (event) {
         console.log(images[i]);
         images[i].setAttribute('id', 'responsive-image');
     }
+
+    let pageContent = document.getElementById('page-content');
+    if(pageContent.innerHTML === ""){
+        let div = document.createElement('div');
+        div.classList.add('mt-4');
+        div.classList.add('mx-auto');
+        div.classList.add('w-75');
+        div.classList.add('rounded-lg');
+        div.classList.add('shadow-lg');
+        div.classList.add('p-5');
+        div.classList.add('rounded');
+        let h5 = document.createElement('h5');
+        h5.classList.add('mx-auto');
+        h5.appendChild(document.createTextNode('Sorry, none conferences presented now. ' +
+            'But our admins have been already working on content!'));
+        div.appendChild(h5);
+        pageContent.appendChild(div);
+    }
 };
 
 function createConference(jsonConference, requestConferenceIds) {
@@ -21,19 +39,20 @@ function createConference(jsonConference, requestConferenceIds) {
     confItem.classList.add('mt-4');
     confItem.classList.add('rounded');
 
-    var bodyData = document.createElement('div');
+    let bodyData = document.createElement('div');
     bodyData.setAttribute('id', 'bodyData' + conferenceId);
     bodyData.innerHTML = conferenceContent;
-    var images = bodyData.getElementsByTagName('img');
+    let images = bodyData.getElementsByTagName('img');
     for (var k = 0; k < images.length; k++) {
         images[k].setAttribute('id', 'responsive-image');
     }
+    confItem.appendChild(bodyData);
 
     if(requestConferenceIds.includes(conferenceId)){
         let span = document.createElement('span');
         let a = document.createElement('a');
         a.setAttribute('href', '/udacidy/profile');
-        a.appendChild(document.createTextNode('Go profile'))
+        a.appendChild(document.createTextNode('Go profile'));
         span.appendChild(a);
         span.appendChild(document.createTextNode(' to check details of your request'));
         confItem.appendChild(span);
@@ -61,12 +80,12 @@ function createConference(jsonConference, requestConferenceIds) {
     let cardBody = document.createElement('card-body');
     let ul = document.createElement('ul');
     ul.classList.add('tox-checklist');
-    ul.setAttribute('sectionsUl'+conferenceId);
-    for(let i=0;i<conferenceSections;i++){
+    ul.setAttribute('id','sectionsUl'+conferenceId);
+    for(let i=0;i<conferenceSections.length;i++){
         let li = document.createElement('li');
         li.setAttribute('name', 'section');
         li.setAttribute('id', conferenceSections[i].id);
-        li.appendChild(conferenceSections[i].content);
+        li.innerHTML = conferenceSections[i].content;
         ul.appendChild(li);
     }
     cardBody.appendChild(ul);
@@ -86,6 +105,7 @@ function createConference(jsonConference, requestConferenceIds) {
     card.appendChild(cardBody);
     card.appendChild(cardFooter);
     collapse.appendChild(card);
+
     confItem.appendChild(collapse);
     console.log(confItem);
     return confItem;
@@ -97,16 +117,10 @@ $('#pagination-demo').twbsPagination({
     next: 'Next',
     prev: 'Prev',
     onPageClick: function (event, page) {
-        //fetch content and render here
-
         console.log(page);
         changePage(page);
-
-
-        // $('#page-content').text('Page ' + page) + ' content here';
     }
 });
-
 
 function changePage(page) {
     const formData = new FormData();
@@ -123,16 +137,25 @@ function changePage(page) {
             return response.json();
         })
         .then(function (obj) {
-            console.log(obj);
+            console.log(obj.conferences);
+            console.log(obj.requestConferenceIds);
+
             let pageContent = document.getElementById('page-content');
             pageContent.innerHTML = "";
-            let conferenceIds;
-            if(!isEmpty(obj.requestConferenceIds)){
-                conferenceIds = obj.requestConferenceIds;
+
+            let conferenceIds = obj.requestConferenceIds;
+            let conferences = obj.conferences;
+
+            if(isEmpty(conferenceIds)){
+                conferenceIds = new Array(1);
+                conferenceIds[0] = -1;
             }
-            for(let i=0;i<obj.conferences.length;i++){
-                pageContent.append(createConference(obj.conferences[i], conferenceIds));
+
+            console.log('conferenceIds' + conferenceIds);
+            for(let i=0;i<conferences.length;i++){
+                pageContent.append(createConference(conferences[i], conferenceIds));
             }
+            body.animate({ scrollTop: 0 }, "slow");
         })
         .catch(function (error) {
             console.log('There has been a problem with your fetch operation: ', error.message);

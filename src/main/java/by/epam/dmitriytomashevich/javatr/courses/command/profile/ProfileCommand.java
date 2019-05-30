@@ -14,11 +14,11 @@ import by.epam.dmitriytomashevich.javatr.courses.logic.RequestService;
 
 import java.util.*;
 
-public class UserProfileCommand implements Command {
+public class ProfileCommand implements Command {
     private final ConferenceService conferenceService;
     private final RequestService requestService;
 
-    public UserProfileCommand(ServiceFactory serviceFactory) {
+    public ProfileCommand(ServiceFactory serviceFactory) {
         conferenceService = serviceFactory.createConferenceService();
         requestService = serviceFactory.createRequestService();
     }

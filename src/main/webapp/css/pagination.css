@@ -1,0 +1,12 @@
+h1 {
+    margin-bottom: 1.25em;
+}
+
+#pagination-demo {
+    display: inline-block;
+    margin-bottom: 1.75em;
+}
+
+#pagination-demo li {
+    display: inline-block;
+}

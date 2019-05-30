@@ -21,8 +21,7 @@ public class HelpCommand implements Command {
     private final ConversationGroupService conversationGroupService;
     private final MessageService messageService;
 
-
-    public HelpCommand(ServiceFactory serviceFactory){
+    public HelpCommand(ServiceFactory serviceFactory) {
         conversationService = serviceFactory.createConversationService();
         conversationGroupService = serviceFactory.createConversationGroupService();
         messageService = serviceFactory.createMessageService();
@@ -36,28 +35,28 @@ public class HelpCommand implements Command {
                         current.getId(),
                         Conversation.ConversationType.QUESTION_CONVERSATION
                 );
-        if(content.getActionType().equals(SessionRequestContent.ActionType.REDIRECT)) {
-            if (group == null) {
-                Conversation conversation = new Conversation();
-                conversation.setCreateDate(LocalDate.now());
-                conversation.setType(Conversation.ConversationType.QUESTION_CONVERSATION);
-                conversation = conversationService.createConversation(conversation);
 
-                ConversationGroup conversationGroup = new ConversationGroup();
-                conversationGroup.setUserId(current.getId());
-                conversationGroup.setConversationId(conversation.getId());
-                conversationGroupService.add(conversationGroup);
-            }
-            return Optional.of(ActionNames.HELP_ACTION);
-        }else {
-            content.setRequestAttribute("conversationId", group.getConversationId());
-            Long messagesAmount = messageService.countMessagesByConversationId(group.getConversationId());
-            if (messagesAmount > Parameter.MESSAGES_UPDATE_AMOUNT) {
-                content.setRequestAttribute("showViewMoreButton", true);
-            } else if (messagesAmount == 0) {
-                content.setRequestAttribute("firstUserEnter", true);
-            }
-            return Optional.of(ActionNames.MESSAGES);
+        if (group == null) {
+            Conversation conversation = new Conversation();
+            conversation.setCreateDate(LocalDate.now());
+            conversation.setType(Conversation.ConversationType.QUESTION_CONVERSATION);
+            conversation = conversationService.createConversation(conversation);
+
+            ConversationGroup conversationGroup = new ConversationGroup();
+            conversationGroup.setUserId(current.getId());
+            conversationGroup.setConversationId(conversation.getId());
+            Long conversationGroupId = conversationGroupService.add(conversationGroup);
+            group = conversationGroupService.findById(conversationGroupId);
         }
+
+        content.setRequestAttribute("conversationId", group.getConversationId());
+        Long messagesAmount = messageService.countMessagesByConversationId(group.getConversationId());
+        if (messagesAmount > Parameter.MESSAGES_UPDATE_AMOUNT) {
+            content.setRequestAttribute("showViewMoreButton", true);
+        } else if (messagesAmount == 0) {
+            content.setRequestAttribute("firstUserEnter", true);
+        }
+        return Optional.of(ActionNames.MESSAGES);
+
     }
 }

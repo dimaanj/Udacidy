@@ -27,7 +27,7 @@ function createConference(jsonConference) {
 
     let div = document.createElement('div');
     div.classList.add('mx-auto');
-    div.classList.add('w-75')
+    div.classList.add('w-75');
     div.classList.add('shadow-lg');
     div.classList.add('p-5');
     div.classList.add('mt-4');
@@ -78,6 +78,57 @@ function createConference(jsonConference) {
     div.appendChild(flexRow);
 
     return div;
+}
+
+$('#pagination-demo').twbsPagination({
+    totalPages: Math.ceil($('#conferencesNumber').val() / 3),
+    visiblePages: 6,
+    next: 'Next',
+    prev: 'Prev',
+    onPageClick: function (event, page) {
+        console.log(page);
+        changePage(page);
+    }
+});
+
+function changePage(page) {
+    const formData = new FormData();
+    formData.append('command', 'getPageContent');
+    formData.append('page', page);
+    var url = '/udacidy/';
+    var fetchOptions = {
+        method: 'POST',
+        body: formData,
+    };
+    var responsePromise = fetch(url, fetchOptions);
+    responsePromise
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (obj) {
+            console.log(obj.conferences);
+            console.log(obj.requestConferenceIds);
+
+            let pageContent = document.getElementById('data-container');
+            pageContent.innerHTML = "";
+
+            let conferenceIds = obj.requestConferenceIds;
+            let conferences = obj.conferences;
+
+            if(isEmpty(conferenceIds)){
+                conferenceIds = new Array(1);
+                conferenceIds[0] = -1;
+            }
+
+            console.log('conferenceIds' + conferenceIds);
+            for(let i=0;i<conferences.length;i++){
+                pageContent.append(createConference(conferences[i]));
+            }
+            body.animate({ scrollTop: 0 }, "slow");
+        })
+        .catch(function (error) {
+            console.log('There has been a problem with your fetch operation: ', error.message);
+        });
 }
 
 var body = $("body");
@@ -321,4 +372,13 @@ function createAlertWithTextAndType(text, type) {
     alert.appendChild(strong);
     alert.appendChild(button);
     return alert;
+}
+
+
+function isEmpty(obj) {
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
 }

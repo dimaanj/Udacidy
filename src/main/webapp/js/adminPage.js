@@ -99,7 +99,6 @@ body.on('click', "button[name='rejectRequest']", function (event) {
     initRequestData(thisButton, 'rejectUserRequest');
 });
 
-
 body.on('click', "#confirmationActionButton", function (event) {
     event.preventDefault();
     let thisButton = this;
@@ -127,14 +126,9 @@ body.on('click', "#confirmationActionButton", function (event) {
             console.log(obj);
 
             let alert = createAlertWithTextAndType(obj.message, 'alert-success');
-            document.getElementById('userRequestItem' + conferenceId).appendChild(alert);
-
-            // let element = document.getElementById('userQuestionItem' + conversationId);
-            // let alert = createAlertWithTextAndType(obj.message, 'alert-success');
-            // alert.classList.add('mt-3');
-            // alert.classList.add('mx-auto');
-            // element.innerHTML = "";
-            // element.appendChild(alert);
+            let requestItem = document.getElementById('userRequestItem' + conferenceId);
+            requestItem.innerHTML = "";
+            requestItem.appendChild(alert);
 
             $('#confirmationActionModal').modal('hide');
         })
@@ -144,8 +138,5 @@ body.on('click', "#confirmationActionButton", function (event) {
     thisButton.removeAttribute('disabled');
 });
 
-function changeViewIfRequestAccepted(){
-
-}
 
 

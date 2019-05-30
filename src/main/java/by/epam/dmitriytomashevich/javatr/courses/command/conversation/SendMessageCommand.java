@@ -49,9 +49,8 @@ public class SendMessageCommand implements Command {
             imageServerPath = ".." + File.separator + "images" + File.separator + "tmp" + File.separator + fileName.get();
         }
         Message message = createMessage(user, text, conversation, imageServerPath);
-        Long messageId = messageService.add(message);
+        Long messageId = messageService.create(message);
         uploadToCloud(content, fileName, messageId);
-
 
         message.setId(messageId);
         JsonMessage jsonMessage = new MessageConverter().convert(message);

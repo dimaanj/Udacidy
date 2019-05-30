@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %>
 <html>
@@ -18,20 +19,7 @@
 
 <tag:navbar/>
 <main role="main" class="container">
-    <div id="removeRequestMessagePlace"></div>
-
-    <div class="card-body mx-auto rounded-lg shadow-lg mt-3" id="profileBody">
-        <h5 class="card-title">
-            <c:out value="${sessionScope.user.getFirstName()}"/> <c:out
-                value="${sessionScope.user.getLastName()}"/>
-        </h5>
-        <h6>Email address: ${sessionScope.user.getEmail()}</h6>
-        <h6 class="card-subtitle mb-2 text-muted">
-            Status: client
-        </h6>
-        <button class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal">Change password
-        </button>
-    </div>
+    <tag:userInfoTag/>
 
     <c:if test="${not empty requestsWithConferences}">
         <div class="my-4 p-3 bg-white rounded-lg shadow-lg mx-auto">
@@ -59,7 +47,7 @@
                                         </span>
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="card-title text-secondary">Request status:
+                                        <span class="card-title text-dark">Request status:
                                             <c:out value="${entry.key.getRequestStatus().toString().toLowerCase()}"/>
                                         </span>
                                     </c:otherwise>
@@ -75,7 +63,15 @@
                                 <button name="removeRequestButton"
                                         id="removeRequestButton${entry.value.getId()}"
                                         type="button" class="btn btn-outline-dark" data-toggle="modal"
-                                        data-target="#confirmationModal">Remove request
+                                        data-target="#confirmationModal">
+                                    <c:choose>
+                                        <c:when test="${entry.key.getRequestStatus().toString() eq 'SHIPPED'}">
+                                            Remove request
+                                        </c:when>
+                                        <c:otherwise>
+                                            Remove this notification
+                                        </c:otherwise>
+                                    </c:choose>
                                 </button>
                             </div>
                         </div>
@@ -86,40 +82,7 @@
     </c:if>
 </main>
 
-<%--Change password modal--%>
-<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Change password</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="change-password-modal-body">
-                <div class="form-group">
-                    <label for="previousPassword">Previous password</label>
-                    <input type="password" name="password" class="form-control" id="previousPassword"
-                           placeholder="previous">
-                </div>
-                <div class="form-group">
-                    <label for="newPassword">New password</label>
-                    <input type="password" name="password" class="form-control" id="newPassword" placeholder="new">
-                </div>
-                <div class="form-group">
-                    <label for="confirmedPassword">Confirm new password</label>
-                    <input type="password" name="password" class="form-control" id="confirmedPassword"
-                           placeholder="confirm">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="changePasswordButton">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
+<tag:changePasswordModalTag/>
 
 <%--Confirmation remove request modal--%>
 <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -163,6 +126,7 @@
 <tag:footer/>
 
 <script src="../js/userPage.js"></script>
+<script src="../js/common/changePassword.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

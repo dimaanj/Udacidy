@@ -7,7 +7,7 @@ import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import java.util.List;
 
 public interface MessageService {
-    Long add(Message message) throws LogicException;
+    Long create(Message message) throws LogicException;
     Message getLastOnTimeByConversationId(Long id) throws LogicException;
     List<Message> getSomeLastMessages(int amount, Long conversationId) throws LogicException;
     List<Message> findSomeLastByConversationIdStartsWithMessageId(int amount, Long conversationId, Long messageId) throws LogicException;

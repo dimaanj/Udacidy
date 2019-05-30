@@ -37,7 +37,7 @@ public class Controller extends HttpServlet {
         SessionRequestContent content = new SessionRequestContent(request, response);
         Optional<String> action = Optional.empty();
 
-        ConnectionPool connectionPool=ConnectionPool.getInstance();
+        ConnectionPool connectionPool = ConnectionPool.getInstance();
         Connection connection = connectionPool.getConnection();
         CommandFactory commandFactory = createCommandFactory(connection);
         Command command = new ActionFactory().defineCommand(request, commandFactory);

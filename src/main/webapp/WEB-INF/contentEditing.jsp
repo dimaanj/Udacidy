@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %>
 <html>
@@ -13,25 +14,24 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+    <script src="../js/jquery.twbsPagination.min.js"></script>
     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=n6pc28z5n87xrwjz2invt1y20ws32djsc2jyd67as953ymf6"></script>
 
     <link rel="stylesheet" type="text/css" href="../css/tinymceEditorStyles.css">
     <link rel="stylesheet" type="text/css" href="../css/responsiveImage.css">
-
+    <link rel="stylesheet" type="text/css" href="../css/pagination.css">
 </head>
 <body>
 <tag:navbar/>
 <main role="main" class="container-fluid" id="main-tag">
+    <input type="hidden" id="conferencesNumber" value="${conferencesNumber}"/>
     <div id="data-container"></div>
 
-    <c:if test="${not hideViewMoreButton}">
-        <button class="btn btn-primary btn-lg btn-block w-50 mx-auto shadow-lg mt-3" type="button"
-                id="view-more-button">View more
-        </button>
-    </c:if>
+    <div class="text-center">
+        <ul id="pagination-demo" class="pagination mt-4">
+        </ul>
+    </div>
 </main>
-
 
 <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -53,22 +53,9 @@
         </div>
     </div>
 </div>
-
 <tag:footer/>
 
 <script src="../js/contentEditor.js"></script>
-<script>
-    window.onload = function () {
-        <c:if test="${not empty conferences}">
-        <c:forEach var="i" begin="0" end="${conferences.size()-1}">
-        var jsonConference = ${conferences.get(i)};
-        console.log(jsonConference);
-        var row = createConference(jsonConference);
-        document.getElementById('data-container').append(row);
-        </c:forEach>
-        </c:if>
-    };
-</script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

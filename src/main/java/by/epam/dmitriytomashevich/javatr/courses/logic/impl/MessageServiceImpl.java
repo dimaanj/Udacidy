@@ -22,7 +22,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Long add(Message message) throws LogicException {
+    public Long create(Message message) throws LogicException {
         try {
             return messageDao.create(message);
         } catch (DAOException e) {

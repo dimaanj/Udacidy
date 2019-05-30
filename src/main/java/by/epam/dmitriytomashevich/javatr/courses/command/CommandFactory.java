@@ -8,10 +8,8 @@ import by.epam.dmitriytomashevich.javatr.courses.command.conversation.ViewMoreCo
 import by.epam.dmitriytomashevich.javatr.courses.command.error.PageNotFoundCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.GetPageContentCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.GreetingCommand;
-import by.epam.dmitriytomashevich.javatr.courses.command.profile.LoginCommand;
-import by.epam.dmitriytomashevich.javatr.courses.command.profile.LogoutCommand;
-import by.epam.dmitriytomashevich.javatr.courses.command.profile.RegistrationCommand;
-import by.epam.dmitriytomashevich.javatr.courses.command.profile.UserProfileCommand;
+import by.epam.dmitriytomashevich.javatr.courses.command.main.MainCommand;
+import by.epam.dmitriytomashevich.javatr.courses.command.profile.*;
 import by.epam.dmitriytomashevich.javatr.courses.command.user.*;
 import by.epam.dmitriytomashevich.javatr.courses.constant.CommandNames;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
@@ -33,7 +31,7 @@ public class CommandFactory {
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.UPLOAD_MESSAGES, new UpdateMessagesCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.LOAD_MESSAGES, new LoadMessagesCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.AJAX_SEND_MESSAGE, new SendMessageCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.USER_PAGE, new UserProfileCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.USER_PAGE, new ProfileCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.ADMIN_PAGE, new AdminPageCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.ADMIN_CONVERSATION, new AdminConversationCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.ADD_CONFERENCE, new CreateConferencePage()));
@@ -42,16 +40,15 @@ public class CommandFactory {
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.DELETE_CONFERENCE, new RemoveConferenceCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.PREVIEW_COURSE_CONTENT, new PreviewCourseContent()));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.PAGE_NOT_FOUND, new PageNotFoundCommand()));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CONTENT_EDITING, new ContentEditingCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CONFERENCES, new ConferencesCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CONTENT_EDITING, new MainCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CONFERENCES, new MainCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.SEND_CLIENT_REQUEST, new SendClientRequestCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CHANGE_PASSWORD, new ChangePasswordCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_CONFERENCE_CONTENT, new GetConferenceContentCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_CONFERENCES, new ConferencesCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REMOVE_QUESTION_CONVERSATION, new RemoveQuestionConversationCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.HELP_USER, new HelpCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.ACCEPT_USER_REQUEST, new AcceptRequestCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_PAGE_CONTENT, new GetPageContentCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REJECT_USER_REQUEST, new RejectRequestCommand(serviceFactory)));
     }
 
     /**

@@ -18,6 +18,7 @@ public class ContextListener implements ServletContextListener {
         try {
             ConnectionPool.getInstance().shutdown();
         } catch (SQLException e) {
+            //  todo logger
             e.printStackTrace();
         }
     }

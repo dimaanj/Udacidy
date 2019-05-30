@@ -25,11 +25,10 @@ public class CommandNames {
     public static final String CONFERENCES = "/udacidy/conferences";
     public static final String CHANGE_PASSWORD = "changePassword";
     public static final String GET_CONFERENCE_CONTENT = "getConferenceContent";
-    public static final String GET_CONFERENCES = "getconferences";
     public static final String REMOVE_QUESTION_CONVERSATION = "removeQuestionConversation";
-    public static final String HELP_USER = "helpUser";
     public static final String ACCEPT_USER_REQUEST = "acceptUserRequest";
     public static final String GET_PAGE_CONTENT = "getPageContent";
+    public static final String REJECT_USER_REQUEST = "rejectUserRequest";
 
     public static final String SEND_CLIENT_REQUEST = "sendClientRequest";
 }
