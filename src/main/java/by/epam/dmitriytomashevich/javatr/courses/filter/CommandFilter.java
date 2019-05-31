@@ -1,6 +1,7 @@
 package by.epam.dmitriytomashevich.javatr.courses.filter;
 
 
+import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.CommandNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
@@ -26,6 +27,7 @@ public class CommandFilter implements Filter {
         guestAllowedCommands.add(CommandNames.GREETING);
         guestAllowedCommands.add(CommandNames.REGISTRATION);
         guestAllowedCommands.add(CommandNames.LOGIN);
+        guestAllowedCommands.add(CommandNames.CHANGE_LOCALE);
 
         userCommands.add(CommandNames.USER_PAGE);
         userCommands.add(CommandNames.HELP);
@@ -41,6 +43,7 @@ public class CommandFilter implements Filter {
         userCommands.add(CommandNames.CHANGE_PASSWORD);
         userCommands.add(CommandNames.GET_CONFERENCE_CONTENT);
         userCommands.add(CommandNames.GET_PAGE_CONTENT);
+        userCommands.add(CommandNames.CHANGE_LOCALE);
 
 
         adminCommands.add(CommandNames.LOG_OUT);
@@ -58,6 +61,8 @@ public class CommandFilter implements Filter {
         adminCommands.add(CommandNames.VIEW_MORE_CONFERENCES);
         adminCommands.add(CommandNames.LOAD_MESSAGES);
         adminCommands.add(CommandNames.CONTENT_EDITING);
+        adminCommands.add(CommandNames.GET_PAGE_CONTENT);
+        adminCommands.add(CommandNames.CHANGE_LOCALE);
     }
 
     @Override

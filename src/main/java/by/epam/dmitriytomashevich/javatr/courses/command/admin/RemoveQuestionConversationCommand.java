@@ -35,16 +35,6 @@ public class RemoveQuestionConversationCommand implements Command {
             conversationService.deleteById(convId);
         }
 
-        try {
-            final JsonNodeFactory factory = JsonNodeFactory.instance;
-            final ObjectNode node = factory.objectNode();
-            node.put("message", "Conversation was successfully deleted!");
-
-            PrintWriter writer = content.getResponse().getWriter();
-            writer.print(node);
-        } catch (IOException e) {
-            throw new LogicException(e);
-        }
         return Optional.empty();
     }
 }

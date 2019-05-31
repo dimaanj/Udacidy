@@ -14,11 +14,13 @@ body.on('click', '#changePasswordButton', function (event) {
 
     var alert;
     if (!isPasswordsCorrect) {
-        alert = createAlertWithTextAndType('Sorry, passwords should contain at least 5 characters!', 'alert-danger');
+        alert = createAlertWithTextAndType(
+            document.getElementById('passwordRequiredLength').value, 'alert-danger');
         alert.classList.add('mt-3');
         modalBody.appendChild(alert);
     } else if (newPassword.value !== confirmedPassword.value) {
-        alert = createAlertWithTextAndType('Sorry, new password should be equal to confirmed!', 'alert-danger');
+        alert = createAlertWithTextAndType(
+            document.getElementById('equalsPasswords').value, 'alert-danger');
         alert.classList.add('mt-3');
         modalBody.appendChild(alert);
     } else {
@@ -47,11 +49,13 @@ body.on('click', '#changePasswordButton', function (event) {
                     newPassword.value = '';
                     confirmedPassword.value = '';
                     $('#changePasswordModal').modal('hide');
-                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-success');
+                    alert = createAlertWithTextAndType(
+                        document.getElementById('updatePasswordSuccess').value, 'alert-success');
                     alert.classList.add('mt-3');
                     document.getElementById('profileBody').appendChild(alert);
                 } else {
-                    alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
+                    alert = createAlertWithTextAndType(
+                        document.getElementById('prevPasswordIsNotValid').value, 'alert-danger');
                     if (modalBody.children[3] !== null && !isEmpty(modalBody.children[3])) {
                         modalBody.children[3].remove();
                     }

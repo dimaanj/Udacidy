@@ -1,19 +1,26 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %>
+
+<%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmr" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page isELIgnored="false" %>
+
+
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale"/>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Carousel Template · Bootstrap</title>
+    <title><fmt:message key="ad.title"/></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <title>Checkout example · Bootstrap</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+    <script src="../js/common/changelocale.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
@@ -24,7 +31,7 @@
 
     <c:if test="${not empty usersWithRequests}">
         <div class="my-3 p-3 bg-white rounded-lg shadow mx-auto">
-            <h5 class="border-bottom border-gray pb-2 mb-0">Queries</h5>
+            <h5 class="border-bottom border-gray pb-2 mb-0"><fmt:message key="ad.queries"/></h5>
             <c:forEach items="${usersWithRequests}" var="entry">
                 <div class="pt-3" id="userRequestItem${entry.value.getConference().getId()}">
                     <div class="border-bottom border-gray">
@@ -34,20 +41,21 @@
                                     <c:out value="${entry.key.getFirstName()}"/>
                                     <c:out value="${entry.key.getLastName()}"/>
                                     <h6 class="text-muted">
-                                        Conference id: <c:out value="${entry.value.getConference().getId()}"/>
+                                        <fmt:message key="ad.conferenceId"/>: <c:out value="${entry.value.getConference().getId()}"/>
                                     </h6>
                                 </strong>
                             </div>
                             <div class="p-2 bd-highlight">
                                 <button name="viewBody"
                                         class="btn btn-outline-info"
-                                        id="viewBodyRequest${entry.value.getConference().getId()}"
+                                        id="viewBody${entry.value.getConference().getId()}"
                                         conferenceId="${entry.value.getConference().getId()}"
+                                        requestId="${entry.value.getId()}"
                                         userId="${entry.key.getId()}"
                                         type="button"
                                         data-toggle="modal"
-                                        data-target="#confirmationActionModal">
-                                    View body
+                                        data-target="#viewDetails">
+                                    <fmt:message key="ad.viewBody"/>
                                 </button>
                             </div>
                             <div class="p-2 bd-highlight">
@@ -59,7 +67,7 @@
                                         type="button"
                                         data-toggle="modal"
                                         data-target="#confirmationActionModal">
-                                    Accept
+                                    <fmt:message key="ad.accept"/>
                                 </button>
                             </div>
                             <div class="p-2 bd-highlight">
@@ -71,7 +79,7 @@
                                         type="button"
                                         data-toggle="modal"
                                         data-target="#confirmationActionModal">
-                                    Reject
+                                    <fmt:message key="ad.reject"/>
                                 </button>
                             </div>
                         </div>
@@ -93,9 +101,9 @@
                                     <c:out value="${entry.key.getFirstName()}"/>
                                     <c:out value="${entry.key.getLastName()}"/>
                                     <h6 class="text-muted">
-                                        Last message: "<c:out
+                                        <fmt:message key="ad.lastMessage"/>: "<c:out
                                             value="${entry.value.getLastMessage().getText()}"/>",
-                                        by <c:out
+                                        <fmt:message key="ad.by"/> <c:out
                                             value="${entry.value.getLastMessage().getCreator().getEmail()}"/>
                                     </h6>
                                 </strong>
@@ -103,7 +111,7 @@
                             <div class="p-2 bd-highlight">
                                 <a class="btn btn-outline-success"
                                    href="${pageContext.request.contextPath}/udacidy/conversation?conversationId=${entry.value.getId()}">
-                                    Answer
+                                    <fmt:message key="ad.answer"/>
                                 </a>
                             </div>
                             <div class="p-2 bd-highlight">
@@ -113,7 +121,7 @@
                                         type="button"
                                         data-toggle="modal"
                                         data-target="#confirmationModal">
-                                    Remove conversation
+                                    <fmt:message key="ad.removeConversation"/>
                                 </button>
                             </div>
                         </div>
@@ -133,17 +141,17 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="confirmationRemoveRequestLabel">Confirmation</h5>
+                <h5 class="modal-title" id="confirmationRemoveRequestLabel"><fmt:message key="ad.modalConfirmationTitle"/></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you really want to remove this conversation?
+                <fmt:message key="ad.modalConfirmationBody"/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="confirmationRemoveConferenceButton">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message key="ad.modalNo"/></button>
+                <button type="button" class="btn btn-primary" id="confirmationRemoveConferenceButton"><fmt:message key="ad.modalYes"/></button>
                 <input type="hidden" name="conversationIdHiddenParam" id="conversationIdHiddenParam"/>
             </div>
         </div>
@@ -156,23 +164,44 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="confirmationActionLabel">Confirmation</h5>
+                <h5 class="modal-title" id="confirmationActionLabel"><fmt:message key="ad.modalConfirmationTitle"/></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you really want to do this action?
+                <fmt:message key="ad.modalConfirmationBody"/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="confirmationActionButton">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message key="ad.modalNo"/></button>
+                <button type="button" class="btn btn-primary" id="confirmationActionButton"><fmt:message key="ad.modalYes"/></button>
             </div>
         </div>
     </div>
 </div>
 
+<%--View details modal--%>
+<div class="modal fade" id="viewDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"><fmr:message key="up.viewDetailsHeader"/></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="data-container">
+            </div>
+        </div>
+    </div>
+</div>
 <tag:footer/>
+
+<div id="localMessagesToJs">
+    <input type="hidden" id="actionWasSubmitted" name="actionWasSubmitted" value="<fmt:message key="ad.actionWasSubmitted"/>"/>
+</div>
+
 <script src="../js/adminPage.js"></script>
 <script src="../js/common/changePassword.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

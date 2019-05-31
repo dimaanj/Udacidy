@@ -27,17 +27,6 @@ public class AcceptRequestCommand implements Command {
         Long conferenceId = Long.valueOf(content.getParameter("conferenceId"));
 
         requestService.updateRequestStatusByUserIdAndConferenceId(userId, conferenceId, RequestStatus.ACCEPTED);
-
-        try {
-            content.getResponse().setContentType("application/json;charset=UTF-8");
-            final JsonNodeFactory factory = JsonNodeFactory.instance;
-            final ObjectNode node = factory.objectNode();
-            node.put("message", "Request was accepted!");
-            PrintWriter writer = content.getResponse().getWriter();
-            writer.print(node);
-        } catch (IOException e) {
-            throw new LogicException(e);
-        }
         return Optional.empty();
     }
 }

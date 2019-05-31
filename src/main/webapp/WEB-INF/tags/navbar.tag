@@ -63,8 +63,16 @@
                     <fmt:message key="nav.language"/>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#"><fmt:message key="nav.eng"/></a>
-                    <a class="dropdown-item" href="#"><fmt:message key="nav.rus"/></a>
+                    <c:choose>
+                        <c:when test="${sessionScope.locale eq 'ru'}">
+                            <button class="dropdown-item" type="submit" form="changeToEn"><fmt:message key="nav.eng"/>
+                            </button>
+                        </c:when>
+                        <c:when test="${sessionScope.locale eq 'en'}">
+                            <button class="dropdown-item" type="submit" form="changeToRu"><fmt:message key="nav.rus"/>
+                            </button>
+                        </c:when>
+                    </c:choose>
                 </div>
             </div>
         </ul>
@@ -102,6 +110,14 @@
         </c:if>
     </div>
 </nav>
+<form method="post" id="changeToEn">
+    <input type="hidden" name="locale" value="en"/>
+    <input type="hidden" name="command" value="changeLocale"/>
+</form>
+<form method="post" id="changeToRu">
+    <input type="hidden" name="locale" value="ru"/>
+    <input type="hidden" name="command" value="changeLocale"/>
+</form>
 
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">

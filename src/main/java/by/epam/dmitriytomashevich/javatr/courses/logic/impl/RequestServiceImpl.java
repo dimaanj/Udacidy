@@ -79,4 +79,13 @@ public class RequestServiceImpl implements RequestService {
             throw new LogicException(e);
         }
     }
+
+    @Override
+    public Request findById(Long id) throws LogicException {
+        try {
+            return requestDao.findById(id);
+        } catch (DAOException e) {
+            throw new LogicException(e);
+        }
+    }
 }

@@ -5,6 +5,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
+
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="locale"/>
 
@@ -23,6 +24,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="../js/jquery.twbsPagination.min.js"></script>
     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=n6pc28z5n87xrwjz2invt1y20ws32djsc2jyd67as953ymf6"></script>
+    <script src="../js/common/changelocale.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../css/tinymceEditorStyles.css">
     <link rel="stylesheet" type="text/css" href="../css/responsiveImage.css">

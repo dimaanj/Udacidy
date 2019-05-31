@@ -94,9 +94,11 @@ body.on('click', "button[name='viewDetailsButton']", function (event) {
     thisButton.setAttribute('disabled', 'true');
 
     let conferenceId = thisButton.getAttribute('id').replace('viewDetailsButton', '');
+    let requestId = thisButton.getAttribute('requestId');
     const formData = new FormData();
     formData.append('command', 'getConferenceContent');
     formData.append('conferenceId', conferenceId);
+    formData.append('requestId', requestId);
 
     var url = '/udacidy/?n=' + new Date().getTime();
     var fetchOptions = {
@@ -158,9 +160,11 @@ body.on('click', '#confirmationButton', function (event) {
             requestItem.innerHTML = "";
             let alert;
             if (jsonObj.isPositiveResult) {
-                alert = createAlertWithTextAndType(jsonObj.message, 'alert-success');
+                alert = createAlertWithTextAndType(
+                    document.getElementById('itemWasSuccessfullyRemoved').value, 'alert-success');
             } else {
-                alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
+                alert = createAlertWithTextAndType(
+                    document.getElementById('sorry').value, 'alert-danger');
             }
             requestItem.appendChild(alert);
 
@@ -168,6 +172,8 @@ body.on('click', '#confirmationButton', function (event) {
         });
     thisButton.removeAttribute('disabled');
 });
+
+
 
 
 

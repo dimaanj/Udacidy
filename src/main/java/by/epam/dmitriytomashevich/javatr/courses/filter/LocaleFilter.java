@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class LocaleFilter implements Filter {
-    private static final String DEFAULT_LANG = "ru";
+    private static final String DEFAULT_LANG = "en";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

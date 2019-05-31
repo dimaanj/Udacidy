@@ -5,24 +5,6 @@ window.onload = function (event) {
         console.log(images[i]);
         images[i].setAttribute('id', 'responsive-image');
     }
-
-    let pageContent = document.getElementById('page-content');
-    if(pageContent.innerHTML === ""){
-        let div = document.createElement('div');
-        div.classList.add('mt-4');
-        div.classList.add('mx-auto');
-        div.classList.add('w-75');
-        div.classList.add('rounded-lg');
-        div.classList.add('shadow-lg');
-        div.classList.add('p-5');
-        div.classList.add('rounded');
-        let h5 = document.createElement('h5');
-        h5.classList.add('mx-auto');
-        h5.appendChild(document.createTextNode('Sorry, none conferences presented now. ' +
-            'But our admins have been already working on content!'));
-        div.appendChild(h5);
-        pageContent.appendChild(div);
-    }
 };
 
 function createConference(jsonConference, requestConferenceIds) {
@@ -52,9 +34,9 @@ function createConference(jsonConference, requestConferenceIds) {
         let span = document.createElement('span');
         let a = document.createElement('a');
         a.setAttribute('href', '/udacidy/profile');
-        a.appendChild(document.createTextNode('Go profile'));
+        a.appendChild(document.createTextNode(document.getElementById('profileLink').value));
         span.appendChild(a);
-        span.appendChild(document.createTextNode(' to check details of your request'));
+        span.appendChild(document.createTextNode(' ' + document.getElementById('profileSpanContinuation').value));
         confItem.appendChild(span);
     }else {
         let button = document.createElement('button');
@@ -67,7 +49,7 @@ function createConference(jsonConference, requestConferenceIds) {
         button.setAttribute('data-target', '#collapseSections' + conferenceId);
         button.setAttribute('aria-expanded', 'false');
         button.setAttribute('aria-controls', 'collapseSections' + conferenceId);
-        button.appendChild(document.createTextNode('Choose sections'));
+        button.appendChild(document.createTextNode(document.getElementById('chooseSectionsButton').value));
         confItem.appendChild(button);
     }
 
@@ -99,7 +81,7 @@ function createConference(jsonConference, requestConferenceIds) {
     submitRequestButton.setAttribute('name', 'submitRequestButton');
     submitRequestButton.setAttribute('type', 'button');
     submitRequestButton.setAttribute('id', 'submitRequestButton' + conferenceId);
-    submitRequestButton.appendChild(document.createTextNode('Submit request'));
+    submitRequestButton.appendChild(document.createTextNode(document.getElementById('submitRequestButton').value));
     cardFooter.appendChild(submitRequestButton);
 
     card.appendChild(cardBody);
@@ -114,10 +96,10 @@ function createConference(jsonConference, requestConferenceIds) {
 $('#pagination-demo').twbsPagination({
     totalPages: Math.ceil($('#conferencesNumber').val() / 3),
     visiblePages: 6,
-    next: 'Next',
-    prev: 'Prev',
-    last: 'last',
-    first: 'First',
+    next: document.getElementById('paginationNext').value,
+    prev: document.getElementById('paginationPrev').value,
+    last: document.getElementById('paginationFirst').value,
+    first: document.getElementById('paginationLast').value,
     onPageClick: function (event, page) {
         console.log(page);
         changePage(page);
@@ -228,8 +210,8 @@ body.on('click', "button[name='submitRequestButton']", function (event) {
         if (previousAlert !== null) {
             previousAlert.remove();
         }
-        let alert = createAlertWithTextAndType('You should choose ' +
-            'at least one section of the conference to submit request!', 'alert-danger');
+        let alert = createAlertWithTextAndType(
+            document.getElementById('dangerAlertChooseSections').value, 'alert-danger');
         alert.setAttribute('id', 'singleAlert');
         alert.classList.add('mt-3');
         thisButton.parentElement.appendChild(alert);
@@ -274,7 +256,8 @@ body.on('click', "button[name='submitRequestButton']", function (event) {
                 let collapseElement = document.getElementById('collapseSections' + conferenceId);
                 collapseElement.remove();
 
-                let alert = createAlertWithTextAndType(jsonObj.message, 'alert-success');
+                let alert = createAlertWithTextAndType(
+                    document.getElementById('successRequestLabel').value, 'alert-success');
                 alert.classList.add('mt-3');
                 alert.classList.add('w-75');
                 alert.classList.add('mx-auto');
@@ -282,9 +265,9 @@ body.on('click', "button[name='submitRequestButton']", function (event) {
                 let span = document.createElement('span');
                 let a = document.createElement('a');
                 a.setAttribute('href', '/udacidy/profile');
-                a.appendChild(document.createTextNode('Go profile'));
+                a.appendChild(document.createTextNode(document.getElementById('profileLink').value));
                 span.appendChild(a);
-                span.appendChild(document.createTextNode('to check details of your request'));
+                span.appendChild(document.createTextNode(' '+document.getElementById('profileSpanContinuation').value));
 
                 let collapseButton = document.getElementById('chooseSectionsButton'+conferenceId);
                 collapseButton.remove();

@@ -1,6 +1,14 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %>
+
+<%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmr" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page isELIgnored="false" %>
+
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale"/>
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -8,14 +16,14 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <title>Checkout example · Bootstrap</title>
+    <title><fmt:message key="add.title"/></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=n6pc28z5n87xrwjz2invt1y20ws32djsc2jyd67as953ymf6"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+    <script src="../js/common/changelocale.js"></script>
     <script src="../js/tinymceCreatorConfig.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/checkList.css">
 </head>
@@ -28,7 +36,7 @@
             <div id="alert-message">
             </div>
             <div class="py-2">
-                <h2>Add conference form</h2>
+                <h2><fmt:message key="add.confForm"/></h2>
             </div>
 
             <div class="card shadow-lg rounded-lg">
@@ -65,7 +73,7 @@
                 <button type="button"
                         class="btn btn-primary btn-lg mt-3 w-50 mx-auto shadow-lg"
                         id="nextStepButton">
-                    Next step
+                    <fmt:message key="add.nextStep"/>
                 </button>
             </div>
         </div>
@@ -76,7 +84,7 @@
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Preview</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle"><fmt:message key="add.preview"/></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

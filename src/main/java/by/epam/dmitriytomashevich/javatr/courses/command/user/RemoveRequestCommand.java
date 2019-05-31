@@ -31,7 +31,6 @@ public class RemoveRequestCommand implements Command {
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         User user = (User) content.getSession(false).getAttribute(ParameterNames.USER);
         String conferenceIdAsString = content.getParameter("conferenceId");
-        String message = null;
         boolean isPositiveResult = false;
         if(conferenceIdAsString !=null ){
             Long conferenceId = Long.valueOf(content.getParameter("conferenceId"));
@@ -42,19 +41,14 @@ public class RemoveRequestCommand implements Command {
                 requestFormService.delete(rf.getId());
             }
             requestService.delete(request.getId());
-
-            message = "Your request was successfully removed!";
             isPositiveResult=true;
-        }else {
-            message = "Sorry, something was wrong!";
         }
 
         try {
             content.getResponse().setContentType("application/json;charset=UTF-8");
             final JsonNodeFactory factory = JsonNodeFactory.instance;
             final ObjectNode node = factory.objectNode();
-            node.put("message", message);
-            node.put("isPositiveResult", isPositiveResult);
+            node.put(ParameterNames.IS_POSITIVE_RESULT, isPositiveResult);
             PrintWriter writer = content.getResponse().getWriter();
             writer.print(node);
         } catch (IOException e) {

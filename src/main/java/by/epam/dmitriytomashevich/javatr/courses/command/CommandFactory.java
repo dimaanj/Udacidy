@@ -6,6 +6,7 @@ import by.epam.dmitriytomashevich.javatr.courses.command.conversation.SendMessag
 import by.epam.dmitriytomashevich.javatr.courses.command.conversation.UpdateMessagesCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.conversation.ViewMoreCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.error.PageNotFoundCommand;
+import by.epam.dmitriytomashevich.javatr.courses.command.main.ChangeLocaleCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.GetPageContentCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.GreetingCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.main.MainCommand;
@@ -49,6 +50,7 @@ public class CommandFactory {
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.ACCEPT_USER_REQUEST, new AcceptRequestCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_PAGE_CONTENT, new GetPageContentCommand(serviceFactory)));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REJECT_USER_REQUEST, new RejectRequestCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CHANGE_LOCALE, new ChangeLocaleCommand()));
     }
 
     /**

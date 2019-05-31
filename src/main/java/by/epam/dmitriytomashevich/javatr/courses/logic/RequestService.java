@@ -13,8 +13,7 @@ public interface RequestService {
     List<Request> findByConferenceId(Long conferenceId) throws LogicException;
     List<Request> findAll() throws LogicException;
     void updateRequestStatusByUserIdAndConferenceId(Long userId, Long conferenceId, RequestStatus requestStatus) throws LogicException;
-
-
+    Request findById(Long id) throws LogicException;
     List<Request> findByUserId(Long userId) throws LogicException;
 
 }

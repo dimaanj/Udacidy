@@ -32,6 +32,8 @@ public class ParameterNames {
     public static final String IS_CONFERENCE_EXISTS = "isConferenceExists";
     public static final String MESSAGE = "message";
     public static final String DID_CONFERENCE_EXIST = "didConferenceExist";
+    public static final String IS_POSITIVE_RESULT = "isPositiveResult";
+    public static final String CONVERSATION_ID="conversationId";
 
     /**
      * Request parameters
@@ -44,6 +46,7 @@ public class ParameterNames {
     public static final String CONTENT = "content";
     public static final String SECTIONS = "sections";
     public static final String REQUEST_SECTIONS_IDS = "sectionsIds";
+    public static final String SHOW_HIDE_VIEW_MORE_BUTTON="showViewMoreButton";
 
 
 

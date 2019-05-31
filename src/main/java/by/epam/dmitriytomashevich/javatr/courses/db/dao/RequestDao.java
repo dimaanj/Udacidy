@@ -40,9 +40,6 @@ public class RequestDao implements AbstractDao<Long, Request> {
             "    SET status = ?\n" +
             "WHERE user_id = ? AND conference_id = ?";
 
-
-
-
     private static final String FIND_BY_USER_ID = "SELECT id, user_id, creation_date_time, status, conference_id\n" +
             "   FROM request\n" +
             "    WHERE user_id = ?\n";

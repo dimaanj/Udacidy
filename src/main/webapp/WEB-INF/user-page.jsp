@@ -1,6 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %>
+
+<%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmr" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page isELIgnored="false" %>
+
+
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale"/>
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -8,8 +17,8 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <title>Checkout example · Bootstrap</title>
-
+    <title><fmt:message key="up.title"/></title>
+    <script src="../js/common/changelocale.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -23,40 +32,43 @@
 
     <c:if test="${not empty requestsWithConferences}">
         <div class="my-4 p-3 bg-white rounded-lg shadow-lg mx-auto">
-            <h5 class="border-bottom border-gray pb-2 mb-0">My Requests</h5>
+            <h5 class="border-bottom border-gray pb-2 mb-0"><fmr:message key="up.myRequests"/></h5>
             <c:forEach items="${requestsWithConferences}" var="entry">
                 <div class="pt-3" id="requestItem${entry.value.getId()}">
                     <div class="border-bottom border-gray">
                         <div class="d-flex bd-highlight mb-3">
                             <div class="mr-auto p-2 bd-highlight">
-                                <strong class="text-gray-dark">Conference id <c:out
+                                <strong class="text-gray-dark"><fmr:message key="up.conferenceId"/> <c:out
                                         value="${entry.value.getId()}"/></strong>
-                                <span class="d-block text-muted">author @ <c:out
+                                <span class="d-block text-muted"><fmr:message key="up.author"/> @ <c:out
                                         value="${entry.value.getAuthor().getFirstName()}"/>
                                     <c:out value="${entry.value.getAuthor().getLastName()}"/>,
                                 </span>
                                 <c:choose>
                                     <c:when test="${entry.key.getRequestStatus().toString() eq 'SHIPPED'}">
-                                        <span class="card-title text-primary">Request status:
-                                            <c:out value="${entry.key.getRequestStatus().toString().toLowerCase()}"/>
+                                        <span class="card-title text-primary"><fmr:message key="up.requestStatus"/>:
+                                            <fmr:message key="up.requestStatusShipped"/>
                                         </span>
                                     </c:when>
                                     <c:when test="${entry.key.getRequestStatus().toString() eq 'ACCEPTED'}">
-                                        <span class="card-title text-success">Request status:
-                                            <c:out value="${entry.key.getRequestStatus().toString().toLowerCase()}"/>
+                                        <span class="card-title text-success"><fmr:message key="up.requestStatus"/>:
+                                            <fmr:message key="up.requestStatusAccepted"/>
                                         </span>
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="card-title text-dark">Request status:
-                                            <c:out value="${entry.key.getRequestStatus().toString().toLowerCase()}"/>
+                                        <span class="card-title text-dark"><fmr:message key="up.requestStatus"/>:
+                                            <fmr:message key="up.requestStatusRejected"/>
                                         </span>
                                     </c:otherwise>
                                 </c:choose>
                             </div>
                             <div class="p-2 bd-highlight">
-                                <button name="viewDetailsButton" id="viewDetailsButton${entry.value.getId()}"
+                                <button name="viewDetailsButton"
+                                        requestId="${entry.key.getId()}"
+                                        id="viewDetailsButton${entry.value.getId()}"
                                         type="button" class="btn btn-outline-primary" data-toggle="modal"
-                                        data-target="#viewDetails">View details
+                                        data-target="#viewDetails">
+                                    <fmr:message key="up.viewDetails"/>
                                 </button>
                             </div>
                             <div class="p-2 bd-highlight">
@@ -66,10 +78,10 @@
                                         data-target="#confirmationModal">
                                     <c:choose>
                                         <c:when test="${entry.key.getRequestStatus().toString() eq 'SHIPPED'}">
-                                            Remove request
+                                            <fmr:message key="up.removeRequest"/>
                                         </c:when>
                                         <c:otherwise>
-                                            Remove this notification
+                                            <fmr:message key="up.removeThisNotification"/>
                                         </c:otherwise>
                                     </c:choose>
                                 </button>
@@ -90,17 +102,17 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="confirmationRemoveRequestLabel">Confirmation</h5>
+                <h5 class="modal-title" id="confirmationRemoveRequestLabel"><fmr:message key="up.confirmHeader"/></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you really want to remove this request?
+                <fmr:message key="up.confirmBody"/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="submit" class="btn btn-primary" id="confirmationButton">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmr:message key="up.confirmNo"/></button>
+                <button type="submit" class="btn btn-primary" id="confirmationButton"><fmr:message key="up.confirmYes"/></button>
             </div>
         </div>
     </div>
@@ -112,7 +124,7 @@
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Conference content</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle"><fmr:message key="up.viewDetailsHeader"/></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -124,6 +136,11 @@
 </div>
 
 <tag:footer/>
+
+<div id="localMessagesToJs">
+    <input type="hidden" id="itemWasSuccessfullyRemoved" name="itemWasSuccessfullyRemoved" value="<fmt:message key="up.itemWasSuccessfullyRemoved"/>">
+    <input type="hidden" id="sorry" name="sorry" value="<fmt:message key="up.sorry"/>">
+</div>
 
 <script src="../js/userPage.js"></script>
 <script src="../js/common/changePassword.js"></script>

@@ -29,9 +29,9 @@ public class AdminConversationCommand implements Command {
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
 
-        String conversationIdAsString = content.getParameter("conversationId");
+        String conversationIdAsString = content.getParameter(ParameterNames.CONVERSATION_ID);
         if(conversationIdAsString != null) {
-            Long conversationId = Long.parseLong(content.getParameter("conversationId"));
+            Long conversationId = Long.parseLong(content.getParameter(ParameterNames.CONVERSATION_ID));
             if (content.getActionType().equals(SessionRequestContent.ActionType.REDIRECT)) {
                 User admin = (User) content.getSession().getAttribute(ParameterNames.USER);
                 if (!conversationService.isUserInConversation(admin, conversationId)) {
@@ -43,10 +43,10 @@ public class AdminConversationCommand implements Command {
                 return Optional.of(ActionNames.ADMIN_CONVERSATION_ACTION + conversationId);
             } else {
                 Conversation conversation = conversationService.getById(conversationId);
-                content.setRequestAttribute("conversationId", conversation.getId());
+                content.setRequestAttribute(ParameterNames.CONVERSATION_ID, conversation.getId());
                 Long messagesAmount = messageService.countMessagesByConversationId(conversationId);
                 if (messagesAmount > ParameterNames.MESSAGES_UPDATE_AMOUNT) {
-                    content.setRequestAttribute("showViewMoreButton", true);
+                    content.setRequestAttribute(ParameterNames.SHOW_HIDE_VIEW_MORE_BUTTON, true);
                 }
                 return Optional.of(ActionNames.MESSAGES);
             }

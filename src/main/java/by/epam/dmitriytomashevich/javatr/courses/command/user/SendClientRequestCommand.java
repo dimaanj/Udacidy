@@ -58,7 +58,6 @@ public class SendClientRequestCommand implements Command {
             content.getResponse().setContentType("application/json;charset=UTF-8");
             final JsonNodeFactory factory = JsonNodeFactory.instance;
             final ObjectNode node = factory.objectNode();
-            node.put("message", "Your request was successfully sent!");
             PrintWriter writer = content.getResponse().getWriter();
             writer.print(node);
         } catch (IOException e) {

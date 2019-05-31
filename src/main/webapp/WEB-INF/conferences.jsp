@@ -5,6 +5,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
+
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="locale"/>
 
@@ -15,14 +16,14 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <title>Checkout example · Bootstrap</title>
+    <title><fmt:message key="c.title"/></title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="../js/jquery.twbsPagination.min.js"></script>
-
+    <script src="../js/common/changelocale.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/checkList.css">
     <link rel="stylesheet" type="text/css" href="../css/responsiveImage.css">
     <link rel="stylesheet" type="text/css" href="../css/pagination.css">
@@ -41,6 +42,19 @@
     </div>
 </main>
 <tag:footer/>
+
+<div id="localeMessagesToJs">
+    <input type="hidden" id="profileLink" name="profileLink" value="<fmt:message key="c.profileLink"/>"/>
+    <input type="hidden" id="profileSpanContinuation" name="profileSpanContinuation" value="<fmt:message key="c.profileSpanContinuation"/>"/>
+    <input type="hidden" id="chooseSectionsButton" name="chooseSectionsButton" value="<fmt:message key="c.chooseSectionsButton"/>"/>
+    <input type="hidden" id="submitRequestButton" name="submitRequestButton" value="<fmt:message key="c.submitRequestButton"/>"/>
+    <input type="hidden" id="successRequestLabel" name="successRequestLabel" value="<fmt:message key="c.successReqeustLabel"/>"/>
+    <input type="hidden" id="paginationNext" name="paginationNext" value="<fmt:message key="c.paginationNext"/>"/>
+    <input type="hidden" id="paginationPrev" name="paginationPrev" value="<fmt:message key="c.paginationPrev"/>"/>
+    <input type="hidden" id="paginationFirst" name="paginationFirst" value="<fmt:message key="c.paginationFirst"/>"/>
+    <input type="hidden" id="paginationLast" name="paginationLast" value="<fmt:message key="c.paginationLast"/>"/>
+    <input type="hidden" id="dangerAlertChooseSections" name="dangerAlertChooseSections" value="<fmt:message key="c.dangerAlertChooseSections"/>"/>
+</div>
 
 <script src="../js/conferences.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

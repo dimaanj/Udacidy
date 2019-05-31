@@ -41,7 +41,7 @@ public class GetConferenceContentCommand implements Command {
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         Long conferenceId = Long.valueOf(content.getParameter("conferenceId"));
-        User client = (User) content.getSession(false).getAttribute(ParameterNames.USER);
+        Long requestId = Long.valueOf(content.getParameter("requestId"));
 
         Conference conference = conferenceService.getById(conferenceId);
         List<Section> sectionList = sectionService.findSectionsByConferenceId(conferenceId);
@@ -49,7 +49,7 @@ public class GetConferenceContentCommand implements Command {
             s.setContent(contentService.findById(s.getContentId()));
         }
 
-        Request request = requestService.findByUserIdAndConferenceId(client.getId(), conferenceId);
+        Request request = requestService.findById(requestId);
         List<Long> sectionsRequestIds = requestFormService.findByRequestId(request.getId())
                 .stream().map(RequestForm::getSectionId)
                 .collect(Collectors.toList());

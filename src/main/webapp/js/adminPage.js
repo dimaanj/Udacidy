@@ -29,18 +29,19 @@ body.on('click', "#confirmationRemoveConferenceButton", function (event) {
     var responsePromise = fetch(url, fetchOptions);
     responsePromise
         .then(function (response) {
-            return response.json();
+            return response.blob();
         })
         .then(function (obj) {
             console.log(obj);
             let element = document.getElementById('userQuestionItem' + conversationId);
-            let alert = createAlertWithTextAndType(obj.message, 'alert-success');
+            let alert = createAlertWithTextAndType(
+                document.getElementById('actionWasSubmitted').value, 'alert-success');
             alert.classList.add('mt-3');
             alert.classList.add('mx-auto');
             element.innerHTML = "";
             element.appendChild(alert);
 
-            $('#confirmationActionModal').modal('hide');
+            $('#confirmationModal').modal('hide');
         })
         .catch(function (error) {
             console.log('There has been a problem with your fetch operation: ', error.message);
@@ -120,12 +121,12 @@ body.on('click', "#confirmationActionButton", function (event) {
     var responsePromise = fetch(url, fetchOptions);
     responsePromise
         .then(function (response) {
-            return response.json();
+            return response.blob();
         })
         .then(function (obj) {
-            console.log(obj);
 
-            let alert = createAlertWithTextAndType(obj.message, 'alert-success');
+            let alert = createAlertWithTextAndType(
+                document.getElementById('actionWasSubmitted').value,'alert-success');
             let requestItem = document.getElementById('userRequestItem' + conferenceId);
             requestItem.innerHTML = "";
             requestItem.appendChild(alert);
@@ -137,6 +138,92 @@ body.on('click', "#confirmationActionButton", function (event) {
         });
     thisButton.removeAttribute('disabled');
 });
+
+body.on('click', "button[name='viewBody']", function (event) {
+    event.preventDefault();
+    console.log('1');
+
+    var thisButton = this;
+    thisButton.setAttribute('disabled', 'true');
+
+    let conferenceId = thisButton.getAttribute('id').replace('viewBody', '');
+    let requestId = thisButton.getAttribute('requestId');
+    const formData = new FormData();
+    formData.append('command', 'getConferenceContent');
+    formData.append('conferenceId', conferenceId);
+    formData.append('requestId', requestId);
+
+    var url = '/udacidy/?n=' + new Date().getTime();
+    var fetchOptions = {
+        method: 'POST',
+        cache: 'no-store',
+        body: formData,
+    };
+    var responsePromise = fetch(url, fetchOptions);
+    responsePromise
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (jsonObj) {
+            console.log(jsonObj);
+            let conference = createConference(jsonObj.conference, jsonObj.requestSectionsIds);
+            var dataContainer = document.getElementById('data-container');
+            dataContainer.innerHTML = "";
+            dataContainer.appendChild(conference);
+            $('#viewDetails').modal('show');
+            thisButton.removeAttribute('disabled');
+        });
+});
+
+function createConference(jsonConference, requestSectionsIds) {
+    var conferenceId = jsonConference.id;
+    var conferenceContent = jsonConference.content;
+    var conferenceSections = jsonConference.jsonSections;
+
+    var row = document.createElement('div');
+    row.classList.add('row');
+    row.classList.add('mt-4');
+    row.classList.add('justify-content-md-center');
+    row.classList.add('mb-3');
+    row.id = conferenceId;
+
+    var col = document.createElement('div');
+    col.classList.add('col-sm-8');
+    col.classList.add('shadow-lg');
+    col.classList.add('rounded-lg');
+    col.classList.add('p-5');
+
+    var bodyData = document.createElement('div');
+    bodyData.setAttribute('id', 'bodyData');
+    bodyData.innerHTML = conferenceContent;
+    var images = bodyData.getElementsByTagName('img');
+    for (var k = 0; k < images.length; k++) {
+        images[k].setAttribute('id', 'responsive-image');
+    }
+
+    col.appendChild(bodyData);
+
+    let h5 = document.createElement('h5');
+    h5.classList.add('mt-3');
+    h5.appendChild(document.createTextNode('Your choice'));
+    col.appendChild(h5);
+
+    let ul = document.createElement('ul');
+    ul.classList.add('list-group');
+    for (let i = 0; i < conferenceSections.length; i++) {
+        let li = document.createElement('li');
+        li.classList.add('list-group-item');
+        if (requestSectionsIds.includes(conferenceSections[i].id)) {
+            li.classList.add('active');
+            console.log('include section id = ' + conferenceSections[i].id);
+        }
+        li.innerHTML = conferenceSections[i].content;
+        ul.appendChild(li);
+    }
+    col.appendChild(ul);
+    row.appendChild(col);
+    return row;
+}
 
 
 
