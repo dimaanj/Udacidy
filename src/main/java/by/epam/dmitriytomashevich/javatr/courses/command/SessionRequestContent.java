@@ -1,6 +1,6 @@
 package by.epam.dmitriytomashevich.javatr.courses.command;
 
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +19,7 @@ public class SessionRequestContent {
     public SessionRequestContent(HttpServletRequest request, HttpServletResponse response) {
         this.request = request;
         this.response = response;
-        this.actionType = request.getMethod().equals(Parameter.METHOD_GET) ? ActionType.FORWARD : ActionType.REDIRECT;
+        this.actionType = request.getMethod().equals(ParameterNames.METHOD_GET) ? ActionType.FORWARD : ActionType.REDIRECT;
         this.requestAttributes = new HashMap<>();
         this.sessionAttributes = new HashMap<>();
         this.requestParameters = new HashMap<>(request.getParameterMap());

@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.admin;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conference;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Content;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Section;
@@ -32,10 +32,10 @@ public class CreateConferenceCommand implements Command {
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
-        User admin = (User) content.getSession(false).getAttribute(Parameter.USER);
+        User admin = (User) content.getSession(false).getAttribute(ParameterNames.USER);
 
-        String htmlContent = content.getParameter(Parameter.CONTENT);
-        List<String> jsonSections = new Gson().fromJson(content.getParameter(Parameter.SECTIONS), List.class);
+        String htmlContent = content.getParameter(ParameterNames.CONTENT);
+        List<String> jsonSections = new Gson().fromJson(content.getParameter(ParameterNames.SECTIONS), List.class);
 
         Content conferenceContent = new Content();
         conferenceContent.setContent(htmlContent);

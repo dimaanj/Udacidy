@@ -2,10 +2,13 @@ package by.epam.dmitriytomashevich.javatr.courses.command.admin;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
+import by.epam.dmitriytomashevich.javatr.courses.constant.MessageNames;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Content;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ContentService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.util.MessageManager;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -22,26 +25,22 @@ public class EditConferenceContentCommand implements Command {
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
-        Long conferenceId = Long.valueOf(content.getParameter("conferenceId"));
-        String htmlConferenceContent = content.getParameter("content");
+        Long conferenceId = Long.valueOf(content.getParameter(ParameterNames.CONFERENCE_ID));
+        String htmlConferenceContent = content.getParameter(ParameterNames.CONTENT);
 
-        String message = null;
         boolean isConferenceExists;
         Content conferenceContent = contentService.findByConferenceId(conferenceId);
         if(conferenceContent != null) {
             conferenceContent.setContent(htmlConferenceContent);
             contentService.update(conferenceContent);
-            message = "You successfully updated content of this conference!";
             isConferenceExists = true;
         }else {
-            message = "Sorry, this conference already deleted! Please try to refresh the page!";
             isConferenceExists = false;
         }
         try {
             final JsonNodeFactory factory = JsonNodeFactory.instance;
             final ObjectNode node = factory.objectNode();
-            node.put("isConferenceExists", isConferenceExists);
-            node.put("message", message);
+            node.put(ParameterNames.IS_CONFERENCE_EXISTS, isConferenceExists);
 
             PrintWriter writer = content.getResponse().getWriter();
             writer.print(node);

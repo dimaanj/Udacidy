@@ -116,6 +116,8 @@ $('#pagination-demo').twbsPagination({
     visiblePages: 6,
     next: 'Next',
     prev: 'Prev',
+    last: 'last',
+    first: 'First',
     onPageClick: function (event, page) {
         console.log(page);
         changePage(page);

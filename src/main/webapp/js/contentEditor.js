@@ -58,7 +58,7 @@ function createConference(jsonConference) {
     editButton.classList.add('btn-primary');
     editButton.setAttribute('type', 'button');
     editButton.setAttribute('name', 'edit');
-    editButton.appendChild(document.createTextNode('Edit'));
+    editButton.appendChild(document.createTextNode(document.getElementById('editConferenceButton').value));
     flexItem1.appendChild(editButton);
 
     var flexItem2 = document.createElement('div');
@@ -67,7 +67,7 @@ function createConference(jsonConference) {
     var deleteConferenceButton = document.createElement('button');
     deleteConferenceButton.classList.add('btn');
     deleteConferenceButton.classList.add('btn-dark');
-    deleteConferenceButton.appendChild(document.createTextNode('Delete conference'));
+    deleteConferenceButton.appendChild(document.createTextNode(document.getElementById('deleteConferenceButton').value));
     deleteConferenceButton.setAttribute('name', 'deleteButton');
     deleteConferenceButton.setAttribute('data-toggle', 'modal');
     deleteConferenceButton.setAttribute('data-target', '#confirmationModal');
@@ -83,8 +83,10 @@ function createConference(jsonConference) {
 $('#pagination-demo').twbsPagination({
     totalPages: Math.ceil($('#conferencesNumber').val() / 3),
     visiblePages: 6,
-    next: 'Next',
-    prev: 'Prev',
+    next: document.getElementById('paginationNext').value,
+    prev: document.getElementById('paginationPrev').value,
+    first: document.getElementById('paginationFirst').value,
+    last: document.getElementById('paginationLast').value,
     onPageClick: function (event, page) {
         console.log(page);
         changePage(page);
@@ -159,7 +161,7 @@ body.on('click', "button[name='edit']", function (event) {
     button.classList.add('btn-primary');
     button.setAttribute('type', 'button');
     button.setAttribute('name', 'saveChanges');
-    button.appendChild(document.createTextNode('Submit changes'));
+    button.appendChild(document.createTextNode(document.getElementById('submitChangesButton').value));
 
     flexItem.appendChild(button);
 
@@ -224,7 +226,8 @@ body.on('click', "button[name='saveChanges']", function (event) {
                 alert.setAttribute('role', 'alert');
 
                 var strong = document.createElement('strong');
-                strong.appendChild(document.createTextNode(jsonObj.message));
+                strong.appendChild(document.createTextNode(
+                    document.getElementById('updateContentSuccess').value));
 
                 var button = document.createElement('button');
                 button.setAttribute('type', 'button');
@@ -246,7 +249,8 @@ body.on('click', "button[name='saveChanges']", function (event) {
 
             } else {
                 var dfBody = document.getElementById(conferenceId);
-                var dangerAlert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
+                var dangerAlert = createAlertWithTextAndType(
+                    document.getElementById('updateContentError').value, 'alert-danger');
 
                 dangerAlert.classList.add('mx-auto');
                 dangerAlert.classList.add('col-sm-8');
@@ -288,9 +292,11 @@ body.on('click', '#confirmationButton', function (event) {
             console.log(jsonObj);
             var alert;
             if (jsonObj.didConferenceExist) {
-                alert = createAlertWithTextAndType(jsonObj.message, 'alert-info');
+                alert = createAlertWithTextAndType(
+                    document.getElementById('removeConferenceSuccess').value + conferenceId, 'alert-info');
             } else {
-                alert = createAlertWithTextAndType(jsonObj.message, 'alert-danger');
+                alert = createAlertWithTextAndType(
+                    document.getElementById('removeConferenceError').value, 'alert-danger');
             }
             alert.setAttribute('id', conferenceId);
             alert.classList.add('mx-auto');
@@ -308,42 +314,6 @@ body.on('click', '#confirmationButton', function (event) {
 $('#confirmationModal').on('hidden.bs.modal', function (e) {
     var currentAlert = document.getElementsByName(deletedConferenceId);
     currentAlert.scrollIntoView();
-});
-
-body.on('click', "button[id='view-more-button']", function (event) {
-    var lastRowElement = $('.row').last();
-    var lastConferenceElementId = lastRowElement.attr('id');
-
-    const formData = new FormData();
-    formData.append('command', 'viewMoreConferences');
-    formData.append('lastConferenceId', lastConferenceElementId);
-
-    var url = '/udacidy/';
-    var fetchOptions = {
-        method: 'POST',
-        body: formData,
-    };
-    var responsePromise = fetch(url, fetchOptions);
-    responsePromise
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (jsonObj) {
-            console.log(jsonObj);
-
-            var conferences = jsonObj.conferences;
-            var hideViewMoreButton = jsonObj.hideViewMoreButton;
-
-            for (var i = 0; i < conferences.length; i++) {
-                var row = createConference(conferences[i]);
-                document.getElementById('data-container').append(row);
-            }
-
-            if (hideViewMoreButton === true) {
-                $("#view-more-button").hide();
-            }
-        });
-    event.preventDefault();
 });
 
 function createAlertWithTextAndType(text, type) {

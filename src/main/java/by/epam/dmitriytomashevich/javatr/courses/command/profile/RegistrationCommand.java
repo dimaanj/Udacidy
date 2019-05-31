@@ -3,12 +3,15 @@ package by.epam.dmitriytomashevich.javatr.courses.command.profile;
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.MessageNames;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.domain.UserRole;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
+import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.util.MessageManager;
 import by.epam.dmitriytomashevich.javatr.courses.util.logic_helper.UserServiceHandler;
 
 import java.util.Optional;
@@ -29,7 +32,9 @@ public class RegistrationCommand implements Command {
             if(userService.addUser(defineUserData(content))){
                 action = ActionNames.LOGIN_ACTION;
             }else {
-                content.setRequestAttribute("errorRegistrationPassMessage", "User already exists!");
+                String locale = (String) content.getSession(false).getAttribute(ParameterNames.LOCALE);
+                String msg = MessageManager.getMessage(MessageNames.USER_ALREADY_EXISTS, locale);
+                content.setRequestAttribute(ParameterNames.ERROR_REGISTRATION_PASS_MESSAGE, msg);
                 content.setActionType(SessionRequestContent.ActionType.FORWARD);
                 action = ActionNames.REGISTRATION;
             }
@@ -39,10 +44,10 @@ public class RegistrationCommand implements Command {
 
     private User defineUserData(SessionRequestContent content){
         User user = new User();
-        user.setFirstName(content.getParameter(Parameter.FIRST_NAME));
-        user.setLastName(content.getParameter(Parameter.LAST_NAME));
-        user.setEmail(content.getParameter(Parameter.EMAIL));
-        user.setPassword(new UserServiceHandler().encodePassword(content.getParameter(Parameter.PASSWORD)));
+        user.setFirstName(content.getParameter(ParameterNames.FIRST_NAME));
+        user.setLastName(content.getParameter(ParameterNames.LAST_NAME));
+        user.setEmail(content.getParameter(ParameterNames.EMAIL));
+        user.setPassword(new UserServiceHandler().encodePassword(content.getParameter(ParameterNames.PASSWORD)));
         user.setUserRole(UserRole.USER);
         return user;
     }

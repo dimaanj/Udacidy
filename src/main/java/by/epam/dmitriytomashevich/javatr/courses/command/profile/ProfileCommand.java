@@ -3,7 +3,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.profile;
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conference;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
@@ -25,7 +25,7 @@ public class ProfileCommand implements Command {
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
-        User user = (User) content.getSession(false).getAttribute(Parameter.USER);
+        User user = (User) content.getSession(false).getAttribute(ParameterNames.USER);
         List<Map.Entry<Request, Conference>> requestsWithConferences = new ArrayList<>();
         List<Request> requests = requestService.findByUserId(user.getId());
         for (Request r : requests) {

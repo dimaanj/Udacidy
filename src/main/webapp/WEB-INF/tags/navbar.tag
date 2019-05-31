@@ -1,5 +1,9 @@
 <%@ tag description="Header" language="java" pageEncoding="UTF-8" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale"/>
 
 <style>
     /* Show it is fixed to the top */
@@ -8,22 +12,27 @@
         padding-top: 4.5rem;
     }
 </style>
-
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light shadow">
     <c:choose>
         <c:when test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
             <h6 class="mt-1">
-                <a class="navbar-brand" href="${pageContext.request.contextPath}/udacidy/contentediting">Udacidy</a>
+                <a class="navbar-brand" href="${pageContext.request.contextPath}/udacidy/contentediting">
+                    <fmt:message key="nav.company"/>
+                </a>
             </h6>
         </c:when>
         <c:when test="${not empty sessionScope.user and not sessionScope.user.isAdmin()}">
             <h6 class="mt-1">
-                <a class="navbar-brand" href="${pageContext.request.contextPath}/udacidy/conferences">Udacidy</a>
+                <a class="navbar-brand" href="${pageContext.request.contextPath}/udacidy/conferences">
+                    <fmt:message key="nav.company"/>
+                </a>
             </h6>
         </c:when>
         <c:otherwise>
             <h6 class="mt-1">
-                <a class="navbar-brand" href="${pageContext.request.contextPath}">Udacidy</a>
+                <a class="navbar-brand" href="${pageContext.request.contextPath}">
+                    <fmt:message key="nav.company"/>
+                </a>
             </h6>
         </c:otherwise>
     </c:choose>
@@ -37,67 +46,79 @@
                 <c:when test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
                     <h6 class="mt-1">
                         <a class="p-2 text-dark" href="${pageContext.request.contextPath}/udacidy/addconference">
-                            Add conference
+                            <fmt:message key="nav.addConference"/>
                         </a>
                     </h6>
                 </c:when>
                 <c:when test="${not empty sessionScope.user and not sessionScope.user.isAdmin()}">
                     <h6 class="mt-1">
-                        <a class="p-2 text-dark" href="${pageContext.request.contextPath}/udacidy/help">Help</a>
+                        <a class="p-2 text-dark" href="${pageContext.request.contextPath}/udacidy/help">
+                            <fmt:message key="nav.help"/>
+                        </a>
                     </h6>
                 </c:when>
             </c:choose>
-        </ul>
-        <c:choose>
-            <c:when test="${not empty sessionScope.user}">
-                <c:choose>
-                    <c:when test="${not empty sessionScope.user and not sessionScope.user.isAdmin()}">
-                        <h6 class="mt-1">
-                            <a class="p-2 text-dark mr-3"
-                               href="${pageContext.request.contextPath}/udacidy/profile"><c:out
-                                    value="${sessionScope.user.getFirstName()}"/></a>
-                        </h6>
-                    </c:when>
-                    <c:when test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
-                        <h6 class="mt-1">
-                            <a class="p-2 text-dark mr-3" href="${pageContext.request.contextPath}/udacidy/admin">
-                                <c:out value="${sessionScope.user.getFirstName()}"/> (Admin)
-                            </a>
-                        </h6>
-                    </c:when>
-                </c:choose>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#logoutModal">Logout
+            <div class="dropdown">
+                <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <fmt:message key="nav.language"/>
                 </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#"><fmt:message key="nav.eng"/></a>
+                    <a class="dropdown-item" href="#"><fmt:message key="nav.rus"/></a>
+                </div>
+            </div>
+        </ul>
+
+        <c:choose>
+            <c:when test="${not empty sessionScope.user and not sessionScope.user.isAdmin()}">
+                <h6 class="mt-1">
+                    <a class="p-2 text-dark mr-3" href="${pageContext.request.contextPath}/udacidy/profile">
+                        <c:out value="${sessionScope.user.getFirstName()}"/>
+                    </a>
+                </h6>
+            </c:when>
+            <c:when test="${not empty sessionScope.user and sessionScope.user.isAdmin()}">
+                <h6 class="mt-1">
+                    <a class="p-2 text-dark mr-3" href="${pageContext.request.contextPath}/udacidy/admin">
+                        <c:out value="${sessionScope.user.getFirstName()}"/>
+                        <fmt:message key="nav.ifAdminLabel"/>
+                    </a>
+                </h6>
             </c:when>
             <c:otherwise>
                 <a class="btn btn-outline-secondary mr-2"
-                   href="${pageContext.request.contextPath}/udacidy/registration">Sign up</a>
-                <a class="btn btn-outline-primary" href="${pageContext.request.contextPath}/udacidy/login">Sign in</a>
+                   href="${pageContext.request.contextPath}/udacidy/registration">
+                    <fmt:message key="nav.signUp"/>
+                </a>
+                <a class="btn btn-outline-primary mr-2" href="${pageContext.request.contextPath}/udacidy/login">
+                    <fmt:message key="nav.singIn"/>
+                </a>
             </c:otherwise>
         </c:choose>
+        <c:if test="${not empty sessionScope.user}">
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#logoutModal">
+                <fmt:message key="nav.logout"/>
+            </button>
+        </c:if>
     </div>
 </nav>
-
-<form method="post" id="helpUserCommand">
-    <input type="hidden" name="command" value="helpUser"/>
-</form>
 
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <h5 class="modal-title" id="exampleModalLabel"><fmt:message key="lm.question"/></h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">Select "Confirm" below if you are ready to end your current session.</div>
+            <div class="modal-body"><fmt:message key="lm.body"/></div>
             <div class="modal-footer">
                 <form method="post" id="logout">
                     <input type="hidden" name="command" value="logout"/>
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary" type="submit" form="logout">Confirm</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal"><fmt:message key="lm.cancel"/></button>
+                    <button class="btn btn-primary" type="submit" form="logout"><fmt:message key="lm.confirm"/></button>
                 </form>
             </div>
         </div>

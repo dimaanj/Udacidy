@@ -2,8 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.user;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
 import by.epam.dmitriytomashevich.javatr.courses.domain.RequestForm;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public class RemoveRequestCommand implements Command {
     private final RequestService requestService;
@@ -31,7 +29,7 @@ public class RemoveRequestCommand implements Command {
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
-        User user = (User) content.getSession(false).getAttribute(Parameter.USER);
+        User user = (User) content.getSession(false).getAttribute(ParameterNames.USER);
         String conferenceIdAsString = content.getParameter("conferenceId");
         String message = null;
         boolean isPositiveResult = false;

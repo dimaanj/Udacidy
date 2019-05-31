@@ -13,11 +13,11 @@ $(document).ready(function () {
         },
         messages: {
             password: {
-                required: "Please provide a password",
-                minlength: "Your password must be at least 5 characters long"
+                required: document.getElementById('passwordRequired').value,
+                minlength: document.getElementById('passwordMinlength').value,
             },
-            email: "Please enter a valid email address",
-            agree: "Please accept our policy"
+            email: document.getElementById('emailRequired').value,
+            agree: document.getElementById('agree').value
         },
         errorElement: "em",
         errorPlacement: function (error, element) {

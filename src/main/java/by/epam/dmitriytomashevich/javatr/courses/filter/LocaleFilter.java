@@ -4,10 +4,12 @@ import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class StaticImageFilter implements Filter {
+public class LocaleFilter implements Filter {
+    private static final String DEFAULT_LANG = "ru";
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -16,10 +18,9 @@ public class StaticImageFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        if (isStaticPicture(request.getRequestURI())) {
-            RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher(request.getRequestURI());
-            dispatcher.forward(request, response);
+        HttpSession session = request.getSession();
+        if(session.getAttribute(ParameterNames.LOCALE) == null){
+            session.setAttribute(ParameterNames.LOCALE, DEFAULT_LANG);
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
@@ -27,9 +28,5 @@ public class StaticImageFilter implements Filter {
     @Override
     public void destroy() {
 
-    }
-
-    private boolean isStaticPicture(String uri){
-        return uri.startsWith(ParameterNames.STATIC_IMAGES_PATH) || uri.startsWith(ParameterNames.TMP_IMAGES_PATH);
     }
 }

@@ -12,7 +12,6 @@
     <servlet-mapping>
         <servlet-name>Controller</servlet-name>
         <url-pattern>/udacidy/*</url-pattern>
-
     </servlet-mapping>
 
     <filter>
@@ -34,13 +33,24 @@
     <filter-mapping>
         <filter-name>AuthorizationFilter</filter-name>
         <url-pattern>/udacidy/*</url-pattern>
-
     </filter-mapping>
+
+    <filter>
+        <filter-name>LocaleFilter</filter-name>
+        <filter-class>by.epam.dmitriytomashevich.javatr.courses.filter.LocaleFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>LocaleFilter</filter-name>
+        <url-pattern>/udacidy/*</url-pattern>
+    </filter-mapping>
+
 
     <error-page>
         <error-code>404</error-code>
         <location>/WEB-INF/404-page.jsp</location>
     </error-page>
+
     <error-page>
         <exception-type>java.lang.RuntimeException</exception-type>
         <location>/WEB-INF/error-page.jsp</location>

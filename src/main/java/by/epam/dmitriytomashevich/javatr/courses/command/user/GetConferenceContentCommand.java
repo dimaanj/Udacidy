@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.user;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.*;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonConference;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
@@ -17,10 +17,8 @@ import com.google.gson.JsonElement;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GetConferenceContentCommand implements Command {
@@ -43,7 +41,7 @@ public class GetConferenceContentCommand implements Command {
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         Long conferenceId = Long.valueOf(content.getParameter("conferenceId"));
-        User client = (User) content.getSession(false).getAttribute(Parameter.USER);
+        User client = (User) content.getSession(false).getAttribute(ParameterNames.USER);
 
         Conference conference = conferenceService.getById(conferenceId);
         List<Section> sectionList = sectionService.findSectionsByConferenceId(conferenceId);

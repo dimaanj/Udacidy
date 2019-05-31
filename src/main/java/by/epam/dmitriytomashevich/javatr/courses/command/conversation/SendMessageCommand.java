@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.conversation;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Message;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
@@ -38,7 +38,7 @@ public class SendMessageCommand implements Command {
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
-        User user = (User) content.getSession(false).getAttribute(Parameter.USER);
+        User user = (User) content.getSession(false).getAttribute(ParameterNames.USER);
         Long conversationId = Long.parseLong(content.getParameter("conversationId"));
         Conversation conversation = conversationService.getById(conversationId);
         String text = content.getParameter("message");

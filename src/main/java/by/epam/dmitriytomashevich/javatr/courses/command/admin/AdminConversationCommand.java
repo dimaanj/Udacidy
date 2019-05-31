@@ -3,7 +3,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.admin;
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.ConversationGroup;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
@@ -33,7 +33,7 @@ public class AdminConversationCommand implements Command {
         if(conversationIdAsString != null) {
             Long conversationId = Long.parseLong(content.getParameter("conversationId"));
             if (content.getActionType().equals(SessionRequestContent.ActionType.REDIRECT)) {
-                User admin = (User) content.getSession().getAttribute(Parameter.USER);
+                User admin = (User) content.getSession().getAttribute(ParameterNames.USER);
                 if (!conversationService.isUserInConversation(admin, conversationId)) {
                     ConversationGroup group = new ConversationGroup();
                     group.setConversationId(conversationId);
@@ -45,7 +45,7 @@ public class AdminConversationCommand implements Command {
                 Conversation conversation = conversationService.getById(conversationId);
                 content.setRequestAttribute("conversationId", conversation.getId());
                 Long messagesAmount = messageService.countMessagesByConversationId(conversationId);
-                if (messagesAmount > Parameter.MESSAGES_UPDATE_AMOUNT) {
+                if (messagesAmount > ParameterNames.MESSAGES_UPDATE_AMOUNT) {
                     content.setRequestAttribute("showViewMoreButton", true);
                 }
                 return Optional.of(ActionNames.MESSAGES);

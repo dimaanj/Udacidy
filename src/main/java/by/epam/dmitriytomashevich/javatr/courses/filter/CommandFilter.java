@@ -1,10 +1,9 @@
 package by.epam.dmitriytomashevich.javatr.courses.filter;
 
 
-import by.epam.dmitriytomashevich.javatr.courses.command.Command;
-import by.epam.dmitriytomashevich.javatr.courses.constant.CommandNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.CommandNames;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.util.validator.CommandValidator;
 
@@ -68,16 +67,16 @@ public class CommandFilter implements Filter {
 
         HttpSession currentSession = request.getSession(false);
         Boolean isAdmin = null;
-        User user = currentSession != null ? (User) currentSession.getAttribute(Parameter.USER) : null;
+        User user = currentSession != null ? (User) currentSession.getAttribute(ParameterNames.USER) : null;
         if (user != null) {
             isAdmin = user.isAdmin();
         }
 
         String stringCommand = null;
-        if (request.getMethod().equals(Parameter.METHOD_GET)) {
+        if (request.getMethod().equals(ParameterNames.METHOD_GET)) {
             stringCommand = request.getRequestURI();
         } else {
-            stringCommand = request.getParameter(Parameter.COMMAND);
+            stringCommand = request.getParameter(ParameterNames.COMMAND);
         }
 
         if ((user == null && CommandValidator.defineCommand(guestAllowedCommands, stringCommand)) ||

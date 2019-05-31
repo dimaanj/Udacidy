@@ -29,6 +29,5 @@ public class CommandNames {
     public static final String ACCEPT_USER_REQUEST = "acceptUserRequest";
     public static final String GET_PAGE_CONTENT = "getPageContent";
     public static final String REJECT_USER_REQUEST = "rejectUserRequest";
-
     public static final String SEND_CLIENT_REQUEST = "sendClientRequest";
 }

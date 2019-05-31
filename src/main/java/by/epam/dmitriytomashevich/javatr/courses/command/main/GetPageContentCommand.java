@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.main;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.*;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonConference;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
@@ -37,11 +37,11 @@ public class GetPageContentCommand implements Command {
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
-        User client = (User) content.getSession(false).getAttribute(Parameter.USER);
+        User client = (User) content.getSession(false).getAttribute(ParameterNames.USER);
 
         Long page = Long.valueOf(content.getParameter("page"));
-        Long skipConferencesNumber = (page-1)*Parameter.CONFERENCES_UPDATE_AMOUNT;
-        Long limit = (long) Parameter.CONFERENCES_UPDATE_AMOUNT;
+        Long skipConferencesNumber = (page-1)* ParameterNames.CONFERENCES_PER_PAGE_AMOUNT;
+        Long limit = (long) ParameterNames.CONFERENCES_PER_PAGE_AMOUNT;
 
         List<Conference> conferenceList = conferenceService.findFromRowIndexToLimit(skipConferencesNumber, limit);
         List<Long> requestConferenceIds = new ArrayList<>();

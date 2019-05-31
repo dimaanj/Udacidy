@@ -2,7 +2,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.conversation;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Message;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
@@ -35,9 +35,9 @@ public class LoadMessagesCommand implements Command {
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         Long conversationId = Long.valueOf(content.getParameter("conversationId"));
-        List<Message> messages = messageService.getSomeLastMessages(Parameter.MESSAGES_UPDATE_AMOUNT, conversationId);
+        List<Message> messages = messageService.getSomeLastMessages(ParameterNames.MESSAGES_UPDATE_AMOUNT, conversationId);
         Collections.reverse(messages);
-        if (messages.size() < Parameter.MESSAGES_UPDATE_AMOUNT ||
+        if (messages.size() < ParameterNames.MESSAGES_UPDATE_AMOUNT ||
                 messageService.getEarliestMessageByConversationId(conversationId).getId()
                         .equals(messages.get(0).getId())) {
             content.setRequestAttribute("hideViewMoreButton", Boolean.TRUE);
@@ -52,7 +52,7 @@ public class LoadMessagesCommand implements Command {
             jsonMessagesList.add(element);
         }
         boolean hideViewMoreButton = false;
-        if (messages.size() < Parameter.MESSAGES_UPDATE_AMOUNT ||
+        if (messages.size() < ParameterNames.MESSAGES_UPDATE_AMOUNT ||
                 messageService.getEarliestMessageByConversationId(conversationId).getId()
                         .equals(messages.get(0).getId())) {
             hideViewMoreButton = true;

@@ -1,6 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags" %>
+
+<%@ page contentType="text/html;charset=UTF-8" isELIgnored="false" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page isELIgnored="false" %>
+
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="locale"/>
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -8,7 +15,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <title>Checkout example · Bootstrap</title>
+    <title><fmt:message key="ce.title"/></title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -38,25 +45,39 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+                <h5 class="modal-title" id="exampleModalLabel"><fmt:message key="ce.modalHeader"/></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you really want delete this conference?
+                <fmt:message key="ce.modalBody"/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="button" class="btn btn-primary" id="confirmationButton">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><fmt:message key="ce.modalNo"/></button>
+                <button type="button" class="btn btn-primary" id="confirmationButton"><fmt:message key="ce.modalYes"/></button>
             </div>
         </div>
     </div>
 </div>
 <tag:footer/>
 
-<script src="../js/contentEditor.js"></script>
+<div id="localMessageToJs">
+    <input type="hidden" id="deleteConferenceButton" name="deleteConferenceButton" value="<fmt:message key="ce.deleteConferenceButton"/>"/>
+    <input type="hidden" id="editConferenceButton" name="editConferenceButton" value="<fmt:message key="ce.editConferenceButton"/>"/>
+    <input type="hidden" id="paginationNext" name="paginationNext" value="<fmt:message key="ce.paginationNext"/>"/>
+    <input type="hidden" id="paginationPrev" name="paginationPrev" value="<fmt:message key="ce.paginationPrev"/>"/>
+    <input type="hidden" id="paginationFirst" name="paginationFirst" value="<fmt:message key="ce.paginationFirst"/>"/>
+    <input type="hidden" id="paginationLast" name="paginationLast" value="<fmt:message key="ce.paginationLast"/>"/>
+    <input type="hidden" id="submitChangesButton" name="submitChangesButton" value="<fmt:message key="ce.sumbitChangesButton"/>"/>
 
+    <input type="hidden" id="updateContentSuccess" name="updateContentSuccess" value="<fmt:message key="ce.updateContentSuccess"/>"/>
+    <input type="hidden" id="updateContentError" name="updateContentError" value="<fmt:message key="ce.updateContentError"/>"/>
+    <input type="hidden" id="removeConferenceSuccess" name="removeConferenceSuccess" value="<fmt:message key="ce.removeConferenceSuccess"/>"/>
+    <input type="hidden" id="removeConferenceError" name="removeConferenceError" value="<fmt:message key="ce.removeConferenceError"/>"/>
+</div>
+
+<script src="../js/contentEditor.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

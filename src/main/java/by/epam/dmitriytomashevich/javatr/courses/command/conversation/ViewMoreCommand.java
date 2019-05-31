@@ -2,10 +2,9 @@ package by.epam.dmitriytomashevich.javatr.courses.command.conversation;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.*;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
-import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonSection;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.*;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
@@ -18,7 +17,6 @@ import com.google.gson.JsonElement;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +36,7 @@ public class ViewMoreCommand implements Command {
         Long earliestDisplayedMessageId = Long.parseLong(content.getParameter("earliestMessageId"));
         Conversation conversation = conversationService.getByMessageId(earliestDisplayedMessageId);
         List<Message> messages = messageService.findSomeLastByConversationIdStartsWithMessageId(
-                Parameter.MESSAGES_UPDATE_AMOUNT, conversation.getId(), earliestDisplayedMessageId);
+                ParameterNames.MESSAGES_UPDATE_AMOUNT, conversation.getId(), earliestDisplayedMessageId);
 
         JsonArray jsonMessagesList = new JsonArray();
         for (Message m : messages) {
@@ -52,7 +50,7 @@ public class ViewMoreCommand implements Command {
 
         content.getResponse().setContentType("application/json;charset=UTF-8");
         boolean hideViewMoreButton = false;
-        if(messages.size() < Parameter.MESSAGES_UPDATE_AMOUNT ||
+        if(messages.size() < ParameterNames.MESSAGES_UPDATE_AMOUNT ||
                 messageService.getEarliestMessageByConversationId(conversation.getId()).getId()
                         .equals(messages.get(messages.size()-1).getId())){
             hideViewMoreButton = true;

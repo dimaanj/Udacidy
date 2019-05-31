@@ -3,7 +3,7 @@ package by.epam.dmitriytomashevich.javatr.courses.command.user;
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
-import by.epam.dmitriytomashevich.javatr.courses.constant.Parameter;
+import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.ConversationGroup;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
@@ -29,7 +29,7 @@ public class HelpCommand implements Command {
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
-        User current = (User) content.getSession().getAttribute(Parameter.USER);
+        User current = (User) content.getSession().getAttribute(ParameterNames.USER);
         ConversationGroup group = conversationGroupService
                 .findByUserIdAndConversationType(
                         current.getId(),
@@ -51,7 +51,7 @@ public class HelpCommand implements Command {
 
         content.setRequestAttribute("conversationId", group.getConversationId());
         Long messagesAmount = messageService.countMessagesByConversationId(group.getConversationId());
-        if (messagesAmount > Parameter.MESSAGES_UPDATE_AMOUNT) {
+        if (messagesAmount > ParameterNames.MESSAGES_UPDATE_AMOUNT) {
             content.setRequestAttribute("showViewMoreButton", true);
         } else if (messagesAmount == 0) {
             content.setRequestAttribute("firstUserEnter", true);

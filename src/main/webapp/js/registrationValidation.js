@@ -23,19 +23,19 @@ $(document).ready(function () {
             agree: "required"
         },
         messages: {
-            firstname: "Please enter your firstname",
-            lastname: "Please enter your lastname",
+            firstname: document.getElementById('firstNameRequired').value,
+            lastname: document.getElementById('lastNameRequired').value,
             password: {
-                required: "Please provide a password",
-                minlength: "Your password must be at least 5 characters long"
+                required: document.getElementById('passwordRequired').value,
+                minlength: document.getElementById('passwordMinlength').value
             },
             confirm_password: {
-                required: "Please provide a password",
-                minlength: "Your password must be at least 5 characters long",
-                equalTo: "Please enter the same password as above"
+                required: document.getElementById('confirmPasswordRequired').value,
+                minlength: document.getElementById('confirmPasswordMinlength').value,
+                equalTo: document.getElementById('confirmPasswordEquals').value
             },
-            email: "Please enter a valid email address",
-            agree: "Please accept our policy"
+            email: document.getElementById('emailRequired').value,
+            agree: document.getElementById('agreePolicy').value
         },
         errorElement: "em",
         errorPlacement: function (error, element) {
