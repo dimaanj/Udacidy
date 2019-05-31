@@ -15,7 +15,7 @@ public class ChangeLocaleCommand implements Command {
         String newLocale = content.getParameter("locale");
         if(newLocale != null &&
                 (newLocale.equalsIgnoreCase("en") || newLocale.equalsIgnoreCase("ru"))){
-            content.getSession().removeAttribute("locale");
+//            content.getSession().removeAttribute("locale");
             content.getSession().setAttribute("locale", newLocale);
         }
         String action = content.getRequest().getRequestURI();

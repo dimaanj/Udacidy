@@ -8,6 +8,8 @@ import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,12 +19,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
         maxFileSize = 1024 * 1024 * 5,
         maxRequestSize = 1024 * 1024 * 5 * 5)
 public class Controller extends HttpServlet {
+    private static final Logger LOGGER = LogManager.getLogger(Controller.class.getName());
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         processRequest(req, resp);
@@ -44,9 +49,11 @@ public class Controller extends HttpServlet {
 
         try {
             action = command.execute(content);
+            Connection connection1 = null;
+            connectionPool.releaseConnection(connection1);
         } catch (LogicException e) {
-            e.printStackTrace();
-        }finally {
+            LOGGER.error("Error with controller", e);
+        }  finally {
             connectionPool.releaseConnection(connection);
         }
         content.insertAttributes();

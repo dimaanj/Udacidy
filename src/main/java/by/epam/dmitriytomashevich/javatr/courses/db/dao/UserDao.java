@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao implements AbstractDao<Long, User> {
+
     private EntityBuilder<User> builder = new UserBuilder();
     private final Connection connection;
 

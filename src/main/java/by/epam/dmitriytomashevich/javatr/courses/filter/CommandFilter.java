@@ -1,7 +1,5 @@
 package by.epam.dmitriytomashevich.javatr.courses.filter;
 
-
-import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.CommandNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;

@@ -28,7 +28,6 @@ public class AdminConversationCommand implements Command {
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
-
         String conversationIdAsString = content.getParameter(ParameterNames.CONVERSATION_ID);
         if(conversationIdAsString != null) {
             Long conversationId = Long.parseLong(content.getParameter(ParameterNames.CONVERSATION_ID));
