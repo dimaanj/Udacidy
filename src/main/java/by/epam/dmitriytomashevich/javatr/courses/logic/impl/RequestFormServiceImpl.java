@@ -4,17 +4,12 @@ import by.epam.dmitriytomashevich.javatr.courses.db.dao.RequestFormDao;
 import by.epam.dmitriytomashevich.javatr.courses.domain.RequestForm;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestFormService;
 
 import java.util.List;
 
 public class RequestFormServiceImpl implements RequestFormService {
-    private final RequestFormDao requestFormDao;
-
-    public RequestFormServiceImpl(DaoFactory daoFactory) {
-        this.requestFormDao = daoFactory.createRequestFormDao();
-    }
+    private final RequestFormDao requestFormDao = new RequestFormDao();
 
     @Override
     public Long create(RequestForm requestForm) throws LogicException {

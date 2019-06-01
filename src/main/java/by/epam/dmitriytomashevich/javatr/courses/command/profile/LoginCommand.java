@@ -6,9 +6,9 @@ import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.MessageNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.UserServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.util.MessageManager;
 import by.epam.dmitriytomashevich.javatr.courses.util.logic_helper.UserServiceHandler;
 
@@ -16,11 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 public class LoginCommand implements Command {
-    private final UserService userService;
-
-    public LoginCommand(ServiceFactory serviceFactory){
-        userService = serviceFactory.createUserService();
-    }
+    private final UserService userService = new UserServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

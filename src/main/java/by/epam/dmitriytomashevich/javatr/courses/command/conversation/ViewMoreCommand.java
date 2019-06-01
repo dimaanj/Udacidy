@@ -5,9 +5,11 @@ import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.*;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.*;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConversationServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.MessageServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.UserServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.util.converter.MessageConverter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -21,15 +23,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class ViewMoreCommand implements Command {
-    private final MessageService messageService;
-    private final ConversationService conversationService;
-    private final UserService userService;
-
-    public ViewMoreCommand(ServiceFactory serviceFactory){
-        messageService = serviceFactory.createMessageService();
-        conversationService = serviceFactory.createConversationService();
-        userService = serviceFactory.createUserService();
-    }
+    private final MessageService messageService = new MessageServiceImpl();
+    private final ConversationService conversationService = new ConversationServiceImpl();
+    private final UserService userService = new UserServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

@@ -4,29 +4,18 @@ import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.*;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.*;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.*;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class AdminPageCommand implements Command {
-    private final ConversationService conversationService;
-    private final MessageService messageService;
-    private final UserService userService;
-    private final ConferenceService conferenceService;
-    private final RequestService requestService;
-
-    public AdminPageCommand(ServiceFactory serviceFactory) {
-        conversationService = serviceFactory.createConversationService();
-        messageService = serviceFactory.createMessageService();
-        userService = serviceFactory.createUserService();
-        conferenceService = serviceFactory.createConferenceService();
-        requestService = serviceFactory.createRequestService();
-    }
+    private final ConversationService conversationService = new ConversationServiceImpl();
+    private final MessageService messageService = new MessageServiceImpl();
+    private final UserService userService = new UserServiceImpl();
+    private final ConferenceService conferenceService = new ConferenceServiceImpl();
+    private final RequestService requestService = new RequestServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

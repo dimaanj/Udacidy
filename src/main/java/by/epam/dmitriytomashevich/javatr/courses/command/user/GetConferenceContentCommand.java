@@ -2,12 +2,11 @@ package by.epam.dmitriytomashevich.javatr.courses.command.user;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.*;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonConference;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.*;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.*;
 import by.epam.dmitriytomashevich.javatr.courses.util.converter.ConferenceConverter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -22,21 +21,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GetConferenceContentCommand implements Command {
-    private final ConferenceService conferenceService;
-    private final ContentService contentService;
-    private final RequestService requestService;
-    private final SectionService sectionService;
-    private final UserService userService;
-    private final RequestFormService requestFormService;
-
-    public GetConferenceContentCommand(ServiceFactory serviceFactory){
-        conferenceService = serviceFactory.createConferenceService();
-        contentService = serviceFactory.createContentService();
-        requestService = serviceFactory.createRequestService();
-        sectionService = serviceFactory.createSectionService();
-        userService = serviceFactory.createUserService();
-        requestFormService = serviceFactory.createRequestFormService();
-    }
+    private final ConferenceService conferenceService = new ConferenceServiceImpl();
+    private final ContentService contentService = new ContentServiceImpl();
+    private final RequestService requestService = new RequestServiceImpl();
+    private final SectionService sectionService = new SectionServiceImpl();
+    private final UserService userService = new UserServiceImpl();
+    private final RequestFormService requestFormService = new RequestFormServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

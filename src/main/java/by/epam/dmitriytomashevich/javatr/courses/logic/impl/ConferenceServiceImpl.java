@@ -1,7 +1,6 @@
 package by.epam.dmitriytomashevich.javatr.courses.logic.impl;
 
 import by.epam.dmitriytomashevich.javatr.courses.db.dao.ConferenceDao;
-import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conference;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConferenceService;
@@ -10,11 +9,7 @@ import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import java.util.List;
 
 public class ConferenceServiceImpl implements ConferenceService {
-    private final ConferenceDao conferenceDao;
-
-    public ConferenceServiceImpl(DaoFactory daoFactory){
-        conferenceDao = daoFactory.createConferenceDao();
-    }
+    private final ConferenceDao conferenceDao = new ConferenceDao();
 
     @Override
     public Long create(Conference conference) throws LogicException {

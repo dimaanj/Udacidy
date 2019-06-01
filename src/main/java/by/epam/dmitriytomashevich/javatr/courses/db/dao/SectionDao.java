@@ -12,7 +12,6 @@ import java.util.List;
 
 public class SectionDao implements AbstractDao<Long, Section> {
     private EntityBuilder<Section> builder = new SectionBuilder();
-    private final Connection connection;
 
     private static final String INSERT = "INSERT INTO udacidy.section\n" +
             "    (content_id, conference_id)\n" +
@@ -35,19 +34,15 @@ public class SectionDao implements AbstractDao<Long, Section> {
     private static final String DELETE_CONTENT = "DELETE FROM udacidy.content\n" +
             "WHERE id = ?;";
 
-    public SectionDao(Connection connection){
-        this.connection = connection;
-    }
-
     @Override
-    public List<Section> findAll() throws DAOException {
-        return null;
+    public List<Section> findAll() {
+        throw new UnsupportedOperationException("SectionDao doesn't support 'findAll()'");
     }
 
     @Override
     public Section findById(Long id) throws DAOException {
         Section section = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_BY_ID);
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -64,7 +59,7 @@ public class SectionDao implements AbstractDao<Long, Section> {
 
     @Override
     public void deleteById(Long id) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, id);
             statement.execute();
@@ -76,8 +71,8 @@ public class SectionDao implements AbstractDao<Long, Section> {
 
     @Override
     public Long create(Section entity) throws DAOException {
-        Long sectionId = null;
-        try {
+        Long sectionId;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
             statement.setLong(1, entity.getContentId());
             statement.setLong(2, entity.getConferenceId());
@@ -102,14 +97,14 @@ public class SectionDao implements AbstractDao<Long, Section> {
     }
 
     @Override
-    public void update(Section entity) throws DAOException {
-
+    public void update(Section entity) {
+        throw new UnsupportedOperationException("SectionDao doesn't support 'update()'");
     }
 
 
     public List<Section> findByConferenceId(Long conferenceId) throws DAOException {
-        List<Section> sections = null;
-        try {
+        List<Section> sections;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_CONFERENCE_ID);
             statement.setLong(1, conferenceId);
             ResultSet resultSet = statement.executeQuery();
@@ -127,7 +122,7 @@ public class SectionDao implements AbstractDao<Long, Section> {
     }
 
     public void deleteSectionWithTheirContent(Long sectionId, Long contentId) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, sectionId);
             statement.execute();

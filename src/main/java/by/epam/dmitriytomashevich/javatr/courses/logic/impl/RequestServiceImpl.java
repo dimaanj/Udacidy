@@ -5,17 +5,12 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
 import by.epam.dmitriytomashevich.javatr.courses.domain.RequestStatus;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestService;
 
 import java.util.List;
 
 public class RequestServiceImpl implements RequestService {
-    private final RequestDao requestDao;
-
-    public RequestServiceImpl(DaoFactory daoFactory){
-        requestDao = daoFactory.createRequestDao();
-    }
+    private final RequestDao requestDao = new RequestDao();
 
     @Override
     public Long create(Request request) throws LogicException {

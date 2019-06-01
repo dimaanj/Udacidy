@@ -2,13 +2,11 @@ package by.epam.dmitriytomashevich.javatr.courses.command.admin;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.MessageNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Content;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ContentService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.util.MessageManager;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ContentServiceImpl;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -17,11 +15,7 @@ import java.io.PrintWriter;
 import java.util.Optional;
 
 public class EditConferenceContentCommand implements Command {
-    private final ContentService contentService;
-
-    public EditConferenceContentCommand(ServiceFactory serviceFactory){
-        contentService = serviceFactory.createContentService();
-    }
+    private final ContentService contentService = new ContentServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

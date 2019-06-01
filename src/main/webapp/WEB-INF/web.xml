@@ -22,7 +22,6 @@
     <filter-mapping>
         <filter-name>StaticImageFilter</filter-name>
         <url-pattern>/udacidy/*</url-pattern>
-
     </filter-mapping>
 
     <filter>

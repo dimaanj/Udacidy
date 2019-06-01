@@ -3,18 +3,13 @@ package by.epam.dmitriytomashevich.javatr.courses.logic.impl;
 import by.epam.dmitriytomashevich.javatr.courses.db.dao.SectionDao;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Section;
-import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.SectionService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 import java.util.List;
 
 public class SectionServiceImpl implements SectionService {
-    private final SectionDao sectionDao;
-
-    public SectionServiceImpl(DaoFactory daoFactory){
-        sectionDao = daoFactory.createSectionDao();
-    }
+    private final SectionDao sectionDao = new SectionDao();
 
     @Override
     public Long create(Section section) throws LogicException {

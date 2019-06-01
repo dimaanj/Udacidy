@@ -9,6 +9,7 @@
 
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="locale"/>
+
 <html>
 <head>
     <meta charset="utf-8">

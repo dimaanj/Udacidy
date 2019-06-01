@@ -245,10 +245,9 @@ body.on('click', "button[name='submitRequestButton']", function (event) {
         var responsePromise = fetch(url, fetchOptions);
         responsePromise
             .then(function (response) {
-                return response.json();
+                return response.blob();
             })
-            .then(function (jsonObj) {
-
+            .then(function () {
                 var modal = $("#viewDetails");
                 modal.modal('show');
 

@@ -1,5 +1,6 @@
 package by.epam.dmitriytomashevich.javatr.courses.db.dao;
 
+import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
 import by.epam.dmitriytomashevich.javatr.courses.db.builder.EntityBuilder;
 import by.epam.dmitriytomashevich.javatr.courses.db.builder.UserBuilder;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
@@ -11,9 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao implements AbstractDao<Long, User> {
-
     private EntityBuilder<User> builder = new UserBuilder();
-    private final Connection connection;
 
     private static final String SELECT_ALL_BY_CONVERSATION_ID  = "SELECT u.id, u.first_name, u.last_name, u.password, u.email, ur.role\n" +
             "FROM conversation c\n" +
@@ -50,19 +49,15 @@ public class UserDao implements AbstractDao<Long, User> {
             "    SET u.password = ?\n" +
             "WHERE u.id = ?";
 
-    public UserDao(Connection connection){
-        this.connection = connection;
-    }
-
     @Override
     public List<User> findAll() {
-        return null;
+        throw new UnsupportedOperationException("UserDao doesn't support 'findAll()'");
     }
 
     @Override
     public User findById(Long id) throws DAOException {
         User user = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -79,13 +74,13 @@ public class UserDao implements AbstractDao<Long, User> {
 
     @Override
     public void deleteById(Long id) {
+        throw new UnsupportedOperationException("UserDao doesn't support 'deleteById()'");
     }
 
     @Override
     public Long create(User entity) throws DAOException {
         Long userId = null;
-        try {
-
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(INSERT_USER);
             statement.setString(1, entity.getFirstName());
             statement.setString(2, entity.getLastName());
@@ -119,12 +114,12 @@ public class UserDao implements AbstractDao<Long, User> {
 
     @Override
     public void update(User entity) {
-
+        throw new UnsupportedOperationException("UserDao doesn't support 'update()'");
     }
 
     public User findByEmail(String email) throws DAOException {
         User user = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_EMAIL);
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
@@ -141,7 +136,7 @@ public class UserDao implements AbstractDao<Long, User> {
 
     private List<User> findByUserRole(UserRole role) throws DAOException {
         List<User> users = new ArrayList<>();
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ROLE);
             statement.setString(1, role.getValue().toUpperCase());
             ResultSet resultSet = statement.executeQuery();
@@ -159,7 +154,7 @@ public class UserDao implements AbstractDao<Long, User> {
 
     public List<User> findAllByConversationId(Long id) throws DAOException {
         List<User> users = new ArrayList<>();
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BY_CONVERSATION_ID);
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -176,7 +171,7 @@ public class UserDao implements AbstractDao<Long, User> {
     }
 
     public void updatePassword(String password, Long userId) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(UPDATE_PASSWORD);
             statement.setString(1, password);
             statement.setLong(2, userId);

@@ -4,10 +4,7 @@ import by.epam.dmitriytomashevich.javatr.courses.command.ActionFactory;
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.CommandFactory;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,8 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Optional;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
@@ -42,21 +37,14 @@ public class Controller extends HttpServlet {
         SessionRequestContent content = new SessionRequestContent(request, response);
         Optional<String> action = Optional.empty();
 
-        ConnectionPool connectionPool = ConnectionPool.getInstance();
-        Connection connection = connectionPool.getConnection();
-        CommandFactory commandFactory = createCommandFactory(connection);
+        CommandFactory commandFactory = new CommandFactory();
         Command command = new ActionFactory().defineCommand(request, commandFactory);
-
         try {
             action = command.execute(content);
-            Connection connection1 = null;
-            connectionPool.releaseConnection(connection1);
+            content.insertAttributes();
         } catch (LogicException e) {
             LOGGER.error("Error with controller", e);
-        }  finally {
-            connectionPool.releaseConnection(connection);
         }
-        content.insertAttributes();
 
         if (action.isPresent()) {
             if (content.getActionType().equals(SessionRequestContent.ActionType.FORWARD)) {
@@ -66,11 +54,5 @@ public class Controller extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + action.get());
             }
         }
-    }
-
-    private CommandFactory createCommandFactory(Connection connection){
-        DaoFactory daoFactory = new DaoFactory(connection);
-        ServiceFactory serviceFactory = new ServiceFactory(daoFactory);
-        return new CommandFactory(serviceFactory);
     }
 }

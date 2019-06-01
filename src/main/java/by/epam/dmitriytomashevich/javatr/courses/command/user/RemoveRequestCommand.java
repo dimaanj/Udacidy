@@ -7,9 +7,10 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
 import by.epam.dmitriytomashevich.javatr.courses.domain.RequestForm;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestFormService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestService;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.RequestFormServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.RequestServiceImpl;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -19,13 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class RemoveRequestCommand implements Command {
-    private final RequestService requestService;
-    private final RequestFormService requestFormService;
-
-    public RemoveRequestCommand(ServiceFactory serviceFactory) {
-        requestService = serviceFactory.createRequestService();
-        requestFormService = serviceFactory.createRequestFormService();
-    }
+    private final RequestService requestService = new RequestServiceImpl();
+    private final RequestFormService requestFormService = new RequestFormServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

@@ -119,7 +119,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `mydb`.`request_form`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `udacidy`.`request_form` (
-  `id` INT NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `section_id` INT(11) NOT NULL,
   `request_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),

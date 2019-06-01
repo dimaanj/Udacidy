@@ -4,33 +4,25 @@ import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.*;
-import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonConference;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.*;
-import by.epam.dmitriytomashevich.javatr.courses.util.converter.ConferenceConverter;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.RequestFormServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.RequestServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.SectionServiceImpl;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class SendClientRequestCommand implements Command {
-    private final RequestService requestService;
-    private final SectionService sectionService;
-    private final RequestFormService requestFormService;
-
-    public SendClientRequestCommand(ServiceFactory serviceFactory) {
-        requestService = serviceFactory.createRequestService();
-        sectionService = serviceFactory.createSectionService();
-        requestFormService = serviceFactory.createRequestFormService();
-    }
+    private final RequestService requestService = new RequestServiceImpl();
+    private final SectionService sectionService = new SectionServiceImpl();
+    private final RequestFormService requestFormService = new RequestFormServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

@@ -3,16 +3,11 @@ package by.epam.dmitriytomashevich.javatr.courses.logic.impl;
 import by.epam.dmitriytomashevich.javatr.courses.db.dao.ContentDao;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Content;
-import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ContentService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 public class ContentServiceImpl implements ContentService {
-    private final ContentDao contentDao;
-
-    public ContentServiceImpl(DaoFactory daoFactory){
-        contentDao = daoFactory.createContentDao();
-    }
+    private final ContentDao contentDao = new ContentDao();
 
     @Override
     public Long create(Content content) throws LogicException {

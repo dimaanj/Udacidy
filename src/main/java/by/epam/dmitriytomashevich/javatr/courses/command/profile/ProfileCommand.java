@@ -8,20 +8,16 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.Conference;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConferenceService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.RequestService;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConferenceServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.RequestServiceImpl;
 
 import java.util.*;
 
 public class ProfileCommand implements Command {
-    private final ConferenceService conferenceService;
-    private final RequestService requestService;
-
-    public ProfileCommand(ServiceFactory serviceFactory) {
-        conferenceService = serviceFactory.createConferenceService();
-        requestService = serviceFactory.createRequestService();
-    }
+    private final ConferenceService conferenceService = new ConferenceServiceImpl();
+    private final RequestService requestService = new RequestServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

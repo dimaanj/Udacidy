@@ -6,8 +6,8 @@ import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.*;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonConference;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.*;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.*;
 import by.epam.dmitriytomashevich.javatr.courses.util.converter.ConferenceConverter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -21,19 +21,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class GetPageContentCommand implements Command {
-    private final ConferenceService conferenceService;
-    private final ContentService contentService;
-    private final UserService userService;
-    private final SectionService sectionService;
-    private final RequestService requestService;
-
-    public GetPageContentCommand(ServiceFactory serviceFactory){
-        conferenceService = serviceFactory.createConferenceService();
-        contentService = serviceFactory.createContentService();
-        userService = serviceFactory.createUserService();
-        sectionService = serviceFactory.createSectionService();
-        requestService = serviceFactory.createRequestService();
-    }
+    private final ConferenceService conferenceService = new ConferenceServiceImpl();
+    private final ContentService contentService = new ContentServiceImpl();
+    private final UserService userService = new UserServiceImpl();
+    private final SectionService sectionService = new SectionServiceImpl();
+    private final RequestService requestService = new RequestServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

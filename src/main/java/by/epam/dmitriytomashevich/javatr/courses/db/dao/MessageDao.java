@@ -14,7 +14,6 @@ import java.util.List;
 
 public class MessageDao implements AbstractDao<Long, Message> {
     private EntityBuilder<Message> builder = new MessageBuilder();
-    private final Connection connection;
 
     private static final String INSERT_MESSAGE = "INSERT INTO udacidy.message\n" +
             "(text, creator_id, creation_date_time, conversation_id, image_path)\n" +
@@ -82,28 +81,25 @@ public class MessageDao implements AbstractDao<Long, Message> {
             "WHERE conversation_id = ?\n" +
             "ORDER BY m.creation_date_time";
 
-    public MessageDao(Connection connection){
-        this.connection = connection;
-    }
-
     @Override
     public List<Message> findAll() {
-        return null;
+        throw new UnsupportedOperationException("MessageDao doesn't support 'findAll()'");
     }
 
     @Override
     public Message findById(Long id) {
-        return null;
+        throw new UnsupportedOperationException("MessageDao doesn't support 'findById()'");
     }
 
     @Override
     public void deleteById(Long id) {
+        throw new UnsupportedOperationException("MessageDao doesn't support 'deleteById()'");
     }
 
     @Override
     public Long create(Message entity) throws DAOException {
-        Long messageId = null;
-        try {
+        Long messageId;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement =
                     connection.prepareStatement(INSERT_MESSAGE, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, entity.getText());
@@ -139,11 +135,12 @@ public class MessageDao implements AbstractDao<Long, Message> {
 
     @Override
     public void update(Message entity) {
+        throw new UnsupportedOperationException("MessageDao doesn't support 'update()'");
     }
 
     public List<Message> findByConversationId(Long id) throws DAOException {
-        List<Message> messages = null;
-        try {
+        List<Message> messages;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_BY_CONVERSATION_ID);
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -162,7 +159,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
 
     public Message findLastOnTimeByConversationId(Long id) throws DAOException {
         Message message = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_LAST_ON_TIME_BY_CONVERSATION_ID);
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -179,7 +176,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
 
     public List<Message> findSomeLastByConversationId(int amount, Long conversationId) throws DAOException {
         List<Message> messages = new ArrayList<>();
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_SOME_LAST_MESSAGES_BY_CONVERSATION_ID);
             statement.setLong(1, conversationId);
             statement.setLong(2, amount);
@@ -198,7 +195,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
 
     public List<Message> findSomeLastByConversationIdStartsWithMessageId(int amount, Long conversationId, Long messageId) throws DAOException {
         List<Message> messages = new ArrayList<>();
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_SOME_BEFORE_MESSAGE_ID_BY_CONVERSATION_ID);
             statement.setLong(1, conversationId);
             statement.setLong(2, messageId);
@@ -218,7 +215,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
 
     public List<Message> findAllAfterMessageId(Long messageId, Long conversationId) throws DAOException {
         List<Message> messages = new ArrayList<>();
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_AFTER_MESSAGE_ID_BY_CONVERSATION_ID);
             statement.setLong(1, conversationId);
             statement.setLong(2, messageId);
@@ -237,7 +234,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
 
     public Message findEarliestMessageByConversationId(Long conversationId) throws DAOException {
         Message message = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_EARLIEST_BY_CONVERSATION_ID);
             statement.setLong(1, conversationId);
             ResultSet resultSet = statement.executeQuery();
@@ -253,7 +250,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
     }
 
     public void updateMessageImagePath(String imagePath, Long messageId) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(UPDATE_MESSAGE_IMAGE_PATH);
             statement.setString(1, imagePath);
             statement.setLong(2, messageId);
@@ -266,7 +263,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
 
     public Long countMessagesByConferenceId(Long conversationId) throws DAOException {
         long amount = 0L;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(COUNT_MESSAGES_BY_CONVERSATION_ID);
             statement.setLong(1, conversationId);
             ResultSet resultSet = statement.executeQuery();
@@ -282,7 +279,7 @@ public class MessageDao implements AbstractDao<Long, Message> {
     }
 
     public void removeAllByConversationId(Long conversationId) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(DELETE_ALL_BY_CONFERENCE_ID);
             statement.setLong(1, conversationId);
             statement.execute();
@@ -293,8 +290,8 @@ public class MessageDao implements AbstractDao<Long, Message> {
     }
 
     public List<Message> findAllByConversationId(Long conversationId) throws DAOException {
-        List<Message> messages = null;
-        try {
+        List<Message> messages;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_ALL_BY_CONVERSATION_ID);
             statement.setLong(1, conversationId);
             ResultSet resultSet = statement.executeQuery();

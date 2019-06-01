@@ -12,7 +12,6 @@ import java.util.List;
 
 public class ConferenceDao implements AbstractDao<Long, Conference> {
     private EntityBuilder<Conference> builder = new ConferenceBuilder();
-    private final Connection connection;
 
     private static final String INSERT_CONFERENCE = "INSERT INTO udacidy.conference\n" +
             "    (content_id, author_id)\n" +
@@ -64,19 +63,15 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
             "ORDER BY id DESC\n" +
             "LIMIT ?";
 
-    public ConferenceDao(Connection connection){
-        this.connection = connection;
-    }
-
     @Override
     public List<Conference> findAll() throws DAOException {
-        return null;
+        throw new UnsupportedOperationException("Conference DAO doesn't support 'findAll()'");
     }
 
     @Override
     public Conference findById(Long id) throws DAOException {
         Conference conference = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
             statement.setLong(1, id);
 
@@ -94,7 +89,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
 
     @Override
     public void deleteById(Long id) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, id);
             statement.execute();
@@ -106,9 +101,8 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
 
     @Override
     public Long create(Conference entity) throws DAOException {
-
         Long conferenceId = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement =
                     connection.prepareStatement(INSERT_CONFERENCE, Statement.RETURN_GENERATED_KEYS);
             statement.setLong(1, entity.getContentId());
@@ -135,12 +129,12 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
 
     @Override
     public void update(Conference entity) {
-
+        throw new UnsupportedOperationException("Conference DAO doesn't support 'update'");
     }
 
     public List<Conference> findSomeLastConferences(int count) throws DAOException {
         List<Conference> conferences = new ArrayList<>();
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_SOME_LAST_CONFERENCES);
             statement.setLong(1, count);
 
@@ -159,7 +153,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
 
     public Conference findTheOldest() throws DAOException {
         Conference conference = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_THE_OLDEST);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -174,7 +168,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
     }
 
     public void deleteConferenceWithTheirContent(Long conferenceId, Long contentId) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, conferenceId);
             statement.execute();
@@ -191,7 +185,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
 
     public Long countNumber() throws DAOException {
         Long number = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(COUNT_CONFERENCES);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -207,7 +201,7 @@ public class ConferenceDao implements AbstractDao<Long, Conference> {
 
     public List<Conference> findFromRowIndexToLimit(Long rowIndex, Long updateAmount) throws DAOException {
         List<Conference> conferences = new ArrayList<>();
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_FROM_ROW_NUMBER_TO_LIMIT);
             statement.setLong(1, rowIndex);
             statement.setLong(2, updateAmount);

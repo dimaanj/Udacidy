@@ -1,5 +1,6 @@
 package by.epam.dmitriytomashevich.javatr.courses.db.dao;
 
+import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
 import by.epam.dmitriytomashevich.javatr.courses.db.builder.EntityBuilder;
 import by.epam.dmitriytomashevich.javatr.courses.db.builder.RequestFormBuilder;
 import by.epam.dmitriytomashevich.javatr.courses.domain.RequestForm;
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RequestFormDao implements AbstractDao<Long, RequestForm> {
-    private final Connection connection;
     private final EntityBuilder<RequestForm> builder = new RequestFormBuilder();
 
     private static final String INSERT = "INSERT INTO udacidy.request_form\n" +
@@ -27,23 +27,19 @@ public class RequestFormDao implements AbstractDao<Long, RequestForm> {
             "    WHERE id = ?";
 
 
-    public RequestFormDao(Connection connection) {
-        this.connection = connection;
+    @Override
+    public List<RequestForm> findAll() {
+        throw new UnsupportedOperationException("RequestFormDao doesn't support 'findAll()'");
     }
 
     @Override
-    public List<RequestForm> findAll() throws DAOException {
-        return null;
-    }
-
-    @Override
-    public RequestForm findById(Long id) throws DAOException {
-        return null;
+    public RequestForm findById(Long id) {
+        throw new UnsupportedOperationException("RequestFormDao doesn't support 'findById()'");
     }
 
     @Override
     public void deleteById(Long id) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, id);
             statement.execute();
@@ -55,8 +51,8 @@ public class RequestFormDao implements AbstractDao<Long, RequestForm> {
 
     @Override
     public Long create(RequestForm entity) throws DAOException {
-        Long requestFormId = null;
-        try {
+        Long requestFormId;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
             statement.setLong(1, entity.getSectionId());
             statement.setLong(2, entity.getRequestId());
@@ -81,13 +77,13 @@ public class RequestFormDao implements AbstractDao<Long, RequestForm> {
     }
 
     @Override
-    public void update(RequestForm entity) throws DAOException {
-
+    public void update(RequestForm entity) {
+        throw new UnsupportedOperationException("RequestFormDao doesn't support 'update()'");
     }
 
     public List<RequestForm> findByRequestId(Long requestId) throws DAOException {
-        List<RequestForm> requestForms = null;
-        try {
+        List<RequestForm> requestForms;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_BY_REQUEST_ID);
             statement.setLong(1, requestId);
             ResultSet resultSet = statement.executeQuery();

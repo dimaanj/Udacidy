@@ -6,17 +6,13 @@ import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConferenceService;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConferenceServiceImpl;
 
 import java.util.Optional;
 
 public class MainCommand implements Command {
-    private final ConferenceService conferenceService;
-
-    public MainCommand(ServiceFactory serviceFactory){
-        conferenceService = serviceFactory.createConferenceService();
-    }
+    private final ConferenceService conferenceService = new ConferenceServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

@@ -4,16 +4,11 @@ import by.epam.dmitriytomashevich.javatr.courses.db.dao.ConversationGroupDao;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.ConversationGroup;
-import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationGroupService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 public class ConversationGroupServiceImpl implements ConversationGroupService {
-    private final ConversationGroupDao conversationGroupDao;
-
-    public ConversationGroupServiceImpl(DaoFactory daoFactory){
-        conversationGroupDao = daoFactory.createConversationGroupDao();
-    }
+    private final ConversationGroupDao conversationGroupDao = new ConversationGroupDao();
 
     @Override
     public ConversationGroup findById(Long id) throws LogicException {

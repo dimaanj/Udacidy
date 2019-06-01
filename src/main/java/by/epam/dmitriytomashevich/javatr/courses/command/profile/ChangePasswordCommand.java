@@ -5,8 +5,8 @@ import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.UserServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.util.logic_helper.UserServiceHandler;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -16,11 +16,7 @@ import java.io.PrintWriter;
 import java.util.Optional;
 
 public class ChangePasswordCommand implements Command {
-    private final UserService userService;
-
-    public ChangePasswordCommand(ServiceFactory serviceFactory){
-        userService = serviceFactory.createUserService();
-    }
+    private final UserService userService = new UserServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
@@ -32,7 +28,7 @@ public class ChangePasswordCommand implements Command {
         UserServiceHandler handler = new UserServiceHandler();
         boolean isPreviousPasswordCorrect =
                 handler.isPreviousPasswordCorrect(previousPassword, current);
-        String message = null;
+        String message;
         if(isPreviousPasswordCorrect){
              newPassword = handler.encodePassword(newPassword);
              userService.updatePassword(newPassword, user.getId());

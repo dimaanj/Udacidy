@@ -3,27 +3,19 @@ package by.epam.dmitriytomashevich.javatr.courses.command.admin;
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationGroupService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConversationGroupServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConversationServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.MessageServiceImpl;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Optional;
 
 public class RemoveQuestionConversationCommand implements Command {
-    private final MessageService messageService;
-    private final ConversationService conversationService;
-    private final ConversationGroupService conversationGroupService;
-
-    public RemoveQuestionConversationCommand(ServiceFactory serviceFactory){
-        messageService = serviceFactory.createMessageService();
-        conversationService = serviceFactory.createConversationService();
-        conversationGroupService = serviceFactory.createConversationGroupService();
-    }
+    private final MessageService messageService = new MessageServiceImpl();
+    private final ConversationService conversationService = new ConversationServiceImpl();
+    private final ConversationGroupService conversationGroupService = new ConversationGroupServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

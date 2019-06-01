@@ -21,7 +21,7 @@ public class CommandFilter implements Filter {
     private Set<String> adminCommands = new HashSet<>();
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
         guestAllowedCommands.add(CommandNames.GREETING);
         guestAllowedCommands.add(CommandNames.REGISTRATION);
         guestAllowedCommands.add(CommandNames.LOGIN);
@@ -42,7 +42,7 @@ public class CommandFilter implements Filter {
         userCommands.add(CommandNames.GET_CONFERENCE_CONTENT);
         userCommands.add(CommandNames.GET_PAGE_CONTENT);
         userCommands.add(CommandNames.CHANGE_LOCALE);
-
+        userCommands.add(CommandNames.SEND_CLIENT_REQUEST);
 
         adminCommands.add(CommandNames.LOG_OUT);
         adminCommands.add(CommandNames.PAGE_NOT_FOUND);
@@ -75,7 +75,7 @@ public class CommandFilter implements Filter {
             isAdmin = user.isAdmin();
         }
 
-        String stringCommand = null;
+        String stringCommand;
         if (request.getMethod().equals(ParameterNames.METHOD_GET)) {
             stringCommand = request.getRequestURI();
         } else {

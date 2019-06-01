@@ -2,13 +2,11 @@ package by.epam.dmitriytomashevich.javatr.courses.command.admin;
 
 import by.epam.dmitriytomashevich.javatr.courses.command.Command;
 import by.epam.dmitriytomashevich.javatr.courses.command.SessionRequestContent;
-import by.epam.dmitriytomashevich.javatr.courses.constant.MessageNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.*;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.*;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
-import by.epam.dmitriytomashevich.javatr.courses.util.MessageManager;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.*;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -18,19 +16,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class RemoveConferenceCommand implements Command {
-    private final ContentService contentService;
-    private final ConferenceService conferenceService;
-    private final SectionService sectionService;
-    private final RequestService requestService;
-    private final RequestFormService requestFormService;
-
-    public RemoveConferenceCommand(ServiceFactory serviceFactory){
-        contentService = serviceFactory.createContentService();
-        conferenceService = serviceFactory.createConferenceService();
-        sectionService = serviceFactory.createSectionService();
-        requestService = serviceFactory.createRequestService();
-        requestFormService = serviceFactory.createRequestFormService();
-    }
+    private final ContentService contentService = new ContentServiceImpl();
+    private final ConferenceService conferenceService = new ConferenceServiceImpl();
+    private final SectionService sectionService = new SectionServiceImpl();
+    private final RequestService requestService = new RequestServiceImpl();
+    private final RequestFormService requestFormService = new RequestFormServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

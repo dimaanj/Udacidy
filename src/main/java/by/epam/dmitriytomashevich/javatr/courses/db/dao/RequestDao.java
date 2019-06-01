@@ -1,5 +1,6 @@
 package by.epam.dmitriytomashevich.javatr.courses.db.dao;
 
+import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
 import by.epam.dmitriytomashevich.javatr.courses.domain.RequestStatus;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Request;
@@ -14,7 +15,6 @@ import java.util.List;
 
 public class RequestDao implements AbstractDao<Long, Request> {
     private EntityBuilder<Request> builder = new RequestBuilder();
-    private final Connection connection;
 
     private static final String INSERT = "INSERT INTO udacidy.request\n" +
             "    (user_id, creation_date_time, status, conference_id)\n" +
@@ -51,14 +51,10 @@ public class RequestDao implements AbstractDao<Long, Request> {
 
 
 
-    public RequestDao(Connection connection){
-        this.connection = connection;
-    }
-
     @Override
     public List<Request> findAll() throws DAOException {
         List<Request> requests = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_ALL);
             ResultSet resultSet = statement.executeQuery();
             requests = new ArrayList<>();
@@ -77,7 +73,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
     @Override
     public Request findById(Long id) throws DAOException {
         Request request = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_BY_ID);
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -94,7 +90,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
 
     @Override
     public void deleteById(Long id) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, id);
             statement.execute();
@@ -107,7 +103,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
     @Override
     public Long create(Request entity) throws DAOException {
         Long requestId = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
             statement.setLong(1, entity.getUserId());
             Date dateTime = Date
@@ -141,12 +137,12 @@ public class RequestDao implements AbstractDao<Long, Request> {
 
     @Override
     public void update(Request entity) throws DAOException {
-
+        throw new UnsupportedOperationException("RequestDao doesn't support 'update()'");
     }
 
     public Request findByUserIdAndConferenceId(Long userId, Long conferenceId) throws DAOException {
         Request request = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_BY_REQUEST_BY_USER_ID_AND_CONFERENCE_ID);
             statement.setLong(1, userId);
             statement.setLong(2, conferenceId);
@@ -164,7 +160,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
     }
 
     public void updateRequestStatusByUserIdAndConferenceId(Long userId, Long conferenceId, RequestStatus requestStatus) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(UPDATE_REQUEST_STATUS_BY_USER_ID_AND_CONFERENCE_ID);
             statement.setString(1, requestStatus.toString());
             statement.setLong(2, userId);
@@ -178,7 +174,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
 
     public List<Request> findByUserId(Long userId) throws DAOException {
         List<Request> requests = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_BY_USER_ID);
             statement.setLong(1, userId);
             ResultSet resultSet = statement.executeQuery();
@@ -197,7 +193,7 @@ public class RequestDao implements AbstractDao<Long, Request> {
 
     public List<Request> findByConferenceId(Long conferenceId) throws DAOException {
         List<Request> requests = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_BY_CONFERENCE_ID);
             statement.setLong(1, conferenceId);
             ResultSet resultSet = statement.executeQuery();

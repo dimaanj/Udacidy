@@ -12,7 +12,6 @@ import java.util.List;
 
 public class ConversationDao implements AbstractDao<Long, Conversation> {
     private EntityBuilder<Conversation> builder = new ConversationBuilder();
-    private final Connection connection;
 
     private static final String INSERT_CONVERSATION_GROUP = "INSERT INTO udacidy.conversation (date_creation) " +
             "VALUES (?)";
@@ -46,16 +45,6 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
             "        ON cg.user_id = u.id\n" +
             "WHERE u.id = ?";
 
-//    private static final String SELECT_BY_USER_ID_AND_CONVERSATION_TYPE = "SELECT c.id, c.date_creation, ct.type\n" +
-//            "FROM conversation c\n" +
-//            "         JOIN conversation_type ct\n" +
-//            "              ON c.id = ct.id\n" +
-//            "    JOIN conversation_group cg \n" +
-//            "        ON c.id = cg.conversation_id\n" +
-//            "    JOIN user u \n" +
-//            "        ON cg.user_id = u.id\n" +
-//            "WHERE u.id = ? AND ct.type = ?";
-
     private static final String SELECT_BY_MESSAGE_ID = "SELECT c.id, c.date_creation, ct.type\n" +
             "FROM message m\n" +
             "    JOIN conversation c\n" +
@@ -70,14 +59,10 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
     private static final String DELETE_BY_ID = "DELETE FROM conversation\n" +
             "    WHERE id = ?";
 
-    public ConversationDao(Connection connection){
-        this.connection = connection;
-    }
-
     @Override
     public List<Conversation> findAll() throws DAOException {
         List<Conversation> conversations;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_CONVERSATIONS);
             ResultSet resultSet = statement.executeQuery();
             conversations = new ArrayList<>();
@@ -96,7 +81,7 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
     @Override
     public Conversation findById(Long id) throws DAOException {
         Conversation conversation = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -113,7 +98,7 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
 
     @Override
     public void deleteById(Long id) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(DELETE_CONVERSATION_TYPE_BY_ID);
             statement.setLong(1, id);
             statement.execute();
@@ -129,8 +114,8 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
 
     @Override
     public Long create(Conversation entity) throws DAOException {
-        Long conversationId = null;
-        try {
+        Long conversationId;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement =
                     connection.prepareStatement(INSERT_CONVERSATION_GROUP, Statement.RETURN_GENERATED_KEYS);
             statement.setDate(1, Date.valueOf(entity.getCreateDate()));
@@ -160,12 +145,12 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
 
     @Override
     public void update(Conversation entity) {
-
+        throw new UnsupportedOperationException("Conversation DAO doesn't support 'update()'");
     }
 
     public List<Conversation> findAllByUserId(Long id) throws DAOException {
         List<Conversation> conversations;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_USER_ID);
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -184,7 +169,7 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
 
     public Conversation findByMessageId(Long messageId) throws DAOException {
         Conversation conversation = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_MESSAGE_ID);
             statement.setLong(1, messageId);
             ResultSet resultSet = statement.executeQuery();
@@ -199,27 +184,9 @@ public class ConversationDao implements AbstractDao<Long, Conversation> {
         }
     }
 
-//    public Conversation findUserConversationByType(Long userId, Conversation.ConversationType type) throws DAOException {
-//        Conversation conversation = null;
-//        try {
-//            PreparedStatement statement = connection.prepareStatement(SELECT_BY_USER_ID_AND_CONVERSATION_TYPE);
-//            statement.setLong(1, userId);
-//            statement.setString(2, type.getValue());
-//            ResultSet resultSet = statement.executeQuery();
-//            while (resultSet.next()) {
-//                conversation = builder.build(resultSet);
-//            }
-//            resultSet.close();
-//            statement.close();
-//            return conversation;
-//        } catch (SQLException e) {
-//            throw new DAOException(e);
-//        }
-//    }
-
     public List<Conversation> findAllConversationsByType(Conversation.ConversationType type) throws DAOException {
-        List<Conversation> conversations = null;
-        try {
+        List<Conversation> conversations;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_CONVERSATIONS_BY_TYPE);
             statement.setString(1, type.getValue());
             ResultSet resultSet = statement.executeQuery();

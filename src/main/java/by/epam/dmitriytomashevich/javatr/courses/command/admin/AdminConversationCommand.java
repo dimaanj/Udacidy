@@ -7,24 +7,20 @@ import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.ConversationGroup;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationGroupService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConversationGroupServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConversationServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.MessageServiceImpl;
 
 import java.util.Optional;
 
 public class AdminConversationCommand implements Command {
-    private final ConversationGroupService conversationGroupService;
-    private final ConversationService conversationService;
-    private final MessageService messageService;
-
-    public AdminConversationCommand(ServiceFactory serviceFactory){
-        conversationGroupService = serviceFactory.createConversationGroupService();
-        conversationService = serviceFactory.createConversationService();
-        messageService = serviceFactory.createMessageService();
-    }
+    private final ConversationGroupService conversationGroupService = new ConversationGroupServiceImpl();
+    private final ConversationService conversationService = new ConversationServiceImpl();
+    private final MessageService messageService = new MessageServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {

@@ -13,7 +13,6 @@ import by.epam.dmitriytomashevich.javatr.courses.command.main.MainCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.profile.*;
 import by.epam.dmitriytomashevich.javatr.courses.command.user.*;
 import by.epam.dmitriytomashevich.javatr.courses.constant.CommandNames;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.util.validator.UriValidator;
 
 import java.util.*;
@@ -21,35 +20,35 @@ import java.util.*;
 public class CommandFactory {
     private final Set<Map.Entry<String, Command>> commands = new HashSet<>();
 
-    public CommandFactory(ServiceFactory serviceFactory) {
+    public CommandFactory() {
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GREETING, new GreetingCommand()));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REGISTRATION, new RegistrationCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.LOGIN, new LoginCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REGISTRATION, new RegistrationCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.LOGIN, new LoginCommand()));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.LOG_OUT, new LogoutCommand()));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.HELP, new HelpCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REMOVE_REQUEST, new RemoveRequestCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.VIEW_MORE, new ViewMoreCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.UPLOAD_MESSAGES, new UpdateMessagesCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.LOAD_MESSAGES, new LoadMessagesCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.AJAX_SEND_MESSAGE, new SendMessageCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.USER_PAGE, new ProfileCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.ADMIN_PAGE, new AdminPageCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.ADMIN_CONVERSATION, new AdminConversationCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.HELP, new HelpCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REMOVE_REQUEST, new RemoveRequestCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.VIEW_MORE, new ViewMoreCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.UPLOAD_MESSAGES, new UpdateMessagesCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.LOAD_MESSAGES, new LoadMessagesCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.AJAX_SEND_MESSAGE, new SendMessageCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.USER_PAGE, new ProfileCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.ADMIN_PAGE, new AdminPageCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.ADMIN_CONVERSATION, new AdminConversationCommand()));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.ADD_CONFERENCE, new CreateConferencePage()));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CREATE_CONFERENCE, new CreateConferenceCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.EDIT_CONFERENCE_CONTENT, new EditConferenceContentCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.DELETE_CONFERENCE, new RemoveConferenceCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CREATE_CONFERENCE, new CreateConferenceCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.EDIT_CONFERENCE_CONTENT, new EditConferenceContentCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.DELETE_CONFERENCE, new RemoveConferenceCommand()));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.PREVIEW_COURSE_CONTENT, new PreviewCourseContent()));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.PAGE_NOT_FOUND, new PageNotFoundCommand()));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CONTENT_EDITING, new MainCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CONFERENCES, new MainCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.SEND_CLIENT_REQUEST, new SendClientRequestCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CHANGE_PASSWORD, new ChangePasswordCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_CONFERENCE_CONTENT, new GetConferenceContentCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REMOVE_QUESTION_CONVERSATION, new RemoveQuestionConversationCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.ACCEPT_USER_REQUEST, new AcceptRequestCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_PAGE_CONTENT, new GetPageContentCommand(serviceFactory)));
-        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REJECT_USER_REQUEST, new RejectRequestCommand(serviceFactory)));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CONTENT_EDITING, new MainCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CONFERENCES, new MainCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.SEND_CLIENT_REQUEST, new SendClientRequestCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CHANGE_PASSWORD, new ChangePasswordCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_CONFERENCE_CONTENT, new GetConferenceContentCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REMOVE_QUESTION_CONVERSATION, new RemoveQuestionConversationCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.ACCEPT_USER_REQUEST, new AcceptRequestCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.GET_PAGE_CONTENT, new GetPageContentCommand()));
+        commands.add(new AbstractMap.SimpleEntry<>(CommandNames.REJECT_USER_REQUEST, new RejectRequestCommand()));
         commands.add(new AbstractMap.SimpleEntry<>(CommandNames.CHANGE_LOCALE, new ChangeLocaleCommand()));
     }
 

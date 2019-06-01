@@ -11,7 +11,6 @@ import java.util.List;
 
 public class ContentDao implements AbstractDao<Long, Content> {
     private EntityBuilder<Content> builder = new ContentBuilder();
-    private final Connection connection;
 
     private static final String INSERT_CONTENT = "INSERT INTO udacidy.content (content)\n" +
             "VALUES(?)";
@@ -39,19 +38,15 @@ public class ContentDao implements AbstractDao<Long, Content> {
             "        on s.content_id = c.id\n" +
             "WHERE s.id = ?";
 
-    public ContentDao(Connection connection){
-        this.connection = connection;
-    }
-
     @Override
-    public List<Content> findAll() throws DAOException {
-        return null;
+    public List<Content> findAll() {
+        throw new UnsupportedOperationException("Content Dao doesn't support 'findAll()'");
     }
 
     @Override
     public Content findById(Long id) throws DAOException {
         Content content = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -68,7 +63,7 @@ public class ContentDao implements AbstractDao<Long, Content> {
 
     @Override
     public void deleteById(Long id) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(DELETE);
             statement.setLong(1, id);
             statement.execute();
@@ -80,8 +75,8 @@ public class ContentDao implements AbstractDao<Long, Content> {
 
     @Override
     public Long create(Content entity) throws DAOException {
-        Long contentId = null;
-        try {
+        Long contentId;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement =
                     connection.prepareStatement(INSERT_CONTENT, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, entity.getContent());
@@ -107,7 +102,7 @@ public class ContentDao implements AbstractDao<Long, Content> {
 
     @Override
     public void update(Content entity) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(UPDATE_CONTENT);
             statement.setString(1, entity.getContent());
             statement.setLong(2, entity.getId());
@@ -120,7 +115,7 @@ public class ContentDao implements AbstractDao<Long, Content> {
 
     public Content findByConferenceId(Long conferenceId) throws DAOException {
         Content content = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_CONFERENCE_ID);
             statement.setLong(1, conferenceId);
             ResultSet resultSet = statement.executeQuery();
@@ -137,7 +132,7 @@ public class ContentDao implements AbstractDao<Long, Content> {
 
     public Content findBySectionId(Long sectionId) throws DAOException {
         Content content = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(SELECT_BY_SECTION_ID);
             statement.setLong(1, sectionId);
             ResultSet resultSet = statement.executeQuery();

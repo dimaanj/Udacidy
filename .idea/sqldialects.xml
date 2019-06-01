@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/src/main/java/by/epam/dmitriytomashevich/javatr/courses/db/dao/ConferenceDao.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/by/epam/dmitriytomashevich/javatr/courses/db/dao/ContentDao.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/by/epam/dmitriytomashevich/javatr/courses/db/dao/ConversationDao.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/by/epam/dmitriytomashevich/javatr/courses/db/dao/ConversationGroupDao.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/by/epam/dmitriytomashevich/javatr/courses/db/dao/MessageDao.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/by/epam/dmitriytomashevich/javatr/courses/db/dao/RequestDao.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/by/epam/dmitriytomashevich/javatr/courses/db/dao/RequestFormDao.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/by/epam/dmitriytomashevich/javatr/courses/db/dao/SectionDao.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/by/epam/dmitriytomashevich/javatr/courses/db/dao/UserDao.java" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/29052019.sql" dialect="MariaDB" />
+  </component>
+</project>

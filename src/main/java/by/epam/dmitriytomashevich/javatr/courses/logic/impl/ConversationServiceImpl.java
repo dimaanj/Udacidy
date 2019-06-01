@@ -4,18 +4,13 @@ import by.epam.dmitriytomashevich.javatr.courses.db.dao.ConversationDao;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
-import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 
 import java.util.List;
 
 public class ConversationServiceImpl implements ConversationService {
-    private final ConversationDao conversationDao;
-
-    public ConversationServiceImpl(DaoFactory daoFactory){
-        this.conversationDao = daoFactory.createConversationDao();
-    }
+    private final ConversationDao conversationDao = new ConversationDao();
 
     @Override
     public List<Conversation> getAllConversations() throws LogicException {

@@ -1,5 +1,6 @@
 package by.epam.dmitriytomashevich.javatr.courses.db.dao;
 
+import by.epam.dmitriytomashevich.javatr.courses.db.ConnectionPool;
 import by.epam.dmitriytomashevich.javatr.courses.db.builder.ConversationGroupBuilder;
 import by.epam.dmitriytomashevich.javatr.courses.db.builder.EntityBuilder;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
@@ -10,7 +11,6 @@ import java.sql.*;
 import java.util.List;
 
 public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup> {
-    private final Connection connection;
     private final EntityBuilder<ConversationGroup> builder = new ConversationGroupBuilder();
 
     private static final String INSERT_CONVERSATION_GROUP = "INSERT INTO udacidy.conversation_group (conversation_id, user_id) " +
@@ -29,19 +29,15 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
             "FROM conversation_group cg\n" +
             "WHERE cg.id = ?";
 
-    public ConversationGroupDao(Connection connection){
-        this.connection = connection;
-    }
-
     @Override
     public List<ConversationGroup> findAll() {
-        return null;
+        throw new UnsupportedOperationException("Conversation DAO doesn't support 'findAll()'");
     }
 
     @Override
     public ConversationGroup findById(Long id) throws DAOException {
         ConversationGroup group = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_BY_ID);
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -58,13 +54,13 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
 
     @Override
     public void deleteById(Long id) {
-
+        throw new UnsupportedOperationException("ConversationGroupDao doesn't support 'deleteById()'");
     }
 
     @Override
     public Long create(ConversationGroup entity) throws DAOException {
         Long conversationGroupId = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(INSERT_CONVERSATION_GROUP, Statement.RETURN_GENERATED_KEYS);
             statement.setLong(1, entity.getConversationId());
             statement.setLong(2, entity.getUserId());
@@ -92,11 +88,11 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
 
     @Override
     public void update(ConversationGroup entity) {
-
+        throw new UnsupportedOperationException("ConversationGroupDao doesn't support 'update()'");
     }
 
     public void deleteByConversationId(Long conversationId) throws DAOException {
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(DELETE_BY_CONVERSATION_ID);
             statement.setLong(1, conversationId);
             statement.execute();
@@ -108,7 +104,7 @@ public class ConversationGroupDao implements AbstractDao<Long, ConversationGroup
 
     public ConversationGroup findByUserIdAndConversationType(Long userId, Conversation.ConversationType type) throws DAOException {
         ConversationGroup group = null;
-        try {
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_BY_USER_ID_AND_CONVERSATION_TYPE);
             statement.setLong(1, userId);
             statement.setString(2, type.getValue());

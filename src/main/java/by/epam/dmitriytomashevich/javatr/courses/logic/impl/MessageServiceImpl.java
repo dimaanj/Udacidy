@@ -4,8 +4,6 @@ import by.epam.dmitriytomashevich.javatr.courses.db.dao.MessageDao;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.DAOException;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Message;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
-import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
-import by.epam.dmitriytomashevich.javatr.courses.factory.DaoFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.UserService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
@@ -13,13 +11,8 @@ import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import java.util.List;
 
 public class MessageServiceImpl implements MessageService {
-    private final MessageDao messageDao;
-    private final UserService userService;
-
-    public MessageServiceImpl(DaoFactory daoFactory){
-        messageDao = daoFactory.createMessageDao();
-        userService = new UserServiceImpl(daoFactory);
-    }
+    private final MessageDao messageDao = new MessageDao();
+    private final UserService userService = new UserServiceImpl();
 
     @Override
     public Long create(Message message) throws LogicException {

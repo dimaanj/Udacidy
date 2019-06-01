@@ -7,10 +7,11 @@ import by.epam.dmitriytomashevich.javatr.courses.domain.Conversation;
 import by.epam.dmitriytomashevich.javatr.courses.domain.Message;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
 import by.epam.dmitriytomashevich.javatr.courses.domain.json.JsonMessage;
-import by.epam.dmitriytomashevich.javatr.courses.factory.ServiceFactory;
 import by.epam.dmitriytomashevich.javatr.courses.logic.ConversationService;
 import by.epam.dmitriytomashevich.javatr.courses.logic.MessageService;
 import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConversationServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.logic.impl.MessageServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.util.converter.MessageConverter;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -28,13 +29,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SendMessageCommand implements Command {
-    private final ConversationService conversationService;
-    private final MessageService messageService;
-
-    public SendMessageCommand(ServiceFactory serviceFactory){
-        conversationService = serviceFactory.createConversationService();
-        messageService = serviceFactory.createMessageService();
-    }
+    private final ConversationService conversationService = new ConversationServiceImpl();
+    private final MessageService messageService = new MessageServiceImpl();
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
