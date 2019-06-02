@@ -9,16 +9,17 @@ $(document).ready(function () {
             },
             password: {
                 required: true,
-                minlength: 5
+                pattern: "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$"
             },
-            confirm_password: {
+            confirmedPassword: {
                 required: true,
-                minlength: 5,
-                equalTo: "#password"
+                pattern: "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
+                equalTo: "#password",
             },
             email: {
                 required: true,
-                email: true
+                email: true,
+                pattern: "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])"
             },
             agree: "required"
         },
@@ -27,11 +28,11 @@ $(document).ready(function () {
             lastname: document.getElementById('lastNameRequired').value,
             password: {
                 required: document.getElementById('passwordRequired').value,
-                minlength: document.getElementById('passwordMinlength').value
+                pattern: document.getElementById('passwordPattern').value
             },
-            confirm_password: {
+            confirmedPassword: {
                 required: document.getElementById('confirmPasswordRequired').value,
-                minlength: document.getElementById('confirmPasswordMinlength').value,
+                pattern: document.getElementById('passwordPattern').value,
                 equalTo: document.getElementById('confirmPasswordEquals').value
             },
             email: document.getElementById('emailRequired').value,

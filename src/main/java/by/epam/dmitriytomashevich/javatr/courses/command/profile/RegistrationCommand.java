@@ -12,6 +12,7 @@ import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.UserServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.util.MessageManager;
 import by.epam.dmitriytomashevich.javatr.courses.util.logic_helper.UserServiceHandler;
+import by.epam.dmitriytomashevich.javatr.courses.util.validation.InputValidator;
 
 import java.util.Optional;
 
@@ -20,14 +21,26 @@ public class RegistrationCommand implements Command {
 
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
+        String locale = (String) content.getSession(false).getAttribute(ParameterNames.LOCALE);
         String action;
         if(content.getActionType().equals(SessionRequestContent.ActionType.FORWARD)){
             action = ActionNames.REGISTRATION;
         }else{
-            if(userService.addUser(defineUserData(content))){
+            boolean isValidUserData = InputValidator.validateUserRegistrationParameters(
+                    content.getParameter(ParameterNames.FIRST_NAME),
+                    content.getParameter(ParameterNames.LAST_NAME),
+                    content.getParameter(ParameterNames.EMAIL),
+                    content.getParameter(ParameterNames.PASSWORD),
+                    content.getParameter(ParameterNames.CONFIRMED_PASSWORD));
+
+            if(!isValidUserData){
+                String msg = MessageManager.getMessage(MessageNames.REGISTRATION_SERVER_SIDE_VALIDATION_FAILS, locale);
+                content.setRequestAttribute(ParameterNames.ERROR_REGISTRATION_PASS_MESSAGE, msg);
+                content.setActionType(SessionRequestContent.ActionType.FORWARD);
+                action = ActionNames.REGISTRATION;
+            }else if(userService.addUser(defineUserData(content))){
                 action = ActionNames.LOGIN_ACTION;
             }else {
-                String locale = (String) content.getSession(false).getAttribute(ParameterNames.LOCALE);
                 String msg = MessageManager.getMessage(MessageNames.USER_ALREADY_EXISTS, locale);
                 content.setRequestAttribute(ParameterNames.ERROR_REGISTRATION_PASS_MESSAGE, msg);
                 content.setActionType(SessionRequestContent.ActionType.FORWARD);

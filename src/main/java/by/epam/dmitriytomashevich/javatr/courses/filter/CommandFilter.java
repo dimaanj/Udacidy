@@ -4,7 +4,7 @@ import by.epam.dmitriytomashevich.javatr.courses.constant.ActionNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.CommandNames;
 import by.epam.dmitriytomashevich.javatr.courses.constant.ParameterNames;
 import by.epam.dmitriytomashevich.javatr.courses.domain.User;
-import by.epam.dmitriytomashevich.javatr.courses.util.validator.CommandValidator;
+import by.epam.dmitriytomashevich.javatr.courses.util.validation.CommandValidator;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -82,9 +82,9 @@ public class CommandFilter implements Filter {
             stringCommand = request.getParameter(ParameterNames.COMMAND);
         }
 
-        if ((user == null && CommandValidator.defineCommand(guestAllowedCommands, stringCommand)) ||
-                (isAdmin != null && isAdmin && CommandValidator.defineCommand(adminCommands, stringCommand)) ||
-                (isAdmin != null && !isAdmin && CommandValidator.defineCommand(userCommands, stringCommand))) {
+        if ((user == null && CommandValidator.isSetContainsCommand(guestAllowedCommands, stringCommand)) ||
+                (isAdmin != null && isAdmin && CommandValidator.isSetContainsCommand(adminCommands, stringCommand)) ||
+                (isAdmin != null && !isAdmin && CommandValidator.isSetContainsCommand(userCommands, stringCommand))) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher(ActionNames.PAGE_NOT_FOUND_ACTION);

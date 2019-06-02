@@ -4,7 +4,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
 
-
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="locale"/>
 
@@ -85,6 +84,7 @@
     <input type="hidden" id="passwordMinlength" name="passwordMinlength" value="<fmt:message key="l.minlengthPassword"/>"/>
     <input type="hidden" id="emailRequired" name="emailRequired" value="<fmt:message key="l.emailValidate"/>"/>
     <input type="hidden" id="agree" name="agree" value="<fmt:message key="l.agree"/>"/>
+    <input type="hidden" id="passwordPattern" name="passwordPattern" value="<fmt:message key="l.passwordPattern"/>"/>
 </div>
 
 <script src="../js/loginValidation.js"></script>

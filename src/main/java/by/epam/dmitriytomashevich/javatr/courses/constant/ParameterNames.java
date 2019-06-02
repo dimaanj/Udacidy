@@ -42,6 +42,7 @@ public class ParameterNames {
     public static final String LAST_NAME = "lastname";
     public static final String EMAIL = "email";
     public static final String PASSWORD = "password";
+    public static final String CONFIRMED_PASSWORD = "confirmedPassword";
     public static final String CONFERENCE_ID = "conferenceId";
     public static final String CONTENT = "content";
     public static final String SECTIONS = "sections";
@@ -57,4 +58,7 @@ public class ParameterNames {
      */
     public static final int MESSAGES_UPDATE_AMOUNT = 7;
     public static final int CONFERENCES_PER_PAGE_AMOUNT = 3;
+    public static final int EMAIL_MIN_LENGTH = 10;
+    public static final int PASSWORD_MIN_LENGTH = 5;
+    public static final int NAME_MIN_LENGTH = 2;
 }

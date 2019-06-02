@@ -14,6 +14,7 @@ import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConversationGroupServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConversationServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.MessageServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.util.validation.FieldValidator;
 
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ public class AdminConversationCommand implements Command {
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         String conversationIdAsString = content.getParameter(ParameterNames.CONVERSATION_ID);
-        if(conversationIdAsString != null) {
+        if(!FieldValidator.isNotFilled(conversationIdAsString)) {
             Long conversationId = Long.parseLong(content.getParameter(ParameterNames.CONVERSATION_ID));
             if (content.getActionType().equals(SessionRequestContent.ActionType.REDIRECT)) {
                 User admin = (User) content.getSession().getAttribute(ParameterNames.USER);

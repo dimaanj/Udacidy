@@ -14,12 +14,14 @@ import by.epam.dmitriytomashevich.javatr.courses.exceptions.LogicException;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ConferenceServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.ContentServiceImpl;
 import by.epam.dmitriytomashevich.javatr.courses.logic.impl.SectionServiceImpl;
+import by.epam.dmitriytomashevich.javatr.courses.util.validation.FieldValidator;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class CreateConferenceCommand implements Command {
     private final ConferenceService conferenceService = new ConferenceServiceImpl();
@@ -29,9 +31,13 @@ public class CreateConferenceCommand implements Command {
     @Override
     public Optional<String> execute(SessionRequestContent content) throws LogicException {
         User admin = (User) content.getSession(false).getAttribute(ParameterNames.USER);
-
         String htmlContent = content.getParameter(ParameterNames.CONTENT);
         List<String> jsonSections = new Gson().fromJson(content.getParameter(ParameterNames.SECTIONS), List.class);
+
+        if (FieldValidator.isNotFilled(htmlContent) ||
+                jsonSections.stream().anyMatch(FieldValidator::isNotFilled)) {
+            return Optional.empty();
+        }
 
         Content conferenceContent = new Content();
         conferenceContent.setContent(htmlContent);
@@ -43,7 +49,7 @@ public class CreateConferenceCommand implements Command {
         Long conferenceId = conferenceService.create(conference);
 
 
-        for(String stringSection : jsonSections){
+        for (String stringSection : jsonSections) {
             Content sectionContent = new Content();
             sectionContent.setContent(stringSection);
             Long sectionContentId = contentService.create(sectionContent);

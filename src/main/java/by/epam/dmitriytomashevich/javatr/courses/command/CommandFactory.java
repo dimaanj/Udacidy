@@ -13,7 +13,7 @@ import by.epam.dmitriytomashevich.javatr.courses.command.main.MainCommand;
 import by.epam.dmitriytomashevich.javatr.courses.command.profile.*;
 import by.epam.dmitriytomashevich.javatr.courses.command.user.*;
 import by.epam.dmitriytomashevich.javatr.courses.constant.CommandNames;
-import by.epam.dmitriytomashevich.javatr.courses.util.validator.UriValidator;
+import by.epam.dmitriytomashevich.javatr.courses.util.validation.CommandValidator;
 
 import java.util.*;
 
@@ -61,7 +61,7 @@ public class CommandFactory {
     Optional<Command> createCommand(String commandStringKey) {
         return commands.stream()
                 .filter(
-                        commandEntry -> UriValidator.isURICorrespondsToCommand(commandEntry.getKey(), commandStringKey)
+                        commandEntry -> CommandValidator.isCommandEqualsToString(commandEntry.getKey(), commandStringKey)
                 )
                 .map(Map.Entry::getValue)
                 .findFirst();

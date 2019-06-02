@@ -71,7 +71,7 @@
     <input type="hidden" id="paginationPrev" name="paginationPrev" value="<fmt:message key="ce.paginationPrev"/>"/>
     <input type="hidden" id="paginationFirst" name="paginationFirst" value="<fmt:message key="ce.paginationFirst"/>"/>
     <input type="hidden" id="paginationLast" name="paginationLast" value="<fmt:message key="ce.paginationLast"/>"/>
-    <input type="hidden" id="submitChangesButton" name="submitChangesButton" value="<fmt:message key="ce.sumbitChangesButton"/>"/>
+    <input type="hidden" id="submitChangesButton" name="submitChangesButton" value="<fmt:message key="ce.submitChangesButton"/>"/>
 
     <input type="hidden" id="updateContentSuccess" name="updateContentSuccess" value="<fmt:message key="ce.updateContentSuccess"/>"/>
     <input type="hidden" id="updateContentError" name="updateContentError" value="<fmt:message key="ce.updateContentError"/>"/>

@@ -23,7 +23,6 @@
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
-
 </head>
 <body>
 
@@ -66,19 +65,10 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-4 col-form-label" for="confirm_password"><fmt:message key="r.confirmPassword"/></label>
+                    <label class="col-sm-4 col-form-label" for="confirmedPassword"><fmt:message key="r.confirmPassword"/></label>
                     <div class="col-sm-6">
-                        <input type="password" class="form-control" id="confirm_password"
-                               name="confirm_password" placeholder="<fmt:message key="r.confirmPassword"/>"/>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-6 offset-sm-4">
-                        <div class="form-check">
-                            <input type="checkbox" id="agree" name="agree" value="agree"
-                                   class="form-check-input"/>
-                            <label class="form-check-label"><fmt:message key="r.pleaseAgreeToPolicy"/></label>
-                        </div>
+                        <input type="password" class="form-control" id="confirmedPassword"
+                               name="confirmedPassword" placeholder="<fmt:message key="r.confirmPassword"/>"/>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -112,12 +102,11 @@
     <input type="hidden" id="firstNameRequired" name="firstNameRequired" value="<fmt:message key="r.firstNameRequired"/>"/>
     <input type="hidden" id="lastNameRequired" name="lastNameRequired" value="<fmt:message key="r.lastNameRequeired"/>"/>
     <input type="hidden" id="passwordRequired" name="passwordRequired" value="<fmt:message key="r.passwordRequeired"/>"/>
-    <input type="hidden" id="passwordMinlength" name="passwordMinlength" value="<fmt:message key="r.passwordMinlength"/>"/>
     <input type="hidden" id="confirmPasswordRequired" name="confirmPasswordRequired" value="<fmt:message key="r.confirmPasswordRequired"/>"/>
-    <input type="hidden" id="confirmPasswordMinlength" name="confirmPasswordMinlength" value="<fmt:message key="r.confirmPasswordMinlength"/>"/>
     <input type="hidden" id="confirmPasswordEquals" name="confirmPasswordEquals" value="<fmt:message key="r.confirmPasswordEquals"/>"/>
     <input type="hidden" id="emailRequired" name="emailRequired" value="<fmt:message key="r.emailRequired"/>"/>
     <input type="hidden" id="agreePolicy" name="agreePolicy" value="<fmt:message key="r.agreeRequired"/>"/>
+    <input type="hidden" id="passwordPattern" name="passwordPattern" value="<fmt:message key="r.passwordPattern"/>">
 </div>
 
 <script src="../js/registrationValidation.js"></script>
