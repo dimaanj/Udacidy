@@ -1,0 +1,15 @@
+02.06.2019 14:43:21,165 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@18e7143f was created
+02.06.2019 14:43:21,196 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@50687efb was created
+02.06.2019 14:43:21,211 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@142eef62 was created
+02.06.2019 14:43:21,211 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@5990e6c5 was created
+02.06.2019 14:43:21,227 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@35d6ca49 was created
+02.06.2019 14:43:21,243 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@47289387 was created
+02.06.2019 14:43:21,243 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@114a85c2 was created
+02.06.2019 14:43:21,258 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@37eeec90 was created
+02.06.2019 14:43:21,274 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@c9413d8 was created
+02.06.2019 14:43:21,274 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@46074492 was created
+02.06.2019 14:43:21,290 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@2c715e84 was created
+02.06.2019 14:43:21,305 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@3b9d6699 was created
+02.06.2019 14:43:21,305 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@21694e53 was created
+02.06.2019 14:43:21,321 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@22c86919 was created
+02.06.2019 14:43:21,336 INFO  ConnectionPool:44 - Connection com.mysql.cj.jdbc.ConnectionImpl@1b0a7baf was created
