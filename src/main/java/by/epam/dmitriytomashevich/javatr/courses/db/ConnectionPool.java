@@ -94,6 +94,7 @@ public class ConnectionPool {
         public void close(){
             ConnectionPool.getInstance().releaseConnection(this);
         }
+
         public Statement createStatement() throws SQLException {
             return connection.createStatement();
         }
